@@ -30,7 +30,7 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <sl:groceryList/>
+                <sl:recipeList/>
             </div>
         </div>
     </div>

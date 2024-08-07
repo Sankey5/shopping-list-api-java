@@ -3,7 +3,7 @@
 // TODO: Understand how the .factory function works for angular
 angular.module('Shopping_List_app').factory('Grocery_List_Service', ['$http', function($http) {
 
-		var REST_SERVICE_URI = 'grocery-list/';
+		var REST_SERVICE_URI = 'recipe';
 
 		var factory = {
 			fetchGroceryList : fetchGroceryList,
@@ -13,7 +13,7 @@ angular.module('Shopping_List_app').factory('Grocery_List_Service', ['$http', fu
 		return factory;
 
 		function fetchGroceryList() {
-			return $http.get(REST_SERVICE_URI).then(function(response) {
+			return $http.get(REST_SERVICE_URI + "/getAll").then(function(response) {
 					return response.data;
 				}
 			);

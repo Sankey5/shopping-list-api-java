@@ -1,8 +1,5 @@
-package com.api.shoppinglist.controlller;
+package com.shoppinglist.controlller;
 
-import com.api.shoppinglist.model.GroceryItem;
-import com.api.shoppinglist.model.GroceryItemList;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

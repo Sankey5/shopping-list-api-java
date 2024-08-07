@@ -7,14 +7,14 @@ angular.module('Shopping_List_app').controller('Grocery_List_Controller',
 			self.groceryItem = {
 				id : '',
 				name : '',
-				quantity : '',
-				measure : ''
+				groceryList : []
 			};
 			self.groceryItems = [];
 
 			self.fetchGroceryList = function(){
 				Grocery_List_Service.fetchGroceryList().then(function(data) {
-					self.groceryItems = data.items;
+					self.groceryItems = data.map(s => s.name);
+					console.log(self.groceryItems);
 				});
 			}
 

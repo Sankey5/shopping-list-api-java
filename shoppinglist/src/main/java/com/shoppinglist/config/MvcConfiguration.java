@@ -1,4 +1,4 @@
-package com.api.shoppinglist.config;
+package com.shoppinglist.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @Configuration
-@ComponentScan(basePackages = "com.api.shoppinglist")
+@ComponentScan(basePackages = "com.shoppinglist")
 @EnableWebMvc
 public class MvcConfiguration implements WebMvcConfigurer {
     @Bean

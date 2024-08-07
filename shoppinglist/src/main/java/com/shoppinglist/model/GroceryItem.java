@@ -1,4 +1,4 @@
-package com.api.shoppinglist.model;
+package com.shoppinglist.model;
 
 import java.util.Objects;
 

@@ -1,4 +1,4 @@
-package com.api.shoppinglist.config;
+package com.shoppinglist.config;
 
 import java.io.IOException;
 

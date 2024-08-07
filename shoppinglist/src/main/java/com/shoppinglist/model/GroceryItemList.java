@@ -1,4 +1,4 @@
-package com.api.shoppinglist.model;
+package com.shoppinglist.model;
 
 import org.springframework.stereotype.Component;
 
