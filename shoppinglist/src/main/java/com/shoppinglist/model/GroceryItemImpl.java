@@ -1,8 +1,10 @@
 package com.shoppinglist.model;
 
+import com.shoppinglist.api.model.GroceryItem;
+
 import java.util.Objects;
 
-public class GroceryItem {
+public class GroceryItemImpl implements GroceryItem {
 
     private static int nextId = 0;
     private final int id;
@@ -10,36 +12,36 @@ public class GroceryItem {
     private double quantity;
     private String measure;
 
-    public GroceryItem(String name, double quantity, String measure) {
+    public GroceryItemImpl(String name, double quantity, String measure) {
         this.id = ++nextId;
         this.name = name.toLowerCase();
         this.quantity = quantity;
         this.measure = measure;
     }
 
-    public String getName() {
+    @Override public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    @Override public void setName(String name) {
         this.name = name.toLowerCase();
     }
 
-    public double getQuantity() {
+    @Override public double getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(double quantity) {
+    @Override public void setQuantity(double quantity) {
         this.quantity = quantity;
     }
 
-    public int getId() {return id;}
+    @Override public int getId() {return id;}
 
-    public String getMeasure() {return measure;}
+    @Override public String getMeasure() {return measure;}
 
-    public void setMeasure(String measure) {this.measure = measure;}
+    @Override public void setMeasure(String measure) {this.measure = measure;}
 
-    public boolean equals(GroceryItem g) {
+    @Override public boolean equals(GroceryItem g) {
         if (g == null || this.getClass() != g.getClass())
             return false;
         else if (this.getId() == g.getId()) {

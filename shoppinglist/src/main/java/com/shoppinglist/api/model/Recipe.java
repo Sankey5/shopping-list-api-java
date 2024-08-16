@@ -1,6 +1,6 @@
 package com.shoppinglist.api.model;
 
-import com.shoppinglist.model.GroceryItemList;
+import java.util.List;
 
 public interface Recipe {
 
@@ -10,9 +10,9 @@ public interface Recipe {
 
     void setName(String name);
 
-    GroceryItemList getGroceryItems();
+    List<GroceryItem> getGroceryItems();
 
-    void setGroceryItems(GroceryItemList groceryItems);
+    void setGroceryItems(List<GroceryItem> groceryItems);
 
     boolean equals(Recipe g);
 }

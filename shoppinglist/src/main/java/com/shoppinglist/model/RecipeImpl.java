@@ -1,8 +1,11 @@
 package com.shoppinglist.model;
 
+import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.model.Recipe;
+import com.shoppinglist.dao.GroceryDAOImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.Objects;
 
 public class RecipeImpl implements Recipe {
@@ -11,9 +14,9 @@ public class RecipeImpl implements Recipe {
     private final int id;
     private String name;
     @Autowired
-    private GroceryItemList groceryItems;
+    private List<GroceryItem> groceryItems;
 
-    public RecipeImpl(String name, GroceryItemList groceryItems) {
+    public RecipeImpl(String name, List<GroceryItem> groceryItems) {
         this.id = ++nextId;
         this.name = name.toLowerCase();
         this.groceryItems = groceryItems;
@@ -33,12 +36,10 @@ public class RecipeImpl implements Recipe {
     }
 
     @Override
-    public GroceryItemList getGroceryItems() {
-        return groceryItems;
-    }
+    public List<GroceryItem> getGroceryItems() {return groceryItems;}
 
     @Override
-    public void setGroceryItems(GroceryItemList groceryItems) {
+    public void setGroceryItems(List<GroceryItem> groceryItems) {
         this.groceryItems = groceryItems;
     }
 

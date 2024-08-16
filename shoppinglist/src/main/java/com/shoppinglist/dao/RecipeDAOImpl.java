@@ -3,9 +3,9 @@ package com.shoppinglist.dao;
 import com.google.common.collect.ImmutableList;
 import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.api.dao.RecipeDAO;
-import com.shoppinglist.model.GroceryItem;
-import com.shoppinglist.model.GroceryItemList;
+import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.model.RecipeImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,7 +14,9 @@ import java.util.List;
 @Component
 public class RecipeDAOImpl implements RecipeDAO {
 
-    private static  List<RecipeImpl> recipesList = new ArrayList<>();
+    private static List<RecipeImpl> recipesList;
+    @Autowired
+    private static GroceryDAOImpl groceryItemsDAO;
 
     static {
         recipesList = populateRecipes();
@@ -22,15 +24,11 @@ public class RecipeDAOImpl implements RecipeDAO {
 
     private static List<RecipeImpl> populateRecipes() {
         ArrayList<RecipeImpl> temp = new ArrayList<RecipeImpl>();
-        GroceryItemList temp1 = new GroceryItemList();
+        List<GroceryItem> tempGroceryItems = groceryItemsDAO.getGroceryItems();
 
-        temp1.addOrUpdateItem(new GroceryItem("Bananas", 1.0, "lbs"));
-        temp1.addOrUpdateItem(new GroceryItem("Ground Beef", 2.5, "lbs"));
-        temp1.addOrUpdateItem(new GroceryItem("Salt", 2.2, "tpbs"));
-
-        temp.add(new RecipeImpl("Chicken Bake", temp1));
-        temp.add(new RecipeImpl("Lasagna", temp1));
-        temp.add(new RecipeImpl("Chicken Pot Pie", temp1));
+        temp.add(new RecipeImpl("Chicken Bake", tempGroceryItems));
+        temp.add(new RecipeImpl("Lasagna", tempGroceryItems));
+        temp.add(new RecipeImpl("Chicken Pot Pie", tempGroceryItems));
 
         return temp;
     }
