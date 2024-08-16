@@ -8,9 +8,9 @@ public interface RecipeService {
 
     List<Recipe> getRecipes();
 
-    Recipe saveRecipe(Recipe newRecipe);
+    boolean saveRecipe(Recipe newRecipe);
 
-    Recipe updateRecipe(Recipe recipe);
+    boolean updateRecipe(Recipe recipe);
 
     boolean deleteRecipe(String recipeName);
 

@@ -23,38 +23,37 @@ public class RecipeDAOImpl implements RecipeDAO {
     }
 
     private static List<RecipeImpl> populateRecipes() {
-        ArrayList<RecipeImpl> temp = new ArrayList<RecipeImpl>();
+        ArrayList<RecipeImpl> tempRecipes = new ArrayList<RecipeImpl>();
         List<GroceryItem> tempGroceryItems = groceryItemsDAO.getGroceryItems();
 
-        temp.add(new RecipeImpl("Chicken Bake", tempGroceryItems));
-        temp.add(new RecipeImpl("Lasagna", tempGroceryItems));
-        temp.add(new RecipeImpl("Chicken Pot Pie", tempGroceryItems));
+        tempRecipes.add(new RecipeImpl("Chicken Bake", tempGroceryItems));
+        tempRecipes.add(new RecipeImpl("Lasagna", tempGroceryItems));
+        tempRecipes.add(new RecipeImpl("Chicken Pot Pie", tempGroceryItems));
 
-        return temp;
+        return tempRecipes;
     }
 
     @Override
     public List<Recipe> getRecipes() { return ImmutableList.copyOf(recipesList);}
 
     @Override
-    public Recipe saveRecipe(Recipe newRecipe) {
-        recipesList.add((RecipeImpl) newRecipe);
-        return newRecipe;
+    public boolean saveRecipe(Recipe newRecipe) {
+        return recipesList.add((RecipeImpl) newRecipe);
     }
 
     @Override
-    public Recipe updateRecipe(Recipe updatedRecipe) {
+    public boolean updateRecipe(Recipe updatedRecipe) {
 
         // TODO: Change to a stream
         // If it can be found, update the item
         for(int i = 0; i < recipesList.size(); i++) {
             if(recipesList.get(i).equals(updatedRecipe)) {
                 recipesList.set(i, (RecipeImpl) updatedRecipe);
-                return updatedRecipe;
+                return true;
             }
         }
 
-        return null;
+        return false;
     }
 
     @Override

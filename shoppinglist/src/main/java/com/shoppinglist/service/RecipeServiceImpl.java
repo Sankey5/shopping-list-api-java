@@ -19,10 +19,10 @@ public class RecipeServiceImpl implements RecipeService {
     public List<Recipe> getRecipes() {return recipeDAO.getRecipes();}
 
     @Override
-    public Recipe saveRecipe(Recipe newRecipe) { return recipeDAO.saveRecipe(newRecipe); }
+    public boolean saveRecipe(Recipe newRecipe) { return recipeDAO.saveRecipe(newRecipe); }
 
     @Override
-    public Recipe updateRecipe(Recipe recipe) { return recipeDAO.updateRecipe(recipe); }
+    public boolean updateRecipe(Recipe recipe) { return recipeDAO.updateRecipe(recipe); }
 
     @Override
     public boolean deleteRecipe(String recipeName) { return recipeDAO.deleteRecipe(recipeName); }

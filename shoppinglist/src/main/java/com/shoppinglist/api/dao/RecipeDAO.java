@@ -8,9 +8,9 @@ public interface RecipeDAO {
 
     List<Recipe> getRecipes();
 
-    Recipe saveRecipe(Recipe newRecipe);
+    boolean saveRecipe(Recipe newRecipe);
 
-    Recipe updateRecipe(Recipe updatedRecipe);
+    boolean updateRecipe(Recipe updatedRecipe);
 
     boolean deleteRecipe(String recipeName);
 }

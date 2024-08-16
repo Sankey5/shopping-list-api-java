@@ -23,13 +23,20 @@ public class RecipesController {
 
     @PostMapping(produces = "application/json")
     public ResponseEntity<String> saveRecipe(@RequestBody Recipe newRecipe) {
-        recipe.saveRecipe(newRecipe);
-        return new ResponseEntity<>("Added new recipe", HttpStatus.OK);
+        if(recipe.saveRecipe(newRecipe)) {
+            return new ResponseEntity<>("Added new recipe", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Incorrect Recipe", HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping(produces = "application/json")
     public ResponseEntity<String> addOrUpdateRecipes(@RequestBody Recipe updatedRecipe) {
-        recipe.updateRecipe(updatedRecipe);
-        return new ResponseEntity<String>("Update recipe", HttpStatus.OK);
+
+        if(recipe.updateRecipe(updatedRecipe)) {
+            return new ResponseEntity<>("Update recipe", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Incorrect Recipe", HttpStatus.BAD_REQUEST);
     }
 }
