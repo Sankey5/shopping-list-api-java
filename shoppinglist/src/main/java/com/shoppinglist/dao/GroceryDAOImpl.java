@@ -2,21 +2,20 @@ package com.shoppinglist.dao;
 
 import com.google.common.collect.ImmutableList;
 import com.shoppinglist.api.dao.GroceryDAO;
-import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.model.GroceryItemImpl;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Repository
 public class GroceryDAOImpl implements GroceryDAO {
 
-    private static  List<GroceryItemImpl> groceriesList = new ArrayList<>();
+    private static List<GroceryItemImpl> groceryItemsList;
 
     static {
-        groceriesList = populateGroceryItems();
+        groceryItemsList = populateGroceryItems();
     }
 
     private static List<GroceryItemImpl> populateGroceryItems() {
@@ -30,11 +29,11 @@ public class GroceryDAOImpl implements GroceryDAO {
     }
 
     @Override
-    public List<GroceryItem> getGroceryItems() { return ImmutableList.copyOf(groceriesList);}
+    public List<GroceryItem> getGroceryItems() { return ImmutableList.copyOf(groceryItemsList);}
 
     @Override
     public boolean saveGroceryItem(GroceryItem newGroceryItem) {
-        return groceriesList.add((GroceryItemImpl) newGroceryItem);
+        return groceryItemsList.add((GroceryItemImpl) newGroceryItem);
     }
 
     @Override
@@ -42,9 +41,9 @@ public class GroceryDAOImpl implements GroceryDAO {
 
         // TODO: Change to a stream
         // If it can be found, update the item
-        for(int i = 0; i < groceriesList.size(); i++) {
-            if(groceriesList.get(i).equals(updatedGroceryItem)) {
-                groceriesList.set(i, (GroceryItemImpl) updatedGroceryItem);
+        for(int i = 0; i < groceryItemsList.size(); i++) {
+            if(groceryItemsList.get(i).equals(updatedGroceryItem)) {
+                groceryItemsList.set(i, (GroceryItemImpl) updatedGroceryItem);
                 return true;
             }
         }
@@ -54,9 +53,9 @@ public class GroceryDAOImpl implements GroceryDAO {
 
     @Override
     public boolean deleteGroceryItem(String groceryItemName) {
-        for(int r = 0; r < groceriesList.size(); r++) {
-            if(groceryItemName.equals(groceriesList.get(r).getName())) {
-                groceriesList.remove(r);
+        for(int r = 0; r < groceryItemsList.size(); r++) {
+            if(groceryItemName.equals(groceryItemsList.get(r).getName())) {
+                groceryItemsList.remove(r);
                 return true;
             }
         }

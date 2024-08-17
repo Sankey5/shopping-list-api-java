@@ -14,7 +14,6 @@ public class RecipeServiceImpl implements RecipeService {
     @Autowired
     RecipeDAO recipeDAO;
 
-
     @Override
     public List<Recipe> getRecipes() {return recipeDAO.getRecipes();}
 
