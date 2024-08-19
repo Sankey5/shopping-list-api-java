@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class RecipeDAOImpl implements RecipeDAO {
@@ -46,19 +47,21 @@ public class RecipeDAOImpl implements RecipeDAO {
     @Override
     public boolean updateRecipe(Recipe updatedRecipe) {
 
-        // TODO: Change to a stream
-        recipesList.stream().filter( r -> {
-            return r.equals(updatedRecipe);
-        }).allMatch();
-
-        for(int i = 0; i < recipesList.size(); i++) {
-            if(recipesList.get(i).equals(updatedRecipe)) {
-                recipesList.set(i, (RecipeImpl) updatedRecipe);
-                return true;
-            }
+        if(recipeExists(updatedRecipe)) {
+            recipesList = recipesList.stream()
+                    .map( r ->  r.getId() == updatedRecipe.getId() ? (RecipeImpl) updatedRecipe : r)
+                    .collect(Collectors.toList());
+            return true;
         }
 
         return false;
+    }
+
+    private boolean recipeExists(Recipe recipe) {
+        return recipesList.stream()
+                .filter( r -> r.equals(recipe))
+                .findFirst()
+                .isEmpty();
     }
 
     @Override
