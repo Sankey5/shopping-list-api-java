@@ -7,7 +7,7 @@ import java.util.Objects;
 public class GroceryItemImpl implements GroceryItem {
 
     private static int nextId = 0;
-    private final int id;
+    private final long id;
     private String name;
     private double quantity;
     private String measure;
@@ -35,7 +35,7 @@ public class GroceryItemImpl implements GroceryItem {
         this.quantity = quantity;
     }
 
-    @Override public int getId() {return id;}
+    @Override public long getId() {return id;}
 
     @Override public String getMeasure() {return measure;}
 
@@ -44,13 +44,7 @@ public class GroceryItemImpl implements GroceryItem {
     @Override public boolean equals(GroceryItem g) {
         if (g == null || this.getClass() != g.getClass())
             return false;
-        else if (this.getId() == g.getId()) {
-            return true;
-        }
-
-        // Compare all
-        return Objects.equals(this.name, g.getName()) &&
-                Objects.equals(this.quantity, g.getQuantity()) &&
-                Objects.equals(this.measure, g.getMeasure());
+        else
+            return this.getId() == g.getId();
     }
 }

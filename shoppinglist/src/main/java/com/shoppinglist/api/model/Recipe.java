@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface Recipe {
 
-    int getId();
+    long getId();
 
     String getName();
 

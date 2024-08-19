@@ -47,7 +47,10 @@ public class RecipeDAOImpl implements RecipeDAO {
     public boolean updateRecipe(Recipe updatedRecipe) {
 
         // TODO: Change to a stream
-        // If it can be found, update the item
+        recipesList.stream().filter( r -> {
+            return r.equals(updatedRecipe);
+        }).allMatch();
+
         for(int i = 0; i < recipesList.size(); i++) {
             if(recipesList.get(i).equals(updatedRecipe)) {
                 recipesList.set(i, (RecipeImpl) updatedRecipe);

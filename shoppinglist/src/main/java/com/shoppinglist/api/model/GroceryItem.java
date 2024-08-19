@@ -9,7 +9,7 @@ public interface GroceryItem {
 
     void setQuantity(double quantity);
 
-    int getId();
+    long getId();
 
     String getMeasure();
 
