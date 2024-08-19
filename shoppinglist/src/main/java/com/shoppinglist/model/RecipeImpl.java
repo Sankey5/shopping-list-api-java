@@ -5,12 +5,12 @@ import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.dao.GroceryDAOImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class RecipeImpl implements Recipe {
 
-    private static int nextId = 0;
     private final long id;
     private String name;
     @Autowired
@@ -22,10 +22,10 @@ public class RecipeImpl implements Recipe {
         this.groceryItems = groceryItems;
     }
 
-    public RecipeImpl(String name, List<GroceryItem> groceryItems) {
-        this.id = ++nextId;
+    public RecipeImpl(long id, String name) {
+        this.id = id;
         this.name = name.toLowerCase();
-        this.groceryItems = groceryItems;
+        this.groceryItems = new ArrayList<>();
     }
 
     @Override

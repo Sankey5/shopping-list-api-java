@@ -4,6 +4,7 @@ import com.shoppinglist.api.dao.RecipeDAO;
 import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.api.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 @Component
 public class RecipeServiceImpl implements RecipeService {
 
+    @Qualifier("recipeDAOImpl")
     @Autowired
     RecipeDAO recipeDAO;
 
