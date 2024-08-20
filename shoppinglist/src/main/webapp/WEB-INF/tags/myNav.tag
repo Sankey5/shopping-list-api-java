@@ -3,5 +3,5 @@
 	<a class="navbar-brand" href="/"> <img
 		src="resources/static/images/MGLlogo.png" width="90" height="60"
 		alt="">
-	</a> <a class="nav-item nav-link" href="index">Home</a>
+	</a> <a class="nav-item nav-link" href="/">Home</a>
 </nav>
