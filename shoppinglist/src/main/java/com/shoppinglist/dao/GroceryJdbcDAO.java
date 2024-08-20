@@ -19,19 +19,20 @@ import java.util.List;
 @Repository
 public class GroceryJdbcDAO implements GroceryDAO {
 
+    // TODO: Maybe change to static-only class instead or figure out how to make it make sense to instantiate class.
     public GroceryJdbcDAO() {
         super();
     }
 
     @Override
-    public List<GroceryItem> getGroceryItems(long RecipeId) {
+    public List<GroceryItem> getGroceryItems(long recipeId) {
         final String sqlStatement = "SELECT * FROM GroceryItems WHERE RecipeId = ?";
         ArrayList<GroceryItemImpl> groceryItemsList = new ArrayList<>();
 
         try(Connection con = Database.getConnection();
         PreparedStatement ps = con.prepareStatement(sqlStatement);) {
 
-            ps.setLong(1, RecipeId);
+            ps.setLong(1, recipeId);
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()) {

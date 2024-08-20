@@ -14,18 +14,18 @@ import java.util.List;
 @Component
 public class RecipeServiceImpl implements RecipeService {
 
+    @Autowired
     @Qualifier("recipeJdbcDAO")
-    @Autowired
     RecipeDAO recipeDAO;
-    @Qualifier("groceryJdbcDAO")
     @Autowired
-    GroceryDAO groceryDAO;
+    @Qualifier("groceryJdbcDAO")
+    GroceryDAO groceryItemDAO;
 
     @Override
     public List<Recipe> getRecipes() {return recipeDAO.getRecipes();}
 
     @Override
-    public List<GroceryItem> getGroceryItems(long recipeId) { return groceryDAO.getGroceryItems(recipeId); }
+    public List<GroceryItem> getGroceryItems(long recipeId) { return groceryItemDAO.getGroceryItems(recipeId); }
 
     @Override
     public boolean saveRecipe(Recipe newRecipe) { return recipeDAO.saveRecipe(newRecipe); }

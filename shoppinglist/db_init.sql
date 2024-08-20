@@ -1,3 +1,7 @@
+--Drop old test data
+DROP TABLE IF EXISTS GroceryItems;
+DROP TABLE IF EXISTS Recipes;
+
 CREATE TABLE IF NOT EXISTS Recipes (
     RecipeId INT AUTO_INCREMENT,
     Name VARCHAR(30) NOT NULL,
@@ -12,30 +16,26 @@ CREATE TABLE IF NOT EXISTS GroceryItems(
     FOREIGN KEY (RecipeId) REFERENCES Recipes(RecipeId),
     CONSTRAINT PK_GroceryItem PRIMARY KEY (GroceryItemId, RecipeId));
 
---Drop old test data
-DELETE FROM GroceryItems WHERE 1=1;
-DELETE FROM Recipes WHERE 1=1;
-
 -- Insert in test data if it doesn't exist
-INSERT INTO Recipes (Name) VALUES
-    ('Chicken Bake'),
-    ('Lasagna'),
-    ('Chicken Pot Pie');
+INSERT INTO Recipes (RecipeId, Name) VALUES
+    (1, 'Chicken Bake'),
+    (2, 'Lasagna'),
+    (3, 'Chicken Pot Pie');
 
-INSERT INTO GroceryItems (Name, Quantity, Measure, RecipeId)
+INSERT INTO GroceryItems (GroceryItemId, Name, Quantity, Measure, RecipeId)
 VALUES
-('Chicken', 3.0, 'lbs', (SELECT RecipeId FROM Recipes WHERE Name = 'Chicken Bake')),
-('Mozzarella Cheese', 1.5, 'lbs', (SELECT RecipeId FROM Recipes WHERE Name = 'Chicken Bake')),
-('Spaghetti Sauce', 16.0, 'oz', (SELECT RecipeId FROM Recipes WHERE Name = 'Chicken Bake'));
+(1, 'Chicken', 3.0, 'lbs', (SELECT RecipeId FROM Recipes WHERE Recipes.Name = 'Chicken Bake')),
+(2, 'Mozzarella Cheese', 1.5, 'lbs', (SELECT RecipeId FROM Recipes WHERE Recipes.Name = 'Chicken Bake')),
+(3, 'Spaghetti Sauce', 16.0, 'oz', (SELECT RecipeId FROM Recipes WHERE Recipes.Name = 'Chicken Bake'));
 
-INSERT INTO GroceryItems (Name, Quantity, Measure, RecipeId)
+INSERT INTO GroceryItems (GroceryItemId, Name, Quantity, Measure, RecipeId)
 VALUES
-('Ground Beef', 2.0, 'lbs', (SELECT RecipeId FROM Recipes WHERE name = 'Lasagna')),
-('Lasagna Noodles', 16.0, 'oz', (SELECT RecipeId FROM Recipes WHERE name = 'Lasagna')),
-('Mozzarella Cheese', 2.0, 'lbs', (SELECT RecipeId FROM Recipes WHERE name = 'Lasagna'));
+(4, 'Ground Beef', 2.0, 'lbs', (SELECT RecipeId FROM Recipes WHERE Recipes.Name = 'Lasagna')),
+(5, 'Lasagna Noodles', 16.0, 'oz', (SELECT RecipeId FROM Recipes WHERE Recipes.Name = 'Lasagna')),
+(6, 'Mozzarella Cheese', 2.0, 'lbs', (SELECT RecipeId FROM Recipes WHERE Recipes.Name = 'Lasagna'));
 
-INSERT INTO GroceryItems (Name, Quantity, Measure, RecipeId)
+INSERT INTO GroceryItems (GroceryItemId, Name, Quantity, Measure, RecipeId)
 VALUES
-('Chicken', 3.0, 'lbs', (SELECT RecipeId FROM Recipes WHERE name = 'Chicken Pot Pie')),
-('Frozen Mixed Vegetables', 16.0, 'oz', (SELECT RecipeId FROM Recipes WHERE name = 'Chicken Pot Pie')),
-('Butter', 1.5, 'lbs', (SELECT RecipeId FROM Recipes WHERE name = 'Chicken Pot Pie'));
+(7, 'Chicken', 3.0, 'lbs', (SELECT RecipeId FROM Recipes WHERE Recipes.Name = 'Chicken Pot Pie')),
+(8, 'Frozen Mixed Vegetables', 16.0, 'oz', (SELECT RecipeId FROM Recipes WHERE Recipes.Name = 'Chicken Pot Pie')),
+(9, 'Butter', 1.5, 'lbs', (SELECT RecipeId FROM Recipes WHERE Recipes.Name = 'Chicken Pot Pie'));

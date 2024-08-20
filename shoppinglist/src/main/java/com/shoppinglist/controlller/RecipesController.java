@@ -22,8 +22,8 @@ public class RecipesController {
         return new ResponseEntity<>(recipe.getRecipes(), HttpStatus.OK) ;
     }
 
-    @GetMapping(value = "/{recipeId]/grocery-items", produces = "application/json")
-    public ResponseEntity<List<GroceryItem>> getRecipes(@PathVariable long recipeId) {
+    @GetMapping(value = "/{recipeId}/grocery-items", produces = "application/json")
+    public ResponseEntity<List<GroceryItem>> getGroceryItems(@PathVariable long recipeId) {
         return new ResponseEntity<>(recipe.getGroceryItems(recipeId), HttpStatus.OK) ;
     }
 

@@ -8,16 +8,15 @@ import java.sql.SQLException;
 
 public class Database {
     private static final String H2_DATABASE_URL =
-            "jdbc:h2:file:%s;AUTO_SERVER=TRUE;INIT=RUNSCRIPT FROM './db_init.sql'";
+            "jdbc:h2:file:%s;AUTO_SERVER=TRUE;INIT=RUNSCRIPT FROM './db_init.sql';DB_CLOSE_DELAY=-1";
 
     private static final DataSource dataSource;
 
-    private Database () {
-        super();
-    }
+    private Database () { }
 
     static {
         JdbcDataSource jdbcDataSource = new JdbcDataSource();
+        // TODO: Change the file name to use a property from application.properties
         jdbcDataSource.setURL(String.format(H2_DATABASE_URL, "./dbFile.sql"));
         dataSource = jdbcDataSource;
     }

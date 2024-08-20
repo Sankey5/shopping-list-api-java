@@ -19,6 +19,7 @@ import java.util.List;
 @Repository
 public class RecipeJdbcDAO implements RecipeDAO {
 
+    // TODO: Maybe change to static-only class instead or figure out how to make it make sense to instantiate class.
     public RecipeJdbcDAO() {
         super();
     }

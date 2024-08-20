@@ -8,7 +8,7 @@ public class GroceryItemImpl implements GroceryItem {
     private String name;
     private double quantity;
     private String measure;
-    private long recipeId;
+    private final long recipeId;
 
     public GroceryItemImpl(String name, double quantity, String measure) {
         this.id = 0;
