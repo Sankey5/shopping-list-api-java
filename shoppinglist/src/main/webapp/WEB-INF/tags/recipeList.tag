@@ -8,7 +8,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="currentRecipe in groceryController.groceryItems">
+      <tr ng-repeat="currentRecipe in groceryController.recipes">
         <td><span ng-bind="currentRecipe"></span></td>
       </tr>
     </tbody>
