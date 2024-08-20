@@ -12,9 +12,13 @@ public class Database {
 
     private static final DataSource dataSource;
 
+    private Database () {
+        super();
+    }
+
     static {
         JdbcDataSource jdbcDataSource = new JdbcDataSource();
-        jdbcDataSource.setURL(String.format(H2_DATABASE_URL, "/dbFile.sql"));
+        jdbcDataSource.setURL(String.format(H2_DATABASE_URL, "./dbFile.sql"));
         dataSource = jdbcDataSource;
     }
 

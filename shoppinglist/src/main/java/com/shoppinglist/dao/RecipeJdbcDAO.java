@@ -1,9 +1,7 @@
 package com.shoppinglist.dao;
 
 import com.google.common.collect.ImmutableList;
-import com.shoppinglist.api.dao.GroceryDAO;
 import com.shoppinglist.api.dao.RecipeDAO;
-import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.model.RecipeImpl;
 import com.shoppinglist.util.Database;
@@ -21,42 +19,27 @@ import java.util.List;
 @Repository
 public class RecipeJdbcDAO implements RecipeDAO {
 
-    @Autowired
-    private GroceryDAO groceryItemsDAO;
-
     public RecipeJdbcDAO() {
-        //dbConnection = Database.getConnection();
+        super();
     }
 
     @Override
     public List<Recipe> getRecipes() {
-        final String getAllRecpies = "SELECT * FROM Recipes";
+        final String getAllRecipes = "SELECT * FROM Recipes";
         List<RecipeImpl> recipesList = new ArrayList<>();
 
         try(Connection con = Database.getConnection();
-            PreparedStatement ps = con.prepareStatement(getAllRecpies)) {
+            PreparedStatement ps = con.prepareStatement(getAllRecipes)) {
 
-            int querySuccessful = ps.executeUpdate();
+            ResultSet rs = ps.executeQuery();
 
-            if(querySuccessful <= 0) {
-                return ImmutableList.copyOf(recipesList);
+            while(rs.next()) {
+                RecipeImpl currRecipe = new RecipeImpl(
+                        rs.getLong("RecipeId"),
+                        rs.getString("Name"));
+
+                recipesList.add(currRecipe);
             }
-
-            try(ResultSet rs = ps.getResultSet();) {
-
-                while(rs.next()) {
-                    RecipeImpl currRecpie = new RecipeImpl(
-                            rs.getLong("RecipeId"),
-                            rs.getString("Name")
-                    );
-
-                    recipesList.add(currRecpie);
-                }
-
-            } catch (SQLException sqlE) {
-                SQLExceptionHandler.handle(sqlE);
-            }
-
 
         } catch (SQLException sqlE) {
             SQLExceptionHandler.handle(sqlE);

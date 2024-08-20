@@ -1,5 +1,6 @@
 package com.shoppinglist.controlller;
 
+import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.api.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,11 @@ public class RecipesController {
     @GetMapping(value = "/getAll", produces = "application/json")
     public ResponseEntity<List<Recipe>> getRecipes() {
         return new ResponseEntity<>(recipe.getRecipes(), HttpStatus.OK) ;
+    }
+
+    @GetMapping(value = "/{recipeId]/grocery-items", produces = "application/json")
+    public ResponseEntity<List<GroceryItem>> getRecipes(@PathVariable long recipeId) {
+        return new ResponseEntity<>(recipe.getGroceryItems(recipeId), HttpStatus.OK) ;
     }
 
     @PostMapping(produces = "application/json")

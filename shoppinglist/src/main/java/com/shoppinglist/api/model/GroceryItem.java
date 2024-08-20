@@ -15,5 +15,7 @@ public interface GroceryItem {
 
     void setMeasure(String measure);
 
+    long getRecipeId();
+
     boolean equals(GroceryItem g);
 }

@@ -7,6 +7,7 @@ import com.shoppinglist.api.dao.RecipeDAO;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.model.RecipeImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 @Repository
 public class RecipeDAOImpl implements RecipeDAO {
 
+    @Qualifier("groceryDAOImpl")
     @Autowired
     private GroceryDAO groceryItemsDAO;
     private List<RecipeImpl> recipesList;
@@ -27,11 +29,11 @@ public class RecipeDAOImpl implements RecipeDAO {
 
     private List<RecipeImpl> populateRecipes() {
         ArrayList<RecipeImpl> tempRecipes = new ArrayList<>();
-        List<GroceryItem> mockGroceryItems = groceryItemsDAO.getGroceryItems();
+        List<GroceryItem> mockGroceryItems = groceryItemsDAO.getGroceryItems(1);
 
-        tempRecipes.add(new RecipeImpl("Chicken Bake", mockGroceryItems));
-        tempRecipes.add(new RecipeImpl("Lasagna", mockGroceryItems));
-        tempRecipes.add(new RecipeImpl("Chicken Pot Pie", mockGroceryItems));
+        tempRecipes.add(new RecipeImpl(1, "Chicken Bake", mockGroceryItems));
+        tempRecipes.add(new RecipeImpl(2, "Lasagna", mockGroceryItems));
+        tempRecipes.add(new RecipeImpl(3, "Chicken Pot Pie", mockGroceryItems));
 
         return tempRecipes;
     }

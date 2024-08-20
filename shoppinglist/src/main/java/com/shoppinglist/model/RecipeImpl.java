@@ -2,18 +2,14 @@ package com.shoppinglist.model;
 
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.model.Recipe;
-import com.shoppinglist.dao.GroceryDAOImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class RecipeImpl implements Recipe {
 
     private final long id;
     private String name;
-    @Autowired
     private List<GroceryItem> groceryItems;
 
     public RecipeImpl(long id, String name, List<GroceryItem> groceryItems) {

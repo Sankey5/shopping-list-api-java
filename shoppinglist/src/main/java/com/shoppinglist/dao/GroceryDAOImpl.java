@@ -32,7 +32,7 @@ public class GroceryDAOImpl implements GroceryDAO {
     }
 
     @Override
-    public List<GroceryItem> getGroceryItems() { return ImmutableList.copyOf(groceryItemsList);}
+    public List<GroceryItem> getGroceryItems(long RecipeId) { return ImmutableList.copyOf(groceryItemsList);}
 
     @Override
     public boolean saveGroceryItem(GroceryItem newGroceryItem) {
