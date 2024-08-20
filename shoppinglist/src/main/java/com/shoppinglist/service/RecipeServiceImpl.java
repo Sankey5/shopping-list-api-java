@@ -34,5 +34,5 @@ public class RecipeServiceImpl implements RecipeService {
     public boolean updateRecipe(Recipe recipe) { return recipeDAO.updateRecipe(recipe); }
 
     @Override
-    public boolean deleteRecipe(String recipeName) { return recipeDAO.deleteRecipe(recipeName); }
+    public boolean deleteRecipe(long recipeId) { return recipeDAO.deleteRecipe(recipeId); }
 }

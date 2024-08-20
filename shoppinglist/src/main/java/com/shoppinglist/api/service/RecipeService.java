@@ -15,6 +15,6 @@ public interface RecipeService {
 
     boolean updateRecipe(Recipe recipe);
 
-    boolean deleteRecipe(String recipeName);
+    boolean deleteRecipe(long recipeId);
 
 }

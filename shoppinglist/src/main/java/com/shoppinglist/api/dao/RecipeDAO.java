@@ -12,5 +12,5 @@ public interface RecipeDAO {
 
     boolean updateRecipe(Recipe updatedRecipe);
 
-    boolean deleteRecipe(String recipeName);
+    boolean deleteRecipe(long recipeId);
 }

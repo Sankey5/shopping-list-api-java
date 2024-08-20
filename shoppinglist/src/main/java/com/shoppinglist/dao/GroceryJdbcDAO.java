@@ -51,7 +51,8 @@ public class GroceryJdbcDAO implements GroceryDAO {
             SQLExceptionHandler.handle(sqlException);
         }
 
-        return ImmutableList.copyOf(groceryItemsList);}
+        return ImmutableList.copyOf(groceryItemsList);
+    }
 
     @Override
     public boolean saveGroceryItem(GroceryItem newGroceryItem) {

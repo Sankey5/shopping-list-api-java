@@ -67,9 +67,9 @@ public class RecipeDAOImpl implements RecipeDAO {
     }
 
     @Override
-    public boolean deleteRecipe(String recipeName) {
+    public boolean deleteRecipe(long recipeId) {
         for(int r = 0; r < recipesList.size(); r++) {
-            if(recipeName.equals(recipesList.get(r).getName())) {
+            if(recipeId == recipesList.get(r).getId()) {
                 recipesList.remove(r);
                 return true;
             }

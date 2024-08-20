@@ -26,11 +26,11 @@ public class RecipeJdbcDAO implements RecipeDAO {
 
     @Override
     public List<Recipe> getRecipes() {
-        final String getAllRecipes = "SELECT * FROM Recipes";
+        final String sqlQuery = "SELECT * FROM Recipes";
         List<RecipeImpl> recipesList = new ArrayList<>();
 
         try(Connection con = Database.getConnection();
-            PreparedStatement ps = con.prepareStatement(getAllRecipes)) {
+            PreparedStatement ps = con.prepareStatement(sqlQuery)) {
 
             ResultSet rs = ps.executeQuery();
 
@@ -51,32 +51,62 @@ public class RecipeJdbcDAO implements RecipeDAO {
 
     @Override
     public boolean saveRecipe(Recipe newRecipe) {
-        return false;//recipesList.add((RecipeImpl) newRecipe);
-    }
+        final String sqlQuery = "INSERT INTO Recipes (Name) VALUES (?)";
 
-    @Override
-    public boolean updateRecipe(Recipe updatedRecipe) {
+        try(Connection con = Database.getConnection();
+            PreparedStatement ps = con.prepareStatement(sqlQuery)) {
 
-//        // TODO: Change to a stream
-//        // If it can be found, update the item
-//        for(int i = 0; i < recipesList.size(); i++) {
-//            if(recipesList.get(i).equals(updatedRecipe)) {
-//                recipesList.set(i, (RecipeImpl) updatedRecipe);
-//                return true;
-//            }
-//        }
+            ps.setString(1, newRecipe.getName());
+            int querySuccessful = ps.executeUpdate();
+
+            if (querySuccessful == 1)
+                return true;
+
+        } catch (SQLException sqlException) {
+            SQLExceptionHandler.handle(sqlException);
+        }
 
         return false;
     }
 
     @Override
-    public boolean deleteRecipe(String recipeName) {
-//        for(int r = 0; r < recipesList.size(); r++) {
-//            if(recipeName.equals(recipesList.get(r).getName())) {
-//                recipesList.remove(r);
-//                return true;
-//            }
-//        }
+    public boolean updateRecipe(Recipe updatedRecipe) {
+        final String sqlQuery = "MERGE INTO Recipes (Name) VALUES (?) WHERE RecipeId = ?";
+
+        try(Connection con = Database.getConnection();
+            PreparedStatement ps = con.prepareStatement(sqlQuery)) {
+
+            ps.setString(1, updatedRecipe.getName());
+            ps.setLong(2, updatedRecipe.getId());
+            int querySuccessful = ps.executeUpdate();
+
+            if (querySuccessful == 1)
+                return true;
+
+        } catch (SQLException sqlException) {
+            SQLExceptionHandler.handle(sqlException);
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean deleteRecipe(long recipeId) {
+        final String sqlQuery = "DELETE FROM Recipes WHERE RecipeId = ?";
+
+        try(Connection con = Database.getConnection();
+            PreparedStatement ps = con.prepareStatement(sqlQuery)) {
+
+            ps.setLong(1, recipeId);
+            int querySuccessful = ps.executeUpdate();
+
+            if (querySuccessful == 1)
+                return true;
+
+        } catch (SQLException sqlException) {
+            SQLExceptionHandler.handle(sqlException);
+        }
+
         return false;
     }
 }
