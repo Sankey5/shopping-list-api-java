@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,12 +43,12 @@ public class RecipeDAOImpl implements RecipeDAO {
     public List<Recipe> getRecipes() { return ImmutableList.copyOf(recipesList);}
 
     @Override
-    public boolean saveRecipe(Recipe newRecipe) {
+    public boolean saveRecipe(Connection connection, Recipe newRecipe) {
         return recipesList.add((RecipeImpl) newRecipe);
     }
 
     @Override
-    public boolean updateRecipe(Recipe updatedRecipe) {
+    public boolean updateRecipe(Connection connection, Recipe updatedRecipe) {
 
         if(recipeExists(updatedRecipe)) {
             recipesList = recipesList.stream()
@@ -67,7 +68,7 @@ public class RecipeDAOImpl implements RecipeDAO {
     }
 
     @Override
-    public boolean deleteRecipe(long recipeId) {
+    public boolean deleteRecipe(Connection connection, long recipeId) {
         for(int r = 0; r < recipesList.size(); r++) {
             if(recipeId == recipesList.get(r).getId()) {
                 recipesList.remove(r);

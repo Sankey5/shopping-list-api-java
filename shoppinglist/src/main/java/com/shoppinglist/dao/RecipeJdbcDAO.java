@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class RecipeJdbcDAO implements RecipeDAO {
@@ -50,27 +51,30 @@ public class RecipeJdbcDAO implements RecipeDAO {
     }
 
     @Override
-    public boolean saveRecipe(Recipe newRecipe) {
+    public Optional<Long> saveRecipe(Connection connection, Recipe newRecipe) {
         final String sqlQuery = "INSERT INTO Recipes (Name) VALUES (?)";
 
-        try(Connection con = Database.getConnection();
-            PreparedStatement ps = con.prepareStatement(sqlQuery)) {
+        try (PreparedStatement ps = connection.prepareStatement(sqlQuery, PreparedStatement.RETURN_GENERATED_KEYS);) {
 
             ps.setString(1, newRecipe.getName());
             int querySuccessful = ps.executeUpdate();
 
-            if (querySuccessful == 1)
-                return true;
+            if (querySuccessful != 1) {
+                throw new SQLException("Could not insert the recipe");
+            }
 
-        } catch (SQLException sqlException) {
-            SQLExceptionHandler.handle(sqlException);
+            ResultSet rs = ps.getGeneratedKeys();
+            rs.next();
+            return Optional.of(rs.getLong(1));
+
+        } catch (SQLException e) {
+            SQLExceptionHandler.handle(e);
+            return Optional.empty();
         }
-
-        return false;
     }
 
     @Override
-    public boolean updateRecipe(Recipe updatedRecipe) {
+    public boolean updateRecipe(Connection connection, Recipe updatedRecipe) {
         final String sqlQuery = "MERGE INTO Recipes (Name) VALUES (?) WHERE RecipeId = ?";
 
         try(Connection con = Database.getConnection();
@@ -91,22 +95,19 @@ public class RecipeJdbcDAO implements RecipeDAO {
     }
 
     @Override
-    public boolean deleteRecipe(long recipeId) {
-        final String sqlQuery = "DELETE FROM Recipes WHERE RecipeId = ?";
+    public boolean deleteRecipe(Connection connection, long recipeId) {
+        final String sqlDeleteRecipes = "DELETE FROM Recipes WHERE RecipeId = ?";
 
-        try(Connection con = Database.getConnection();
-            PreparedStatement ps = con.prepareStatement(sqlQuery)) {
+        // Delete the parent recipe and rollback if there are any failures
+        try (PreparedStatement psRecipe = connection.prepareStatement(sqlDeleteRecipes)) {
 
-            ps.setLong(1, recipeId);
-            int querySuccessful = ps.executeUpdate();
+            psRecipe.setLong(1, recipeId);
+            psRecipe.executeUpdate();
+            return true;
 
-            if (querySuccessful == 1)
-                return true;
-
-        } catch (SQLException sqlException) {
-            SQLExceptionHandler.handle(sqlException);
+        } catch (SQLException e) {
+            SQLExceptionHandler.handle(e);
+            return false;
         }
-
-        return false;
     }
 }

@@ -9,8 +9,6 @@ public interface RecipeService {
 
     List<Recipe> getRecipes();
 
-    List<GroceryItem> getGroceryItems(long recipeId);
-
     boolean saveRecipe(Recipe newRecipe);
 
     boolean updateRecipe(Recipe recipe);

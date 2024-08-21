@@ -55,33 +55,30 @@ public class GroceryJdbcDAO implements GroceryDAO {
     }
 
     @Override
-    public boolean saveGroceryItem(GroceryItem newGroceryItem) {
-        return false; //groceryItemsList.add((GroceryItemImpl) newGroceryItem);
+    public void saveGroceryItems(Connection connection, List<GroceryItem> newGroceryItems) throws SQLException {
+
+
     }
 
     @Override
-    public boolean updateGroceryItem(GroceryItem updatedGroceryItem) {
+    public void updateGroceryItems(Connection connection, List<GroceryItem> updatedGroceryItem) throws SQLException {
 
-//        // TODO: Change to a stream
-//        // If it can be found, update the item
-//        for(int i = 0; i < groceryItemsList.size(); i++) {
-//            if(groceryItemsList.get(i).equals(updatedGroceryItem)) {
-//                groceryItemsList.set(i, (GroceryItemImpl) updatedGroceryItem);
-//                return true;
-//            }
-//        }
-
-        return false;
     }
 
     @Override
-    public boolean deleteGroceryItem(String groceryItemName) {
-//        for(int r = 0; r < groceryItemsList.size(); r++) {
-//            if(groceryItemName.equals(groceryItemsList.get(r).getName())) {
-//                groceryItemsList.remove(r);
-//                return true;
-//            }
-//        }
+    public void deleteAllGroceryItems (Connection connection, long recipeId) throws SQLException {
+        final String sqlDeleteGroceries = "DELETE FROM GroceryItem WHERE RecipeId = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sqlDeleteGroceries);) {
+            ps.setLong(1, recipeId);
+            ps.executeUpdate();
+        }
+    }
+
+    @Override
+    public boolean deleteGroceryItem(long groceryItemId) {
+
+
         return false;
     }
 }

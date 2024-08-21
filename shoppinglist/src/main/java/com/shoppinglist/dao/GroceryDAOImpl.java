@@ -8,6 +8,7 @@ import com.shoppinglist.model.GroceryItemImpl;
 import com.shoppinglist.model.RecipeImpl;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,12 +36,12 @@ public class GroceryDAOImpl implements GroceryDAO {
     public List<GroceryItem> getGroceryItems(long RecipeId) { return ImmutableList.copyOf(groceryItemsList);}
 
     @Override
-    public boolean saveGroceryItem(GroceryItem newGroceryItem) {
+    public boolean saveGroceryItem(Connection connection, GroceryItem newGroceryItem) {
         return groceryItemsList.add((GroceryItemImpl) newGroceryItem);
     }
 
     @Override
-    public boolean updateGroceryItem(GroceryItem updatedGroceryItem) {
+    public boolean updateGroceryItem(Connection connection, GroceryItem updatedGroceryItem) {
 
         if(groceryItemExists(updatedGroceryItem)) {
             groceryItemsList = groceryItemsList.stream()
@@ -64,9 +65,15 @@ public class GroceryDAOImpl implements GroceryDAO {
     }
 
     @Override
-    public boolean deleteGroceryItem(String groceryItemName) {
+    public void deleteAllGroceryItems(Connection connection, long recipeId) {
+
+
+    }
+
+    @Override
+    public boolean deleteGroceryItem(long groceryItemId) {
         for(int r = 0; r < groceryItemsList.size(); r++) {
-            if(groceryItemName.equals(groceryItemsList.get(r).getName())) {
+            if(groceryItemId == groceryItemsList.get(r).getId()) {
                 groceryItemsList.remove(r);
                 return true;
             }
