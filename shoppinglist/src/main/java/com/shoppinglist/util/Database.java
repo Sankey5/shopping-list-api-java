@@ -7,8 +7,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class Database {
+    // INIT=RUNSCRIPT runs each time a connection is made to the database.
     private static final String H2_DATABASE_URL =
             "jdbc:h2:file:%s;AUTO_SERVER=TRUE;INIT=RUNSCRIPT FROM './db_init.sql';DB_CLOSE_DELAY=-1";
+
 
     private static final DataSource dataSource;
 
