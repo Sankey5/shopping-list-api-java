@@ -21,31 +21,30 @@ public class RecipesController {
 
     @GetMapping(produces = "application/json")
     public ResponseEntity<List<Recipe>> getRecipes() {
-        List<Recipe> recipes = recipeService.getRecipes();
-        return new ResponseEntity<>(recipes, HttpStatus.OK) ;
+        return new ResponseEntity<>(recipeService.getRecipes(), HttpStatus.OK) ;
     }
 
     @PostMapping(produces = "application/json")
     public ResponseEntity<String> saveRecipe(@RequestBody RecipeImpl newRecipe) {
-        System.out.println(newRecipe.getId());
-        if(recipeService.saveRecipe(newRecipe)) {
-            return new ResponseEntity<>("Added new recipe", HttpStatus.OK);
+
+        if(!recipeService.saveRecipe(newRecipe)) {
+            return new ResponseEntity<>("Invalid recipe creation", HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>("Invalid recipe creation", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Added new recipe", HttpStatus.OK);
     }
 
-    @PutMapping(produces = "application/json")
-    public ResponseEntity<String> updateRecipe(@RequestBody Recipe updatedRecipe) {
+    @PutMapping(value = "/{recipeId}", produces = "application/json")
+    public ResponseEntity<String> updateRecipe(@PathVariable long recipeId, @RequestBody Recipe updatedRecipe) {
 
-        if(updatedRecipe.getId() <= 0)
-            return new ResponseEntity<>("Invalid recipe id", HttpStatus.BAD_REQUEST);
+        if(recipeId <= 0)
+            return new ResponseEntity<>("Invalid recipe update", HttpStatus.BAD_REQUEST);
 
-        if(recipeService.updateRecipe(updatedRecipe)) {
-            return new ResponseEntity<>("Updated recipe", HttpStatus.OK);
+        if(!recipeService.updateRecipe(recipeId, updatedRecipe)) {
+            return new ResponseEntity<>("Invalid recipe update", HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>("Invalid recipe update", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Updated recipe", HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{recipeId}", produces = "application/json")

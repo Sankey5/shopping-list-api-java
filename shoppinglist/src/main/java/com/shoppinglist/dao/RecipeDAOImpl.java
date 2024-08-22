@@ -51,11 +51,11 @@ public class RecipeDAOImpl implements RecipeDAO {
     }
 
     @Override
-    public boolean updateRecipe(Connection connection, Recipe updatedRecipe) {
+    public boolean updateRecipe(Connection connection, long recipeId, Recipe updatedRecipe) {
 
         if(recipeExists(updatedRecipe)) {
             recipesList = recipesList.stream()
-                    .map( r ->  r.getId() == updatedRecipe.getId() ? (RecipeImpl) updatedRecipe : r)
+                    .map( r ->  r.getId() == recipeId ? (RecipeImpl) updatedRecipe : r)
                     .collect(Collectors.toList());
             return true;
         }

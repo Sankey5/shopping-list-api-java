@@ -14,7 +14,7 @@ public interface RecipeService {
 
     boolean saveRecipe(Recipe newRecipe);
 
-    boolean updateRecipe(Recipe recipe);
+    boolean updateRecipe(long recipeId, Recipe recipe);
 
     boolean deleteRecipe(long recipeId);
 

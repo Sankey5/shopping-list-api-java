@@ -66,7 +66,28 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public boolean updateRecipe(Recipe updatedRecipe) {
+    public boolean updateRecipe(long recipeId, Recipe updatedRecipe) {
+
+        try(Connection connection = Database.getConnection();) {
+
+            connection.setAutoCommit(false);
+
+            if(!recipeDAO.updateRecipe(connection, recipeId, updatedRecipe)) {
+                connection.rollback();
+                return false;
+            }
+
+            if (!groceryService.updateGroceryItems(connection, recipeId, updatedRecipe.getGroceryItems())) {
+                connection.rollback();
+                return false;
+            }
+
+            connection.commit();
+            return true;
+
+        } catch (SQLException e) {
+            SQLExceptionHandler.handle(e);
+        }
 
         return false;
     }

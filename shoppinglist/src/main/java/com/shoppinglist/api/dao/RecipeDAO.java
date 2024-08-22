@@ -13,7 +13,7 @@ public interface RecipeDAO {
 
     Optional<Long> saveRecipe(Connection connection, Recipe newRecipe);
 
-    boolean updateRecipe(Connection connection, Recipe updatedRecipe);
+    boolean updateRecipe(Connection connection, long recipeId, Recipe updatedRecipe);
 
     boolean deleteRecipe(Connection connection, long recipeId);
 }

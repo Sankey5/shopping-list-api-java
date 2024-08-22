@@ -74,14 +74,14 @@ public class RecipeJdbcDAO implements RecipeDAO {
     }
 
     @Override
-    public boolean updateRecipe(Connection connection, Recipe updatedRecipe) {
-        final String sqlQuery = "MERGE INTO Recipes (Name) VALUES (?) WHERE RecipeId = ?";
+    public boolean updateRecipe(Connection connection, long recipeId, Recipe updatedRecipe) {
+        final String sqlQuery = "UPDATE Recipes SET Name = ? WHERE RecipeId = ?";
 
         try(Connection con = Database.getConnection();
             PreparedStatement ps = con.prepareStatement(sqlQuery)) {
 
             ps.setString(1, updatedRecipe.getName());
-            ps.setLong(2, updatedRecipe.getId());
+            ps.setLong(2, recipeId);
             int querySuccessful = ps.executeUpdate();
 
             if (querySuccessful == 1)

@@ -9,10 +9,7 @@ import com.shoppinglist.util.SQLExceptionHandler;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -78,21 +75,19 @@ public class GroceryJdbcDAO implements GroceryDAO {
 
     @Override
     public void updateGroceryItems(Connection connection, long recipeId, List<GroceryItem> updatedGroceryItem) throws SQLException {
-        final String sqlInsertGroceries = "MERGE INTO GroceryItems (Name, Quantity, Measure, RecipeId) Values (?, ?, ?) WHERE recipeId = ?";
+        final String sqlInsertGroceries = "UPDATE GroceryItems SET Name = ?, Quantity = ?, Measure = ? WHERE GroceryItemId = ?";
 
         try(PreparedStatement ps = connection.prepareStatement(sqlInsertGroceries);) {
 
-            for(int i = 0; i < updatedGroceryItem.size(); i++) {
-                GroceryItem currGI = updatedGroceryItem.get(i);
-
+            for (GroceryItem currGI : updatedGroceryItem) {
                 ps.setString(1, currGI.getName());
                 ps.setDouble(2, currGI.getQuantity());
                 ps.setString(3, currGI.getMeasure());
-                ps.setLong(4, recipeId); // Ignore sonarling in favor of sql injection possibility?
+                ps.setLong(4, currGI.getId());
                 ps.addBatch();
             }
 
-            ps.executeUpdate();
+            ps.executeBatch();
         }
     }
 

@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS GroceryItems(
     Quantity DOUBLE NOT NULL,
     Measure VARCHAR(10) NOT NULL,
     RecipeId INT NOT NULL,
-    FOREIGN KEY (RecipeId) REFERENCES Recipes(RecipeId),
-    CONSTRAINT PK_GroceryItem PRIMARY KEY (GroceryItemId, RecipeId));
+    PRIMARY KEY (GroceryItemId),
+    FOREIGN KEY (RecipeId) REFERENCES Recipes(RecipeId));
 
 -- Insert in test data if it doesn't exist
 --INSERT INTO Recipes (Name) VALUES
