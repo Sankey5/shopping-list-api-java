@@ -23,11 +23,11 @@ public class GroceryItemsController {
     }
 
     @DeleteMapping(value = "/grocery-items/{groceryItemId}", produces = "application/json")
-    public ResponseEntity<String> deleteAGroceryItem(@PathVariable long recipeId, @PathVariable long groceryItemId) {
+    public ResponseEntity<String> deleteAGroceryItem(@PathVariable long groceryItemId) {
         if (!groceryService.deleteGroceryItem(groceryItemId)) {
-            return new ResponseEntity<String>("Failed to delete grocery item", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Failed to delete grocery item", HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<String>("Deleted grocery item", HttpStatus.OK);
+        return new ResponseEntity<>("Deleted grocery item", HttpStatus.OK);
     }
 }
