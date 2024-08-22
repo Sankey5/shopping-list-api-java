@@ -1,16 +1,29 @@
 package com.shoppinglist.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.shoppinglist.api.model.GroceryItem;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({"id", "name", "quantity", "measure", "recipeId"})
 public class GroceryItemImpl implements GroceryItem {
 
+    @JsonProperty("id")
     private final long id;
+    @JsonProperty("name")
     private String name;
+    @JsonProperty("quantity")
     private double quantity;
+    @JsonProperty("measure")
     private String measure;
+    @JsonProperty("recipeId")
     private final long recipeId;
 
-    public GroceryItemImpl(String name, double quantity, String measure) {
+    public GroceryItemImpl(@JsonProperty("name") String name,
+                           @JsonProperty("quantity") double quantity,
+                           @JsonProperty("measure") String measure) {
         this.id = 0;
         this.name = name.toLowerCase();
         this.quantity = quantity;
@@ -26,28 +39,36 @@ public class GroceryItemImpl implements GroceryItem {
         this.recipeId = recipeId;
     }
 
+    @JsonProperty("name")
     @Override public String getName() {
         return name;
     }
 
+    @JsonProperty("name")
     @Override public void setName(String name) {
         this.name = name.toLowerCase();
     }
 
+    @JsonProperty("quantity")
     @Override public double getQuantity() {
         return quantity;
     }
 
+    @JsonProperty("quantity")
     @Override public void setQuantity(double quantity) {
         this.quantity = quantity;
     }
 
+    @JsonProperty("id")
     @Override public long getId() {return id;}
 
+    @JsonProperty("measure")
     @Override public String getMeasure() {return measure;}
 
+    @JsonProperty("measure")
     @Override public void setMeasure(String measure) {this.measure = measure;}
 
+    @JsonProperty("recipeId")
     @Override
     public long getRecipeId() { return recipeId; }
 

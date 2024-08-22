@@ -34,7 +34,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public boolean saveRecipe(Recipe newRecipe) {
-        long recipeId = newRecipe.getId();
+        long recipeId;
         List<GroceryItem> groceryItems = newRecipe.getGroceryItems();
 
         try(Connection connection = Database.getConnection();) {
@@ -42,15 +42,19 @@ public class RecipeServiceImpl implements RecipeService {
             connection.setAutoCommit(false);
             Optional<Long> generatedKeysOpt = recipeDAO.saveRecipe(connection, newRecipe);
 
+            // TODO: This could be solved more elegantly,but might not be more readable
             if(generatedKeysOpt.isEmpty()) {
                 connection.rollback();
                 return false;
             }
+            recipeId = generatedKeysOpt.get();
 
             if(!groceryService.saveGroceryItems(connection, recipeId, groceryItems)) {
                 connection.rollback();
                 return false;
             }
+
+            connection.commit();
 
             return true;
 

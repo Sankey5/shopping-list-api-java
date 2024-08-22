@@ -72,7 +72,7 @@ public class GroceryJdbcDAO implements GroceryDAO {
                 ps.addBatch();
             }
 
-            ps.executeUpdate();
+            ps.executeBatch();
         }
     }
 

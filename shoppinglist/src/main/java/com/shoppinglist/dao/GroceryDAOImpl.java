@@ -36,25 +36,26 @@ public class GroceryDAOImpl implements GroceryDAO {
     public List<GroceryItem> getGroceryItems(long RecipeId) { return ImmutableList.copyOf(groceryItemsList);}
 
     @Override
-    public boolean saveGroceryItem(Connection connection, GroceryItem newGroceryItem) {
-        return groceryItemsList.add((GroceryItemImpl) newGroceryItem);
+    public void saveGroceryItems(Connection connection, long recipeId, List<GroceryItem> newGroceryItem) {
+        groceryItemsList.add((GroceryItemImpl) newGroceryItem);
     }
 
     @Override
-    public boolean updateGroceryItem(Connection connection, GroceryItem updatedGroceryItem) {
+    public void updateGroceryItems(Connection connection, long recipeId, List<GroceryItem> updatedGroceryItems) {
 
-        if(groceryItemExists(updatedGroceryItem)) {
-            groceryItemsList = groceryItemsList.stream()
-                    .map( r -> {
-                        if(r.getId() == updatedGroceryItem.getId())
-                            return (GroceryItemImpl) updatedGroceryItem;
-                        return r;
-                    })
-                    .collect(Collectors.toList());
-            return true;
+        // TODO: Needs a major upgrade in terms of performance
+        for(GroceryItem updatedGroceryItem: updatedGroceryItems) {
+            if(groceryItemExists(updatedGroceryItem)) {
+                groceryItemsList = groceryItemsList.stream()
+                        .map( r -> {
+                            if(r.getId() == updatedGroceryItem.getId())
+                                return (GroceryItemImpl) updatedGroceryItem;
+                            return r;
+                        })
+                        .collect(Collectors.toList());
+            }
         }
 
-        return false;
     }
 
     private boolean groceryItemExists(GroceryItem groceryItem) {

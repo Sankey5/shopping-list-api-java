@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -43,8 +44,10 @@ public class RecipeDAOImpl implements RecipeDAO {
     public List<Recipe> getRecipes() { return ImmutableList.copyOf(recipesList);}
 
     @Override
-    public boolean saveRecipe(Connection connection, Recipe newRecipe) {
-        return recipesList.add((RecipeImpl) newRecipe);
+    public Optional<Long> saveRecipe(Connection connection, Recipe newRecipe) {
+        // TODO: Major overhaul needed
+        recipesList.add((RecipeImpl) newRecipe);
+        return Optional.empty();
     }
 
     @Override

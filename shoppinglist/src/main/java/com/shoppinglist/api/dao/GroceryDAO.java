@@ -1,7 +1,6 @@
 package com.shoppinglist.api.dao;
 
 import com.shoppinglist.api.model.GroceryItem;
-import com.shoppinglist.api.model.Recipe;
 
 import java.sql.Connection;
 import java.sql.SQLException;

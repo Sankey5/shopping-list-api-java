@@ -1,5 +1,9 @@
 package com.shoppinglist.api.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.shoppinglist.model.GroceryItemImpl;
+
+@JsonDeserialize(as = GroceryItemImpl.class)
 public interface GroceryItem {
     String getName();
 

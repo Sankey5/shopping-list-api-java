@@ -10,20 +10,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping(value = "/recipes/{id}/grocery-items")
+
 @RestController
 public class GroceryItemsController {
 
     @Autowired
     private GroceryService groceryService;
 
-    @GetMapping(produces = "application/json")
+    @GetMapping(value = "/recipes/{recipeId}/grocery-items", produces = "application/json")
     public ResponseEntity<List<GroceryItem>> getGroceryItems(@PathVariable long recipeId) {
         return new ResponseEntity<>(groceryService.getGroceryItems(recipeId), HttpStatus.OK) ;
     }
 
-    @DeleteMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<String> deleteAGroceryItem(@PathVariable long groceryItemId) {
+    @DeleteMapping(value = "/grocery-items/{groceryItemId}", produces = "application/json")
+    public ResponseEntity<String> deleteAGroceryItem(@PathVariable long recipeId, @PathVariable long groceryItemId) {
         if (!groceryService.deleteGroceryItem(groceryItemId)) {
             return new ResponseEntity<String>("Failed to delete grocery item", HttpStatus.BAD_REQUEST);
         }

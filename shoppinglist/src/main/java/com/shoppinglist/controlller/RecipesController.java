@@ -4,6 +4,7 @@ import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.api.service.GroceryService;
 import com.shoppinglist.api.service.RecipeService;
+import com.shoppinglist.model.RecipeImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +21,13 @@ public class RecipesController {
 
     @GetMapping(produces = "application/json")
     public ResponseEntity<List<Recipe>> getRecipes() {
-        return new ResponseEntity<>(recipeService.getRecipes(), HttpStatus.OK) ;
+        List<Recipe> recipes = recipeService.getRecipes();
+        return new ResponseEntity<>(recipes, HttpStatus.OK) ;
     }
 
     @PostMapping(produces = "application/json")
-    public ResponseEntity<String> saveRecipe(@RequestBody Recipe newRecipe) {
+    public ResponseEntity<String> saveRecipe(@RequestBody RecipeImpl newRecipe) {
+        System.out.println(newRecipe.getId());
         if(recipeService.saveRecipe(newRecipe)) {
             return new ResponseEntity<>("Added new recipe", HttpStatus.OK);
         }
@@ -34,6 +37,9 @@ public class RecipesController {
 
     @PutMapping(produces = "application/json")
     public ResponseEntity<String> updateRecipe(@RequestBody Recipe updatedRecipe) {
+
+        if(updatedRecipe.getId() <= 0)
+            return new ResponseEntity<>("Invalid recipe id", HttpStatus.BAD_REQUEST);
 
         if(recipeService.updateRecipe(updatedRecipe)) {
             return new ResponseEntity<>("Updated recipe", HttpStatus.OK);
