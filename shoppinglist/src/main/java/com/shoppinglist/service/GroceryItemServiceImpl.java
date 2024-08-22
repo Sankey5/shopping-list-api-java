@@ -36,8 +36,13 @@ public class GroceryItemServiceImpl implements GroceryService {
 
     @Override
     public boolean updateGroceryItems(Connection connection, long recipeId, List<GroceryItem> updatedGroceryItems) {
-
-        return false;
+        try {
+            groceryItemDAO.updateGroceryItems(connection, recipeId, updatedGroceryItems);
+            return true;
+        } catch (SQLException e) {
+            SQLExceptionHandler.handle(e);
+            return false;
+        }
     }
 
     @Override
