@@ -1,26 +1,14 @@
 package com.shoppinglist.config;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRegistration;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
 
-public class ShoppingListApplication implements WebApplicationInitializer {
+@SpringBootApplication
+public class ShoppingListApplication {
 
-	@Override
-	public void onStartup(ServletContext servletContext) {
-
-		// Load Spring web application configuration
-		AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-		context.register(MvcConfiguration.class);
-
-		// Create and register the DispatcherServlet
-		DispatcherServlet servlet = new DispatcherServlet(context);
-		ServletRegistration.Dynamic registration = servletContext.addServlet("app", servlet);
-		registration.setLoadOnStartup(1);
-		registration.addMapping("/");
+	public static void main(String[] args) {
+		SpringApplication.run(ShoppingListApplication.class, args);
 	}
 
 }
