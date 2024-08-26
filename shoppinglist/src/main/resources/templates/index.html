@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Shopping List</title>
+
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <!--CSS-->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="/css/main.css"/>
+        <!--JS-->
+        <script src="/js/app.js"></script>
+        <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+    </head>
+    <body class="container-fluid">
+        <div class="row justify-content-center heading">
+            <h1 class="col-*-*">Shopping List</h1>
+        </div>
+
+        <div th:fragment="app" class="row d-flex justify-content-center">
+            <div hx-get="/home/recipes" hx-trigger="load" hx-swap="outerHTML"></div>
+            <div hx-get="/home/groceryList" hx-trigger="load" hx-swap="outerHTML"></div>
+        </div>
+    </body>
+
+</html>

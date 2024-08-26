@@ -50,10 +50,9 @@ public class RecipesController {
     @DeleteMapping(value = "/{recipeId}", produces = "application/json")
     public ResponseEntity<String> deleteRecipe(@PathVariable long recipeId) {
 
-        if(recipeService.deleteRecipe(recipeId)) {
-            return new ResponseEntity<>("Deleted recipe", HttpStatus.OK);
-        }
+        if(!recipeService.deleteRecipe(recipeId))
+            return new ResponseEntity<>("Invalid recipe deletion", HttpStatus.BAD_REQUEST);
 
-        return new ResponseEntity<>("Invalid recipe deletion", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Deleted recipe", HttpStatus.OK);
     }
 }
