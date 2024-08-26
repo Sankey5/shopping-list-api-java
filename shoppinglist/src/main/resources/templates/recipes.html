@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+    <div th:fragment="recipes" class="col-md-4">
+
+        <h2>Recipes</h2>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Name:</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr th:each="recipe : ${recipes}" class="recipe">
+                    <td class="grocery-item-list-toggle" hx-on:click="toggleRecipeDropDown(event)">
+                        <span th:text="${recipe.name}">Name</span>
+                        <span class="carrot">⏴</span>
+                        <span th:attr="hx-get=@{ /home/recipes/{recipeId}/grocery-items(recipeId=${recipe.id}) }"
+                              hx-trigger="load"
+                              hx-swap="outerHTML"></span>
+                    </td>
+                    <td><button class="btn-info">Add to grocery list</button></td>
+                    <td><button th:attr="hx-delete=@{/recipes/{recipeId}(recipeId=${recipe.id}) }"
+                                hx-trigger="click"
+                                hx-target="closest .recipe"
+                                hx-confirm="Are you sure?"
+                                hx-swap="delete"
+                                class="btn-danger">&#128465;</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</html>

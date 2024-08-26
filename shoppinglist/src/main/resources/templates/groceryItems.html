@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
+    <table th:fragment="grocery-item-table" class="grocery-item-table not-visible">
+        <tbody th:each="groceryItem : ${groceryItems}">
+            <td th:text="${groceryItem.name}">Name</td>
+            <td th:text="${groceryItem.quantity}">Quantity</td>
+            <td th:text="${groceryItem.measure}">Measure</td>
+        </tbody>
+    </table>
 </html>

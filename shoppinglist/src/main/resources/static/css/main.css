@@ -1,0 +1,8 @@
+.heading {
+    background-color: #005f0f;
+    color: white;
+}
+
+.not-visible {
+    display: none;
+}
