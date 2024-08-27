@@ -160,11 +160,12 @@
 			<artifactId>htmx-spring-boot</artifactId>
 			<version>3.4.1</version>
 		</dependency>
-		<dependency>
-			<groupId>io.github.wimdeblauwe</groupId>
-			<artifactId>htmx-spring-boot-thymeleaf</artifactId>
-			<version>3.4.1</version>
-		</dependency>
+		<!--Duplicate. Already introduced by htmx-import-->
+<!--		<dependency>-->
+<!--			<groupId>io.github.wimdeblauwe</groupId>-->
+<!--			<artifactId>htmx-spring-boot-thymeleaf</artifactId>-->
+<!--			<version>3.4.1</version>-->
+<!--		</dependency>-->
 		<!--Required for converting strings to html views-->
 		<!--Example return "index" returns an index.html page-->
 		<dependency>
