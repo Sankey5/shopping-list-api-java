@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/home/grocery-list")
@@ -40,8 +41,12 @@ public class GroceryListPageController {
         return "grocerylist.html :: grocerylist";
     }
 
-    @PutMapping
+    @PutMapping(consumes = "application/json")
     public String saveOrUpdateGroceryList(@RequestBody List<GroceryItem> groceryItemList, Model model) {
+
+        if(groceryItemList == null)
+            return "error";
+
         List<GroceryItem> updatedList = groceryListService.updateGroceryList(groceryItemList);
 
         if(updatedList.isEmpty())
@@ -52,7 +57,7 @@ public class GroceryListPageController {
     }
 
 
-    @DeleteMapping("/")
+    @DeleteMapping
     public String deleteShoppingList() {
         return "";
     }

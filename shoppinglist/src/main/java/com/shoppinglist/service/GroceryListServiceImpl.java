@@ -1,22 +1,24 @@
 package com.shoppinglist.service;
 
+import com.google.common.collect.ImmutableList;
 import com.shoppinglist.api.dao.GroceryListDAO;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.service.GroceryListService;
 import com.shoppinglist.model.GroceryItemImpl;
 import com.shoppinglist.util.SQLExceptionHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class GroceryListServiceImpl implements GroceryListService {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(GroceryListServiceImpl.class);
 
     @Autowired
     GroceryListDAO groceryListDAO;
@@ -28,13 +30,15 @@ public class GroceryListServiceImpl implements GroceryListService {
 
     @Override
     public List<GroceryItem> updateGroceryList(List<GroceryItem> updatedGroceryList) {
-        ArrayList<GroceryItem> oldGroceryList = new ArrayList<>();
+        ArrayList<GroceryItem> oldGroceryList;
+
+        LOGGER.info(String.format("Updated grocery list given to be updated: %s", updatedGroceryList));
 
         try {
-            oldGroceryList= (ArrayList<GroceryItem>) this.getGroceryList();
+            oldGroceryList = new ArrayList<>(this.getGroceryList());
         } catch (SQLException e) {
             SQLExceptionHandler.handle(e);
-            return List.of();
+            return new ArrayList<>();
         }
 
         if(oldGroceryList.isEmpty()) {
@@ -42,7 +46,11 @@ public class GroceryListServiceImpl implements GroceryListService {
             return updatedGroceryList;
         }
 
-        oldGroceryList = (ArrayList<GroceryItem>) mergeGroceryItemListQuantity(oldGroceryList, updatedGroceryList);
+        LOGGER.info(String.format("Old grocery list before mutation: %s", oldGroceryList));
+
+        mergeGroceryItemListQuantity(oldGroceryList, updatedGroceryList);
+
+        LOGGER.info(String.format("Updated old grocery list: %s", oldGroceryList));
 
         return groceryListDAO.updateGroceryList(oldGroceryList);
     }
@@ -57,10 +65,12 @@ public class GroceryListServiceImpl implements GroceryListService {
         return false;
     }
 
-    private List<GroceryItem> mergeGroceryItemListQuantity(List<GroceryItem> originalGroceryList,
+    private void mergeGroceryItemListQuantity(ArrayList<GroceryItem> originalGroceryList,
                                                             List<GroceryItem> updatedGroceryList) {
         for(int i = 0; i < updatedGroceryList.size(); i++) {
             GroceryItem currGroceryItem = updatedGroceryList.get(i);
+
+            LOGGER.info(String.format("Current grocery item during merge list: %s", currGroceryItem));
 
             if(originalGroceryList.contains(currGroceryItem)) {
                 for(int j = 0; j < originalGroceryList.size(); j++) {
@@ -82,7 +92,5 @@ public class GroceryListServiceImpl implements GroceryListService {
                 originalGroceryList.add(currGroceryItem);
             }
         }
-
-        return originalGroceryList;
     }
 }

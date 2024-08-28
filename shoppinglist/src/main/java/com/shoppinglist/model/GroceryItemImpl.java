@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.shoppinglist.api.model.GroceryItem;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"id", "name", "quantity", "measure", "recipeId"})
+@JsonPropertyOrder({"id", "name", "quantity", "measure"})
 public class GroceryItemImpl implements GroceryItem {
 
     @JsonProperty("id")
@@ -20,6 +20,17 @@ public class GroceryItemImpl implements GroceryItem {
     private String measure;
     @JsonProperty("recipeId")
     private final long recipeId;
+
+    public GroceryItemImpl(@JsonProperty("id") long id,
+                           @JsonProperty("name") String name,
+                           @JsonProperty("quantity") double quantity,
+                           @JsonProperty("measure") String measure) {
+        this.id = id;
+        this.name = name.toLowerCase();
+        this.quantity = quantity;
+        this.measure = measure;
+        this.recipeId = 0;
+    }
 
     public GroceryItemImpl(@JsonProperty("name") String name,
                            @JsonProperty("quantity") double quantity,
@@ -78,5 +89,10 @@ public class GroceryItemImpl implements GroceryItem {
             return false;
         else
             return this.getId() == g.getId();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("id: %s, name: %s, quantity: %s, measure: %s", this.id, this.name, this.quantity, this.measure);
     }
 }

@@ -1,24 +1,34 @@
 
-// HTMX Event handlers
+// HTMX custom extension
 
-document.body.addEventListener('htmx:configRequest', (event) => {
-    let sourceElement = event.detail.elt;
+(function() {
+    let api;
 
-    console.log(event.detail);
-    console.log(sourceElement);
+    htmx.defineExtension('put-Grocery-Items', {
+        init: function(apiRef) {
+            api = apiRef
+        },
 
-    if(sourceElement.localName == 'button' &&
-        sourceElement.classList.contains('btn-put-grocery-list')
-        ) {
-        setRecipeParameters(event.detail.parameters, sourceElement);
-    }
+        onEvent: function(name, event) {
+            if(name === 'htmx:configRequest')
+                event.detail.headers['Content-Type'] = 'application/json'
+        },
 
-    console.log("New param list: ", event.detail.parameters);
-});
+        encodeParameters: function(xhr, parameters, elt) {
+            xhr.overrideMimeType('text/json');
+
+            const vals = api.getExpressionVars(elt)
+            let obj = setRecipeParameters(elt);
+            console.log("Object before sending: ", obj);
+
+            return JSON.stringify(obj);
+        }
+    })
+})()
 
 // Event handler helper methods
 
-function setRecipeParameters(parametersList, sourceElement) {
+function setRecipeParameters(sourceElement) {
     let closestRow = sourceElement.closest('tr');
     let closestGroceryItemRows = closestRow.querySelectorAll('table.grocery-item-table tr');
 
@@ -29,14 +39,25 @@ function setRecipeParameters(parametersList, sourceElement) {
         let obj = {};
 
         for(j = 0; j < currRow.length; j++) {
-            obj[currRow[j].classList[0]] = currRow[j].innerText;
+            switch(j) {
+                case 0:
+                    obj[currRow[j].classList[0]] = parseInt(currRow[j].innerText);
+                    break;
+                case 2:
+                    obj[currRow[j].classList[0]] = parseFloat(currRow[j].innerText);
+                    break;
+                default:
+                    obj[currRow[j].classList[0]] = currRow[j].innerText;
+            }
         }
+        obj.toString = function() {
+            console.log('called toString in object');
+            return "{id: this.id, name: this.name, quantity: this.quantity, measure:this.measure}"
+        };
 
         paramArray[i] = obj;
     }
 
-    parametersList['groceryItemList'] = JSON.stringify(paramArray);
-    console.log('parameter list before function exit: ', parametersList);
     return paramArray;
 }
 
