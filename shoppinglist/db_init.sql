@@ -2,7 +2,7 @@
 --DROP TABLE IF EXISTS GroceryItems;
 --DROP TABLE IF EXISTS Recipes;
 
-CREATE TABLE IF NOT EXISTS Recipes (
+CREATE TABLE IF NOT EXISTS Recipes ( -- Change from Recipes to Recipe
     RecipeId INT NOT NULL AUTO_INCREMENT,
     Name VARCHAR(30) NOT NULL,
     PRIMARY KEY (RecipeId));
@@ -15,6 +15,20 @@ CREATE TABLE IF NOT EXISTS GroceryItems(
     RecipeId INT NOT NULL,
     PRIMARY KEY (GroceryItemId),
     FOREIGN KEY (RecipeId) REFERENCES Recipes(RecipeId));
+
+CREATE TABLE IF NOT EXISTS Recipe_GroceryItems (
+    RecipeId INT NOT NULL AUTO_INCREMENT,
+    GroceryItemId INT NOT NULL,
+    CONSTRAINT RC_GI PRIMARY KEY (RecipeId, GroceryItemId)
+);
+
+CREATE TABLE IF NOT EXISTS ShoppingList (
+    GroceryItemId INT NOT NULL,
+    Name VARCHAR(30) NOT NULL,
+    Quantity DOUBLE NOT NULL,
+    Measure VARCHAR(10) NOT NULL,
+    PRIMARY KEY (GroceryItemId)
+);
 
 -- Insert in test data if it doesn't exist
 --INSERT INTO Recipes (Name) VALUES

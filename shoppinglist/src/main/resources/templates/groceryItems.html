@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
     <table th:fragment="grocery-item-table" class="grocery-item-table not-visible">
-        <tbody th:each="groceryItem : ${groceryItems}">
-            <td th:text="${groceryItem.name}">Name</td>
-            <td th:text="${groceryItem.quantity}">Quantity</td>
-            <td th:text="${groceryItem.measure}">Measure</td>
+        <tbody>
+            <tr th:each="groceryItem : ${groceryItems}" class="grocery-item-table-row">
+                <td hidden class="id" th:text="${groceryItem.id}"></td>
+                <td class="name" th:text="${groceryItem.name}"></td>
+                <td class="quantity" th:text="${groceryItem.quantity}"></td>
+                <td class="measure" th:text="${groceryItem.measure}"></td>
+            </tr>
         </tbody>
     </table>
 </html>

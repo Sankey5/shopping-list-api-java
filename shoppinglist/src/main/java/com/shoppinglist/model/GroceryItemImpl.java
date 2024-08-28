@@ -31,6 +31,7 @@ public class GroceryItemImpl implements GroceryItem {
         this.recipeId = 0;
     }
 
+    // TODO: Decouple recipeId from GroceryItemImpl
     public GroceryItemImpl(long id, String name, double quantity, String measure, long recipeId) {
         this.id = id;
         this.name = name.toLowerCase();

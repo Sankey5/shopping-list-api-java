@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
-    <div th:fragment="grocerylist" class="col-md-4">
+    <div th:fragment="grocerylist" id="grocerylist" class="col-md-4">
 
         <h2>Grocery List</h2>
 
@@ -14,10 +14,10 @@
             </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Name</td>
-                    <td>Quantity</td>
-                    <td>Measure</td>
+                <tr th:each="groceryItem : ${groceryList}" >
+                    <td th:text="${groceryItem.name}">Name</td>
+                    <td th:text="${groceryItem.quantity}">Quantity</td>
+                    <td th:text="${groceryItem.measure}">Measure</td>
                 </tr>
             </tbody>
         </table>
