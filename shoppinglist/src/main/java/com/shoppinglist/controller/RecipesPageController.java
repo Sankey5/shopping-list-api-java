@@ -4,6 +4,8 @@ import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.api.service.GroceryService;
 import com.shoppinglist.api.service.RecipeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +21,15 @@ import java.util.List;
 @RequestMapping("/home/recipes")
 public class RecipesPageController {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(RecipesPageController.class);
+
     @Autowired RecipeService recipeService;
     @Autowired GroceryService groceryService;
 
     @GetMapping
     public String getRecipes(Model model) {
         List<Recipe> recipeList = recipeService.getRecipes();
+        LOGGER.info(String.format("Retrieved recipe list from database: %s", recipeList));
         model.addAttribute("recipes", recipeList);
 
         return "recipes.html :: recipes";

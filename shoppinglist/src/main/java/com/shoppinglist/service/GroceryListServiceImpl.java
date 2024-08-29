@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +34,7 @@ public class GroceryListServiceImpl implements GroceryListService {
     public List<GroceryItem> updateGroceryList(List<GroceryItem> updatedGroceryList) {
         ArrayList<GroceryItem> oldGroceryList;
 
-        LOGGER.info(String.format("Updated grocery list given to be updated: %s", updatedGroceryList));
+        LOGGER.debug(String.format("Updated grocery list given to be updated: %s", updatedGroceryList));
 
         try {
             oldGroceryList = new ArrayList<>(this.getGroceryList());
@@ -46,12 +48,7 @@ public class GroceryListServiceImpl implements GroceryListService {
             return updatedGroceryList;
         }
 
-        LOGGER.info(String.format("Old grocery list before mutation: %s", oldGroceryList));
-
         mergeGroceryItemListQuantity(oldGroceryList, updatedGroceryList);
-
-        LOGGER.info(String.format("Updated old grocery list: %s", oldGroceryList));
-
         return groceryListDAO.updateGroceryList(oldGroceryList);
     }
 
@@ -66,30 +63,23 @@ public class GroceryListServiceImpl implements GroceryListService {
     }
 
     private void mergeGroceryItemListQuantity(ArrayList<GroceryItem> originalGroceryList,
-                                                            List<GroceryItem> updatedGroceryList) {
-        for(int i = 0; i < updatedGroceryList.size(); i++) {
-            GroceryItem currGroceryItem = updatedGroceryList.get(i);
+                                                            List<GroceryItem> providedGroceryList) {
 
-            LOGGER.info(String.format("Current grocery item during merge list: %s", currGroceryItem));
+        for (GroceryItem groceryItemToUpdate : providedGroceryList) {
 
-            if(originalGroceryList.contains(currGroceryItem)) {
-                for(int j = 0; j < originalGroceryList.size(); j++) {
-                    GroceryItem currOldGroceryItem = originalGroceryList.get(j);
+            if (originalGroceryList.contains(groceryItemToUpdate)) {
 
-                    if( currGroceryItem == originalGroceryList.get(i) ) {
-                        GroceryItemImpl newGroceryItem = new GroceryItemImpl(
-                                currOldGroceryItem.getId(),
-                                currOldGroceryItem.getName(),
-                                currOldGroceryItem.getQuantity() + currGroceryItem.getQuantity(),
-                                currOldGroceryItem.getMeasure(),
-                                0
-                        );
+                int indexOfItemInOldList = originalGroceryList.indexOf(groceryItemToUpdate);
+                BigDecimal currentOriginalQuantity = originalGroceryList.get(indexOfItemInOldList).getQuantity();
 
-                        originalGroceryList.set(j, newGroceryItem);
-                    }
-                }
+                BigDecimal updatedQuantity = currentOriginalQuantity.add(groceryItemToUpdate.getQuantity())
+                                                .setScale(3, RoundingMode.HALF_UP);
+
+                groceryItemToUpdate.setQuantity(updatedQuantity);
+                originalGroceryList.set(indexOfItemInOldList, groceryItemToUpdate);
+
             } else {
-                originalGroceryList.add(currGroceryItem);
+                originalGroceryList.add(groceryItemToUpdate);
             }
         }
     }

@@ -67,12 +67,14 @@ public class RecipeImpl implements Recipe {
     }
 
     @Override
-    public boolean equals(Recipe g) {
+    public boolean equals(Object g) {
         if (g == null || this.getClass() != g.getClass())
             return false;
         else
-            return this.getId() == g.getId();
+            return this.getId() == ((Recipe) g).getId();
     }
+
+    // TODO: Override the hasCode() method
 
     public String toString() {
         return String.format("Id: %s, Name: %s, GroceryItems: %s", this.id, this.name, this.groceryItems);

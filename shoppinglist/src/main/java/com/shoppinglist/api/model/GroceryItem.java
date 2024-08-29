@@ -3,15 +3,19 @@ package com.shoppinglist.api.model;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.shoppinglist.model.GroceryItemImpl;
 
+import java.math.BigDecimal;
+
 @JsonDeserialize(as = GroceryItemImpl.class)
 public interface GroceryItem {
     String getName();
 
     void setName(String name);
 
-    double getQuantity();
+    BigDecimal getQuantity();
 
-    void setQuantity(double quantity);
+    void setQuantity(BigDecimal quantity);
+
+    void setQuantity(Double quantity);
 
     long getId();
 
@@ -20,6 +24,4 @@ public interface GroceryItem {
     void setMeasure(String measure);
 
     long getRecipeId();
-
-    boolean equals(GroceryItem g);
 }

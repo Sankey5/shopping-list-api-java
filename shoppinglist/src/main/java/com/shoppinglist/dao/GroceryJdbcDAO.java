@@ -9,6 +9,7 @@ import com.shoppinglist.util.SQLExceptionHandler;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +39,7 @@ public class GroceryJdbcDAO implements GroceryDAO {
                 GroceryItemImpl currGI = new GroceryItemImpl(
                         rs.getLong("GroceryItemId"),
                         rs.getString("Name"),
-                        rs.getDouble("Quantity"),
+                        BigDecimal.valueOf(rs.getDouble("Quantity")),
                         rs.getString("Measure"),
                         rs.getLong("RecipeId")
                 );
@@ -63,7 +64,7 @@ public class GroceryJdbcDAO implements GroceryDAO {
                 GroceryItem currGI = newGroceryItems.get(i);
 
                 ps.setString(1, currGI.getName());
-                ps.setDouble(2, currGI.getQuantity());
+                ps.setDouble(2, currGI.getQuantity().doubleValue());
                 ps.setString(3, currGI.getMeasure());
                 ps.setLong(4, recipeId); // Ignore sonarling in favor of sql injection possibility?
                 ps.addBatch();
@@ -81,7 +82,7 @@ public class GroceryJdbcDAO implements GroceryDAO {
 
             for (GroceryItem currGI : updatedGroceryItem) {
                 ps.setString(1, currGI.getName());
-                ps.setDouble(2, currGI.getQuantity());
+                ps.setDouble(2, currGI.getQuantity().doubleValue());
                 ps.setString(3, currGI.getMeasure());
                 ps.setLong(4, currGI.getId());
                 ps.addBatch();

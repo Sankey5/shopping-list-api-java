@@ -1,4 +1,6 @@
 --Drop old test data
+--DROP TABLE IF EXISTS ShoppingList;
+--DROP TABLE IF EXISTS Recipe_GroceryItems;
 --DROP TABLE IF EXISTS GroceryItems;
 --DROP TABLE IF EXISTS Recipes;
 

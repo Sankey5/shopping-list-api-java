@@ -8,6 +8,7 @@ import com.shoppinglist.model.GroceryItemImpl;
 import com.shoppinglist.model.RecipeImpl;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,15 +26,15 @@ public class GroceryDAOImpl implements GroceryDAO {
     private static List<GroceryItemImpl> populateGroceryItems() {
         List<GroceryItemImpl> mockGroceryItems = new ArrayList<>();
 
-        mockGroceryItems.add(new GroceryItemImpl("Bananas", 1.0, "lbs"));
-        mockGroceryItems.add(new GroceryItemImpl("Ground Beef", 2.5, "lbs"));
-        mockGroceryItems.add(new GroceryItemImpl("Salt", 2.2, "tpbs"));
+        mockGroceryItems.add(new GroceryItemImpl("Bananas", new BigDecimal("1.0"), "lbs"));
+        mockGroceryItems.add(new GroceryItemImpl("Ground Beef", new BigDecimal("2.5"), "lbs"));
+        mockGroceryItems.add(new GroceryItemImpl("Salt", new BigDecimal("2.2"), "tpbs"));
 
         return mockGroceryItems;
     }
 
     @Override
-    public List<GroceryItem> getGroceryItems(long RecipeId) { return ImmutableList.copyOf(groceryItemsList);}
+    public List<GroceryItem> getGroceryItems(long recipeId) { return ImmutableList.copyOf(groceryItemsList);}
 
     @Override
     public void saveGroceryItems(Connection connection, long recipeId, List<GroceryItem> newGroceryItem) {

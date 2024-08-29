@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.shoppinglist.api.model.GroceryItem;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"id", "name", "quantity", "measure"})
 public class GroceryItemImpl implements GroceryItem {
@@ -15,7 +18,7 @@ public class GroceryItemImpl implements GroceryItem {
     @JsonProperty("name")
     private String name;
     @JsonProperty("quantity")
-    private double quantity;
+    private BigDecimal quantity;
     @JsonProperty("measure")
     private String measure;
     @JsonProperty("recipeId")
@@ -23,30 +26,30 @@ public class GroceryItemImpl implements GroceryItem {
 
     public GroceryItemImpl(@JsonProperty("id") long id,
                            @JsonProperty("name") String name,
-                           @JsonProperty("quantity") double quantity,
+                           @JsonProperty("quantity") BigDecimal quantity,
                            @JsonProperty("measure") String measure) {
         this.id = id;
         this.name = name.toLowerCase();
-        this.quantity = quantity;
+        this.quantity = quantity.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros();
         this.measure = measure;
         this.recipeId = 0;
     }
 
     public GroceryItemImpl(@JsonProperty("name") String name,
-                           @JsonProperty("quantity") double quantity,
+                           @JsonProperty("quantity") BigDecimal quantity,
                            @JsonProperty("measure") String measure) {
         this.id = 0;
         this.name = name.toLowerCase();
-        this.quantity = quantity;
+        this.quantity = quantity.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros();
         this.measure = measure;
         this.recipeId = 0;
     }
 
     // TODO: Decouple recipeId from GroceryItemImpl
-    public GroceryItemImpl(long id, String name, double quantity, String measure, long recipeId) {
+    public GroceryItemImpl(long id, String name, BigDecimal quantity, String measure, long recipeId) {
         this.id = id;
         this.name = name.toLowerCase();
-        this.quantity = quantity;
+        this.quantity = quantity.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros();
         this.measure = measure;
         this.recipeId = recipeId;
     }
@@ -62,13 +65,17 @@ public class GroceryItemImpl implements GroceryItem {
     }
 
     @JsonProperty("quantity")
-    @Override public double getQuantity() {
+    @Override public BigDecimal getQuantity() {
         return quantity;
     }
 
+    @Override public void setQuantity(BigDecimal quantity) {
+        this.quantity = quantity.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros();
+    }
+
     @JsonProperty("quantity")
-    @Override public void setQuantity(double quantity) {
-        this.quantity = quantity;
+    @Override public void setQuantity(Double quantity) {
+        this.setQuantity(BigDecimal.valueOf(quantity));
     }
 
     @JsonProperty("id")
@@ -84,12 +91,14 @@ public class GroceryItemImpl implements GroceryItem {
     @Override
     public long getRecipeId() { return recipeId; }
 
-    @Override public boolean equals(GroceryItem g) {
+    @Override public boolean equals(Object g) {
         if (g == null || this.getClass() != g.getClass())
             return false;
         else
-            return this.getId() == g.getId();
+            return this.getId() == ((GroceryItem) g).getId();
     }
+
+    // TODO: Override the hasCode() method
 
     @Override
     public String toString() {

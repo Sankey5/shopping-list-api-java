@@ -8,10 +8,8 @@ import com.shoppinglist.util.Database;
 import com.shoppinglist.util.SQLExceptionHandler;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.math.BigDecimal;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +17,7 @@ import java.util.List;
 public class GroceryListDAOImpl implements GroceryListDAO {
 
     // TODO: Maybe change to static-only class instead or figure out how to make it make sense to instantiate class.
-    public GroceryListDAOImpl() {
+    private GroceryListDAOImpl() {
         super();
     }
 
@@ -38,7 +36,7 @@ public class GroceryListDAOImpl implements GroceryListDAO {
                 GroceryItemImpl currGroceryItem = new GroceryItemImpl(
                         rs.getLong(1),
                         rs.getString(2),
-                        rs.getDouble(3),
+                        BigDecimal.valueOf(rs.getDouble(3)),
                         rs.getString(4),
                         0
                 );
@@ -64,7 +62,7 @@ public class GroceryListDAOImpl implements GroceryListDAO {
 
                 ps.setLong(1, currGI.getId());
                 ps.setString(2, currGI.getName());
-                ps.setDouble(3, currGI.getQuantity());
+                ps.setDouble(3, currGI.getQuantity().doubleValue());
                 ps.setString(4, currGI.getMeasure());
 
                 ps.addBatch();
@@ -93,18 +91,16 @@ public class GroceryListDAOImpl implements GroceryListDAO {
         try(Connection connection = Database.getConnection();
             PreparedStatement ps = connection.prepareStatement(sqlStatement)) {
 
-            for(int i = 0; i < groceryList.size(); i++) {
-                GroceryItem currGI = groceryList.get(i);
-
-                ps.setDouble(1, currGI.getQuantity());
+            for (GroceryItem currGI : groceryList) {
+                ps.setDouble(1, currGI.getQuantity().doubleValue());
                 ps.setLong(2, currGI.getId());
 
                 ps.addBatch();
             }
 
             int[] returnVals = ps.executeBatch();
-            for(int i = 0; i < returnVals.length; i++) {
-                if (returnVals[i] == PreparedStatement.EXECUTE_FAILED)
+            for (int returnVal : returnVals) {
+                if (returnVal == Statement.EXECUTE_FAILED)
                     return List.of();
             }
 
