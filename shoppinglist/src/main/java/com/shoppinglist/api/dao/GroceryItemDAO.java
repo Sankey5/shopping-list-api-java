@@ -14,4 +14,6 @@ public interface GroceryItemDAO {
     List<GroceryItem> updateGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> updatedGroceryItems) throws SQLException;
 
     boolean deleteAllGroceryItemsForRecipe(Connection connection, long recipeId) throws SQLException;
+
+    boolean deleteGroceryItem(long groceryItemId);
 }

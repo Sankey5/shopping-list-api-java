@@ -45,7 +45,7 @@ public class RecipeServiceImpl implements RecipeService {
             }
             recipeId = generatedKeysOpt.get();
 
-            if(!groceryItemService.saveGroceryItemsForRecipe(connection, recipeId, groceryItems)) {
+            if(groceryItemService.saveGroceryItemsForRecipe(connection, recipeId, groceryItems).isEmpty()) {
                 connection.rollback();
                 return false;
             }
@@ -73,7 +73,7 @@ public class RecipeServiceImpl implements RecipeService {
                 return false;
             }
 
-            if (!groceryItemService.updateGroceryItemsForRecipe(connection, recipeId, updatedRecipe.getGroceryItems())) {
+            if (groceryItemService.updateGroceryItemsForRecipe(connection, recipeId, updatedRecipe.getGroceryItems()).isEmpty()) {
                 connection.rollback();
                 return false;
             }

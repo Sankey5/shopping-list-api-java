@@ -24,6 +24,7 @@ public class GroceryItemDAOImpl implements GroceryItemDAO {
     private static List<GroceryItemImpl> populateGroceryItems() {
         List<GroceryItemImpl> mockGroceryItems = new ArrayList<>();
 
+        // TODO: Create a list of multiple recipes
         mockGroceryItems.add(new GroceryItemImpl("Bananas", new BigDecimal("1.0"), "lbs"));
         mockGroceryItems.add(new GroceryItemImpl("Ground Beef", new BigDecimal("2.5"), "lbs"));
         mockGroceryItems.add(new GroceryItemImpl("Salt", new BigDecimal("2.2"), "tpbs"));
@@ -35,12 +36,13 @@ public class GroceryItemDAOImpl implements GroceryItemDAO {
     public List<GroceryItem> getGroceryItemsForRecipe(long recipeId) { return ImmutableList.copyOf(groceryItemsList);}
 
     @Override
-    public void saveGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> newGroceryItem) {
+    public List<GroceryItem> saveGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> newGroceryItem) {
         groceryItemsList.add((GroceryItemImpl) newGroceryItem);
+        return ImmutableList.copyOf(groceryItemsList);
     }
 
     @Override
-    public void updateGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> updatedGroceryItems) {
+    public List<GroceryItem> updateGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> updatedGroceryItems) {
 
         // TODO: Needs a major upgrade in terms of performance
         for(GroceryItem updatedGroceryItem: updatedGroceryItems) {
@@ -55,6 +57,7 @@ public class GroceryItemDAOImpl implements GroceryItemDAO {
             }
         }
 
+        return ImmutableList.copyOf(groceryItemsList);
     }
 
     private boolean groceryItemExists(GroceryItem groceryItem) {
@@ -65,9 +68,9 @@ public class GroceryItemDAOImpl implements GroceryItemDAO {
     }
 
     @Override
-    public void deleteAllGroceryItemsForRecipe(Connection connection, long recipeId) {
-
-
+    public boolean deleteAllGroceryItemsForRecipe(Connection connection, long recipeId) {
+        // TODO: Implement
+        return false;
     }
 
     @Override
