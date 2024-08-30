@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS GroceryItem (
     Measure VARCHAR(10) NOT NULL,
     RecipeId INT NOT NULL,
     PRIMARY KEY (GroceryItemId),
-    FOREIGN KEY RecipeId REFERENCES Recipe(RecipeId)
+    FOREIGN KEY (RecipeId) REFERENCES Recipe(RecipeId)
 );
 
 -- HELPER TABLES
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS GroceryItem (
 -- Accumulation of Grocery Items on the shopping list
 CREATE TABLE IF NOT EXISTS GroceryList (
     GroceryItemId INT NOT NULL,
-    FOREIGN KEY GroceryItemId REFERENCES GroceryItem(GroceryItemId)
+    FOREIGN KEY (GroceryItemId) REFERENCES GroceryItem(GroceryItemId)
 );
 
 -- Insert in test data if it doesn't exist
