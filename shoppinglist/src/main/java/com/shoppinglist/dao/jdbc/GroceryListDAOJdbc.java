@@ -49,37 +49,37 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
     }
 
     @Override
-    public boolean saveGroceryList(List<GroceryItem> groceryList) {
+    public List<GroceryItem> addToGroceryList(List<GroceryItem> groceryList) {
 
-        final String sqlStatement = "INSERT INTO ShoppingList (GroceryItemId, Name, Quantity, Measure) VALUES (?, ?, ?, ?)";
+        final String sqlStatement = "INSERT INTO ShoppingList (GroceryItemId) VALUES (?)";
 
         try(Connection connection = Database.getConnection();
             PreparedStatement ps = connection.prepareStatement(sqlStatement)) {
 
-            for(int i = 0; i < groceryList.size(); i++) {
-                GroceryItem currGI = groceryList.get(i);
+            connection.setAutoCommit(false);
 
+            for (GroceryItem currGI : groceryList) {
                 ps.setLong(1, currGI.getId());
-                ps.setString(2, currGI.getName());
-                ps.setDouble(3, currGI.getQuantity().doubleValue());
-                ps.setString(4, currGI.getMeasure());
-
                 ps.addBatch();
             }
 
-            // TODO: Check the int array for successful execution
             int[] returnVals = ps.executeBatch();
-            for(int i = 0; i < returnVals.length; i++) {
-                if (returnVals[i] == PreparedStatement.EXECUTE_FAILED)
-                    return false;
+
+            for (int returnVal : returnVals) {
+                if (returnVal == PreparedStatement.EXECUTE_FAILED) {
+                    connection.rollback();
+                    return List.of();
+                }
             }
-            return true;
+
+            connection.commit();
+            return groceryList;
 
         } catch (SQLException e) {
             SQLExceptionHandler.handle(e);
         }
 
-        return false;
+        return List.of();
     }
 
     @Override
@@ -98,9 +98,10 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
             }
 
             int[] returnVals = ps.executeBatch();
-            for (int returnVal : returnVals) {
-                if (returnVal == Statement.EXECUTE_FAILED)
-                    return List.of();
+
+            if(Database.failedBatchExecution(returnVals)) {
+                connection.rollback();
+                return List.of();
             }
 
             return this.getGroceryList();

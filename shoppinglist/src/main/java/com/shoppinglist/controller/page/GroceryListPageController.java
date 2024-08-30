@@ -39,13 +39,17 @@ public class GroceryListPageController {
         return "grocerylist.html :: grocerylist";
     }
 
-    @PutMapping(consumes = "application/json")
-    public String saveOrUpdateGroceryList(@RequestBody List<GroceryItem> groceryItemList, Model model) {
+    @PostMapping(consumes = "application/json")
+    // TODO: Chance to response entity to see if this still returns the template
+    public String addGroceryItemsToGroceryList(@RequestBody List<GroceryItem> groceryItemList, Model model) {
 
         if(groceryItemList == null)
             return "error";
 
-        List<GroceryItem> updatedList = groceryListService.updateGroceryList(groceryItemList);
+        if(groceryItemList.isEmpty())
+            return "grocerylist.html :: grocerylist";
+
+        List<GroceryItem> updatedList = groceryListService.addToGroceryList(groceryItemList);
 
         if(updatedList.isEmpty())
             return "grocerylist.html :: grocerylist";
@@ -57,7 +61,7 @@ public class GroceryListPageController {
 
     @DeleteMapping
     public String deleteShoppingList() {
-        return "";
+        return "grocerylist.html :: grocerylist";
     }
 
 

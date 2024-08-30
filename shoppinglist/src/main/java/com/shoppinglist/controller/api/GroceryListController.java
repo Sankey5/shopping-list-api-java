@@ -30,9 +30,9 @@ public class GroceryListController {
         return groceryList;
     }
 
-    @PutMapping("/")
-    public List<GroceryItem> saveOrUpdateGroceryList(List<GroceryItem> groceryItemList) {
-        List<GroceryItem> updatedList = groceryListService.updateGroceryList(groceryItemList);
+    @PostMapping
+    public List<GroceryItem> addGroceryItemsToGroceryList(List<GroceryItem> newGroceryItems) {
+        List<GroceryItem> updatedList = groceryListService.addToGroceryList(newGroceryItems);
 
         if(updatedList.isEmpty())
             return List.of();

@@ -5,6 +5,7 @@ import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.service.GroceryItemService;
 import com.shoppinglist.util.SQLExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -15,8 +16,8 @@ import java.util.List;
 @Component
 public class GroceryItemServiceImpl implements GroceryItemService {
 
-    @Autowired
-    GroceryItemDAO groceryItemDAO;
+    @Qualifier("groceryItemDAOJdbc")
+    @Autowired GroceryItemDAO groceryItemDAO;
 
     @Override
     public List<GroceryItem> getGroceryItemsForRecipe(long recipeId) { return groceryItemDAO.getGroceryItemsForRecipe(recipeId); }

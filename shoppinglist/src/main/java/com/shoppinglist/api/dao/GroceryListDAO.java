@@ -9,7 +9,7 @@ public interface GroceryListDAO {
 
     List<GroceryItem> getGroceryList() throws SQLException;
 
-    boolean saveGroceryList(List<GroceryItem> groceryList);
+    List<GroceryItem> addToGroceryList(List<GroceryItem> groceryList);
 
     List<GroceryItem> updateGroceryList(List<GroceryItem> groceryList);
 

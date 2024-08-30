@@ -5,6 +5,7 @@ import org.h2.jdbcx.JdbcDataSource;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Database {
     // INIT=RUNSCRIPT runs each time a connection is made to the database.
@@ -25,5 +26,15 @@ public class Database {
 
     public static Connection getConnection() throws SQLException {
         return dataSource.getConnection();
+    }
+
+    public static boolean failedBatchExecution(int[] returnValues) {
+
+        for (int returnVal : returnValues) {
+            if (returnVal == Statement.EXECUTE_FAILED)
+                return true;
+        }
+
+        return false;
     }
 }

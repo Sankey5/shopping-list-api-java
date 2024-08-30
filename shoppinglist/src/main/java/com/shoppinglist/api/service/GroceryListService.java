@@ -11,7 +11,7 @@ public interface GroceryListService {
     
     List<GroceryItem> getGroceryList() throws SQLException;
 
-    List<GroceryItem> updateGroceryList(List<GroceryItem> updatedGroceryList);
+    List<GroceryItem> addToGroceryList(List<GroceryItem> newGroceryList);
 
     boolean deleteGroceryListItem(long groceryItemId);
 

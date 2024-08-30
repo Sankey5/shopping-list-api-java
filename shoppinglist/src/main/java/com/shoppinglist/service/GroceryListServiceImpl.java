@@ -31,25 +31,8 @@ public class GroceryListServiceImpl implements GroceryListService {
     }
 
     @Override
-    public List<GroceryItem> updateGroceryList(List<GroceryItem> updatedGroceryList) {
-        ArrayList<GroceryItem> oldGroceryList;
-
-        LOGGER.debug(String.format("Updated grocery list given to be updated: %s", updatedGroceryList));
-
-        try {
-            oldGroceryList = new ArrayList<>(this.getGroceryList());
-        } catch (SQLException e) {
-            SQLExceptionHandler.handle(e);
-            return new ArrayList<>();
-        }
-
-        if(oldGroceryList.isEmpty()) {
-            groceryListDAO.saveGroceryList(updatedGroceryList);
-            return updatedGroceryList;
-        }
-
-        mergeGroceryItemListQuantity(oldGroceryList, updatedGroceryList);
-        return groceryListDAO.updateGroceryList(oldGroceryList);
+    public List<GroceryItem> addToGroceryList(List<GroceryItem> newGroceryList) {
+        return groceryListDAO.addToGroceryList(newGroceryList);
     }
 
     @Override
