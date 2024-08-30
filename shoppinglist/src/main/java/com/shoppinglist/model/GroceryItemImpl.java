@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"id", "name", "quantity", "measure", "recipeId"})
+@JsonPropertyOrder({"id", "name", "quantity", "measure"})
 public class GroceryItemImpl implements GroceryItem {
 
     @JsonProperty("id")
@@ -20,30 +20,24 @@ public class GroceryItemImpl implements GroceryItem {
     private BigDecimal quantity;
     @JsonProperty("measure")
     private String measure;
-    @JsonProperty("recipeId")
-    private final long recipeId;
 
     public GroceryItemImpl(@JsonProperty("name") String name,
                            @JsonProperty("quantity") BigDecimal quantity,
-                           @JsonProperty("measure") String measure,
-                           @JsonProperty("recipeId") long recipeId) {
+                           @JsonProperty("measure") String measure) {
         this.id = 0;
         this.name = name.toLowerCase();
         this.quantity = quantity.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros();
         this.measure = measure;
-        this.recipeId = recipeId;
     }
 
     public GroceryItemImpl(@JsonProperty("id") long id,
                            @JsonProperty("name") String name,
                            @JsonProperty("quantity") BigDecimal quantity,
-                           @JsonProperty("measure") String measure,
-                           @JsonProperty("recipeId") long recipeId) {
+                           @JsonProperty("measure") String measure) {
         this.id = id;
         this.name = name.toLowerCase();
         this.quantity = quantity.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros();
         this.measure = measure;
-        this.recipeId = recipeId;
     }
 
     @JsonProperty("name")
@@ -78,9 +72,6 @@ public class GroceryItemImpl implements GroceryItem {
 
     @JsonProperty("measure")
     @Override public void setMeasure(String measure) {this.measure = measure;}
-
-    @JsonProperty("recipeId")
-    @Override public long getRecipeId() { return this.recipeId; }
 
     @Override public boolean equals(Object g) {
         if (g == null || this.getClass() != g.getClass())

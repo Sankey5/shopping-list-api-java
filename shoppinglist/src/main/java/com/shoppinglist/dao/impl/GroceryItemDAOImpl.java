@@ -25,9 +25,9 @@ public class GroceryItemDAOImpl implements GroceryItemDAO {
         List<GroceryItemImpl> mockGroceryItems = new ArrayList<>();
 
         // TODO: Create a list of multiple recipes
-        mockGroceryItems.add(new GroceryItemImpl("Bananas", new BigDecimal("1.0"), "lbs", 1));
-        mockGroceryItems.add(new GroceryItemImpl("Ground Beef", new BigDecimal("2.5"), "lbs", 1));
-        mockGroceryItems.add(new GroceryItemImpl("Salt", new BigDecimal("2.2"), "tpbs", 1));
+        mockGroceryItems.add(new GroceryItemImpl("Bananas", new BigDecimal("1.0"), "lbs"));
+        mockGroceryItems.add(new GroceryItemImpl("Ground Beef", new BigDecimal("2.5"), "lbs"));
+        mockGroceryItems.add(new GroceryItemImpl("Salt", new BigDecimal("2.2"), "tpbs"));
 
         return mockGroceryItems;
     }
