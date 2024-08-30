@@ -25,12 +25,13 @@ public class GroceryItemImpl implements GroceryItem {
 
     public GroceryItemImpl(@JsonProperty("name") String name,
                            @JsonProperty("quantity") BigDecimal quantity,
-                           @JsonProperty("measure") String measure) {
+                           @JsonProperty("measure") String measure,
+                           @JsonProperty("recipeId") long recipeId) {
         this.id = 0;
         this.name = name.toLowerCase();
         this.quantity = quantity.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros();
         this.measure = measure;
-        this.recipeId = 0;
+        this.recipeId = recipeId;
     }
 
     public GroceryItemImpl(@JsonProperty("id") long id,

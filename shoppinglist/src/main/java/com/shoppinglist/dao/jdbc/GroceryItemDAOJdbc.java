@@ -57,23 +57,25 @@ public class GroceryItemDAOJdbc implements GroceryItemDAO {
 
     @Override
     public List<GroceryItem> saveGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> newGroceryItems) throws SQLException {
-        final String sqlInsertGroceries = "INSERT INTO GroceryItem (GroceryItemId, Name, Quantity, Measure, RecipeId) Values (?, ?, ?, ?, " + recipeId + ")";
+        final String sqlInsertGroceries = "INSERT INTO GroceryItem (Name, Quantity, Measure, RecipeId) Values (?, ?, ?, " + recipeId + ")";
 
         try(PreparedStatement ps = connection.prepareStatement(sqlInsertGroceries);) {
 
             for (GroceryItem currGI : newGroceryItems) {
-                ps.setLong(1, currGI.getId());
-                ps.setString(2, currGI.getName());
-                ps.setDouble(3, currGI.getQuantity().doubleValue());
-                ps.setString(4, currGI.getMeasure());
+                ps.setString(1, currGI.getName());
+                ps.setDouble(2, currGI.getQuantity().doubleValue());
+                ps.setString(3, currGI.getMeasure());
 
                 ps.addBatch();
             }
 
-            ps.executeBatch();
+            int[] retVals = ps.executeBatch();
+
+            if(Database.failedBatchExecution(retVals))
+                return List.of();
+
         }
 
-        // TODO: Cheating. Need to ensure the grocery items were saved in the database correctly by pulling those same ones from the database.
         return newGroceryItems;
     }
 

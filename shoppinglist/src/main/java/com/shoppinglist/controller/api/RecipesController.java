@@ -22,9 +22,10 @@ public class RecipesController {
         return new ResponseEntity<>(recipeService.getRecipes(), HttpStatus.OK) ;
     }
 
-    @PostMapping(produces = "application/json")
+    @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> saveRecipe(@RequestBody RecipeImpl newRecipe) {
 
+        // TODO: Return list instead of boolean
         if(!recipeService.saveRecipe(newRecipe)) {
             return new ResponseEntity<>("Invalid recipe creation", HttpStatus.BAD_REQUEST);
         }
@@ -32,12 +33,13 @@ public class RecipesController {
         return new ResponseEntity<>("Added new recipe", HttpStatus.OK);
     }
 
-    @PutMapping(value = "/{recipeId}", produces = "application/json")
+    @PutMapping(value = "/{recipeId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> updateRecipe(@PathVariable long recipeId, @RequestBody Recipe updatedRecipe) {
 
         if(recipeId <= 0)
             return new ResponseEntity<>("Invalid recipe update", HttpStatus.BAD_REQUEST);
 
+        // TODO: Return list instead of boolean
         if(!recipeService.updateRecipe(recipeId, updatedRecipe)) {
             return new ResponseEntity<>("Invalid recipe update", HttpStatus.BAD_REQUEST);
         }
