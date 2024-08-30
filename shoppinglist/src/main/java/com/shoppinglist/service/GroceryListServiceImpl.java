@@ -56,7 +56,7 @@ public class GroceryListServiceImpl implements GroceryListService {
                 itemsHashMap.put(currName, currItem);
             } else {
                 itemsHashMap.computeIfPresent(currName, (key, val) -> {
-                    val.setQuantity(val.getQuantity().add(currItem.getQuantity()));
+                    val.setQuantity(val.getQuantity(), currItem.getQuantity());
                     return val;
                 });
 

@@ -55,8 +55,14 @@ public class GroceryItemImpl implements GroceryItem {
         return quantity;
     }
 
-    @Override public void setQuantity(BigDecimal quantity) {
-        this.quantity = quantity.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros();
+    @Override public void setQuantity(BigDecimal quantity1, BigDecimal quantity2) {
+        this.quantity = quantity1.add(quantity2)
+                                .setScale(3, RoundingMode.HALF_UP)
+                                .stripTrailingZeros();
+    }
+
+    private void setQuantity(BigDecimal newQuantity) {
+        this.quantity = newQuantity.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros();
     }
 
     @JsonProperty("quantity")

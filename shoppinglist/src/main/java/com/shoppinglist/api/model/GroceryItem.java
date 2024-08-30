@@ -13,7 +13,7 @@ public interface GroceryItem {
 
     BigDecimal getQuantity();
 
-    void setQuantity(BigDecimal quantity);
+    void setQuantity(BigDecimal quantity1, BigDecimal quantity2);
 
     void setQuantity(Double quantity);
 
