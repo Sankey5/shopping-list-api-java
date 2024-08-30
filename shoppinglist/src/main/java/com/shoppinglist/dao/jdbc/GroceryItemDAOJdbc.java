@@ -41,7 +41,8 @@ public class GroceryItemDAOJdbc implements GroceryItemDAO {
                         rs.getLong("GroceryItemId"),
                         rs.getString("Name"),
                         BigDecimal.valueOf(rs.getDouble("Quantity")),
-                        rs.getString("Measure")
+                        rs.getString("Measure"),
+                        recipeId
                 );
 
                 groceryItemsList.add(currGI);

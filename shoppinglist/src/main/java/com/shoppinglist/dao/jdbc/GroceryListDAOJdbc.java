@@ -24,7 +24,11 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
     @Override
     public List<GroceryItem> getGroceryList() throws SQLException {
 
-        final String sqlStatement = "SELECT * FROM ShoppingList";
+        final String sqlStatement = """
+                                    SELECT GroceryItem.GroceryItemId, GroceryItem.Name, GroceryItem.Quantity, GroceryItem.Measure, GroceryItem.RecipeId
+                                    FROM GroceryItem
+                                    INNER JOIN GroceryList ON GroceryList.GroceryItemId = GroceryItem.GroceryItemId
+                                    """;
         ArrayList<GroceryItemImpl> shoppingList = new ArrayList<>();
 
         try(Connection connection = Database.getConnection();
@@ -37,7 +41,8 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
                         rs.getLong(1),
                         rs.getString(2),
                         BigDecimal.valueOf(rs.getDouble(3)),
-                        rs.getString(4)
+                        rs.getString(4),
+                        rs.getLong(5)
                 );
 
                 shoppingList.add(currGroceryItem);

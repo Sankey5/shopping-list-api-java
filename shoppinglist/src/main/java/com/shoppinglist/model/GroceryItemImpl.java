@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"id", "name", "quantity", "measure"})
+@JsonPropertyOrder({"id", "name", "quantity", "measure", "recipeId"})
 public class GroceryItemImpl implements GroceryItem {
 
     @JsonProperty("id")
@@ -21,23 +21,12 @@ public class GroceryItemImpl implements GroceryItem {
     @JsonProperty("measure")
     private String measure;
     @JsonProperty("recipeId")
-    private long recipeId;
+    private final long recipeId;
 
     public GroceryItemImpl(@JsonProperty("name") String name,
                            @JsonProperty("quantity") BigDecimal quantity,
                            @JsonProperty("measure") String measure) {
         this.id = 0;
-        this.name = name.toLowerCase();
-        this.quantity = quantity.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros();
-        this.measure = measure;
-        this.recipeId = 0;
-    }
-
-    public GroceryItemImpl(@JsonProperty("id") long id,
-                           @JsonProperty("name") String name,
-                           @JsonProperty("quantity") BigDecimal quantity,
-                           @JsonProperty("measure") String measure) {
-        this.id = id;
         this.name = name.toLowerCase();
         this.quantity = quantity.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros();
         this.measure = measure;
