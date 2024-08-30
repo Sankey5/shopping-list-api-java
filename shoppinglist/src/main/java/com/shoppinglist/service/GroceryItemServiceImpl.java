@@ -15,8 +15,6 @@ import java.util.List;
 public class GroceryItemServiceImpl implements GroceryItemService {
 
     @Autowired
-    GroceryItemService groceryItemService;
-    @Autowired
     GroceryItemDAO groceryItemDAO;
 
     @Override
