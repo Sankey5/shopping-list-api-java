@@ -24,10 +24,9 @@ public class GroceryItemDAOJdbc implements GroceryItemDAO {
     @Override
     public List<GroceryItem> getGroceryItemsForRecipe(long recipeId) {
         final String sqlStatement = """
-                                       SELECT GroceryItems.GroceryItemId, GroceryItems.Name, GroceryItems.Quantity, GroceryItems.Measure
-                                       FROM GroceryItems
-                                       INNER JOIN Recipe_GroceryItems ON GroceryItems.GroceryItemId =  Recipe_GroceryItems.GroceryItemId
-                                       WHERE Recipe_GroceryItems.RecipeId = ?
+                                       SELECT GroceryItemId, Name, Quantity, Measure
+                                       FROM GroceryItem
+                                       WHERE RecipeId = ?
                                     """;
         ArrayList<GroceryItemImpl> groceryItemsList = new ArrayList<>();
 
@@ -57,12 +56,15 @@ public class GroceryItemDAOJdbc implements GroceryItemDAO {
 
     @Override
     public List<GroceryItem> saveGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> newGroceryItems) throws SQLException {
-        final String sqlInsertGroceries = "INSERT INTO Recipe_GroceryItems (RecipeId, GroceryItemId) Values (" + recipeId + ", ?)";
+        final String sqlInsertGroceries = "INSERT INTO GroceryItem (GroceryItemId, Name, Quantity, Measure, RecipeId) Values (?, ?, ?, ?, " + recipeId + ")";
 
         try(PreparedStatement ps = connection.prepareStatement(sqlInsertGroceries);) {
 
             for (GroceryItem currGI : newGroceryItems) {
                 ps.setLong(1, currGI.getId());
+                ps.setString(2, currGI.getName());
+                ps.setDouble(3, currGI.getQuantity().doubleValue());
+                ps.setString(4, currGI.getMeasure());
 
                 ps.addBatch();
             }
@@ -77,10 +79,10 @@ public class GroceryItemDAOJdbc implements GroceryItemDAO {
     @Override
     public List<GroceryItem> updateGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> updatedGroceryItem) throws SQLException {
         final String sqlInsertGroceries = """
-                                             UPDATE Recipe_GroceryItems 
-                                             SET RecipeId = ?, Quantity = ?, Measure = ?
-                                             INNER JOIN 
-                                             WHERE GroceryItemId = ?""";
+                                             UPDATE GroceryItem
+                                             SET Name = ?, Quantity = ?, Measure = ?
+                                             WHERE GroceryItemId = ?
+                                          """;
 
         try(PreparedStatement ps = connection.prepareStatement(sqlInsertGroceries);) {
 
@@ -89,6 +91,7 @@ public class GroceryItemDAOJdbc implements GroceryItemDAO {
                 ps.setDouble(2, currGI.getQuantity().doubleValue());
                 ps.setString(3, currGI.getMeasure());
                 ps.setLong(4, currGI.getId());
+
                 ps.addBatch();
             }
 
@@ -101,7 +104,7 @@ public class GroceryItemDAOJdbc implements GroceryItemDAO {
 
     @Override
     public boolean deleteAllGroceryItemsForRecipe (Connection connection, long recipeId) throws SQLException {
-        final String sqlDeleteGroceries = "DELETE FROM Recipe_GroceryItems WHERE RecipeId = ?";
+        final String sqlDeleteGroceries = "DELETE FROM GroceryItem WHERE RecipeId = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sqlDeleteGroceries);) {
             ps.setLong(1, recipeId);
@@ -112,7 +115,7 @@ public class GroceryItemDAOJdbc implements GroceryItemDAO {
 
     @Override
     public boolean deleteGroceryItem(long groceryItemId) {
-        final String sqlDeleteGroceries = "DELETE FROM GroceryItems WHERE GroceryItemId = ?";
+        final String sqlDeleteGroceries = "DELETE FROM GroceryItem WHERE GroceryItemId = ?";
 
         try (Connection connection = Database.getConnection();
              PreparedStatement ps = connection.prepareStatement(sqlDeleteGroceries);) {

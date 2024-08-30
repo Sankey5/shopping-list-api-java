@@ -45,6 +45,7 @@ public class GroceryItemServiceImpl implements GroceryItemService {
     @Override
     public boolean deleteAllGroceryItemsForRecipe(Connection connection, long recipeId) {
         try {
+            // TODO: Change to delete from GroceryList table first as a transaction
             return groceryItemDAO.deleteAllGroceryItemsForRecipe(connection, recipeId);
         } catch (SQLException e) {
             SQLExceptionHandler.handle(e);
@@ -53,6 +54,9 @@ public class GroceryItemServiceImpl implements GroceryItemService {
     }
 
     @Override
-    public boolean deleteGroceryItem(long groceryItemId) { return groceryItemDAO.deleteGroceryItem(groceryItemId); }
+    public boolean deleteGroceryItem(long groceryItemId) {
+        // TODO: Change to delete from GroceryList first as a transaction
+        return groceryItemDAO.deleteGroceryItem(groceryItemId);
+    }
 
 }
