@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Repository
 public class RecipeDAOImpl implements RecipeDAO {
 
-    @Qualifier("groceryDAOImpl")
+    @Qualifier("groceryItemDAOImpl")
     @Autowired
     private GroceryItemDAO groceryItemsDAO;
     private List<RecipeImpl> recipesList;

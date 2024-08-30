@@ -20,7 +20,7 @@ import java.util.Optional;
 public class RecipeServiceImpl implements RecipeService {
 
     @Autowired
-    @Qualifier("recipeJdbcDAO")
+    @Qualifier("recipeDAOJdbc")
     RecipeDAO recipeDAO;
     @Autowired
     GroceryItemService groceryItemService;
