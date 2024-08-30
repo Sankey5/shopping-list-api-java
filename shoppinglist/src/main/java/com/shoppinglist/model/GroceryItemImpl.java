@@ -1,6 +1,5 @@
 package com.shoppinglist.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -21,8 +20,6 @@ public class GroceryItemImpl implements GroceryItem {
     private BigDecimal quantity;
     @JsonProperty("measure")
     private String measure;
-    @JsonProperty("recipeId")
-    private final long recipeId;
 
     public GroceryItemImpl(@JsonProperty("id") long id,
                            @JsonProperty("name") String name,
@@ -32,7 +29,6 @@ public class GroceryItemImpl implements GroceryItem {
         this.name = name.toLowerCase();
         this.quantity = quantity.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros();
         this.measure = measure;
-        this.recipeId = 0;
     }
 
     public GroceryItemImpl(@JsonProperty("name") String name,
@@ -42,16 +38,6 @@ public class GroceryItemImpl implements GroceryItem {
         this.name = name.toLowerCase();
         this.quantity = quantity.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros();
         this.measure = measure;
-        this.recipeId = 0;
-    }
-
-    // TODO: Decouple recipeId from GroceryItemImpl
-    public GroceryItemImpl(long id, String name, BigDecimal quantity, String measure, long recipeId) {
-        this.id = id;
-        this.name = name.toLowerCase();
-        this.quantity = quantity.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros();
-        this.measure = measure;
-        this.recipeId = recipeId;
     }
 
     @JsonProperty("name")
@@ -86,10 +72,6 @@ public class GroceryItemImpl implements GroceryItem {
 
     @JsonProperty("measure")
     @Override public void setMeasure(String measure) {this.measure = measure;}
-
-    @JsonProperty("recipeId")
-    @Override
-    public long getRecipeId() { return recipeId; }
 
     @Override public boolean equals(Object g) {
         if (g == null || this.getClass() != g.getClass())

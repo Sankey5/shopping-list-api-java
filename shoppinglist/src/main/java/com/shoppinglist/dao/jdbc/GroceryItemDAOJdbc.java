@@ -1,32 +1,34 @@
-package com.shoppinglist.dao;
+package com.shoppinglist.dao.jdbc;
 
 import com.google.common.collect.ImmutableList;
-import com.shoppinglist.api.dao.GroceryDAO;
+import com.shoppinglist.api.dao.GroceryItemDAO;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.model.GroceryItemImpl;
 import com.shoppinglist.util.Database;
 import com.shoppinglist.util.SQLExceptionHandler;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @Repository
-public class GroceryJdbcDAO implements GroceryDAO {
+public class GroceryItemDAOJdbc implements GroceryItemDAO {
 
     // TODO: Maybe change to static-only class instead or figure out how to make it make sense to instantiate class.
-    public GroceryJdbcDAO() {
+    public GroceryItemDAOJdbc() {
         super();
     }
 
     @Override
-    public List<GroceryItem> getGroceryItems(long recipeId) {
-        final String sqlStatement = "SELECT * FROM GroceryItems WHERE RecipeId = ?";
+    public List<GroceryItem> getGroceryItemsForRecipe(long recipeId) {
+        final String sqlStatement = """
+                                       SELECT GroceryItems.GroceryItemId, GroceryItems.Name, GroceryItems.Quantity, GroceryItems.Measure
+                                       FROM GroceryItems
+                                       INNER JOIN Recipe_GroceryItems ON GroceryItems.GroceryItemId =  Recipe_GroceryItems.GroceryItemId
+                                       WHERE Recipe_GroceryItems.RecipeId = ?
+                                    """;
         ArrayList<GroceryItemImpl> groceryItemsList = new ArrayList<>();
 
         try(Connection con = Database.getConnection();
@@ -40,8 +42,7 @@ public class GroceryJdbcDAO implements GroceryDAO {
                         rs.getLong("GroceryItemId"),
                         rs.getString("Name"),
                         BigDecimal.valueOf(rs.getDouble("Quantity")),
-                        rs.getString("Measure"),
-                        rs.getLong("RecipeId")
+                        rs.getString("Measure")
                 );
 
                 groceryItemsList.add(currGI);
@@ -55,28 +56,31 @@ public class GroceryJdbcDAO implements GroceryDAO {
     }
 
     @Override
-    public void saveGroceryItems(Connection connection, long recipeId, List<GroceryItem> newGroceryItems) throws SQLException {
-        final String sqlInsertGroceries = "INSERT INTO GroceryItems (Name, Quantity, Measure, RecipeId) Values (?, ?, ?, ?)";
+    public List<GroceryItem> saveGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> newGroceryItems) throws SQLException {
+        final String sqlInsertGroceries = "INSERT INTO Recipe_GroceryItems (RecipeId, GroceryItemId) Values (" + recipeId + ", ?)";
 
         try(PreparedStatement ps = connection.prepareStatement(sqlInsertGroceries);) {
 
-            for(int i = 0; i < newGroceryItems.size(); i++) {
-                GroceryItem currGI = newGroceryItems.get(i);
+            for (GroceryItem currGI : newGroceryItems) {
+                ps.setLong(1, currGI.getId());
 
-                ps.setString(1, currGI.getName());
-                ps.setDouble(2, currGI.getQuantity().doubleValue());
-                ps.setString(3, currGI.getMeasure());
-                ps.setLong(4, recipeId); // Ignore sonarling in favor of sql injection possibility?
                 ps.addBatch();
             }
 
             ps.executeBatch();
         }
+
+        // TODO: Cheating. Need to ensure the grocery items were saved in the database correctly by pulling those same ones from the database.
+        return newGroceryItems;
     }
 
     @Override
-    public void updateGroceryItems(Connection connection, long recipeId, List<GroceryItem> updatedGroceryItem) throws SQLException {
-        final String sqlInsertGroceries = "UPDATE GroceryItems SET Name = ?, Quantity = ?, Measure = ? WHERE GroceryItemId = ?";
+    public List<GroceryItem> updateGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> updatedGroceryItem) throws SQLException {
+        final String sqlInsertGroceries = """
+                                             UPDATE Recipe_GroceryItems 
+                                             SET RecipeId = ?, Quantity = ?, Measure = ?
+                                             INNER JOIN 
+                                             WHERE GroceryItemId = ?""";
 
         try(PreparedStatement ps = connection.prepareStatement(sqlInsertGroceries);) {
 
@@ -90,15 +94,19 @@ public class GroceryJdbcDAO implements GroceryDAO {
 
             ps.executeBatch();
         }
+
+        // TODO: Cheating. Need to ensure the grocery items were saved in the database correctly by pulling those same ones from the database.
+        return updatedGroceryItem;
     }
 
     @Override
-    public void deleteAllGroceryItems (Connection connection, long recipeId) throws SQLException {
-        final String sqlDeleteGroceries = "DELETE FROM GroceryItems WHERE RecipeId = ?";
+    public boolean deleteAllGroceryItemsForRecipe (Connection connection, long recipeId) throws SQLException {
+        final String sqlDeleteGroceries = "DELETE FROM Recipe_GroceryItems WHERE RecipeId = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sqlDeleteGroceries);) {
             ps.setLong(1, recipeId);
             ps.executeUpdate();
+            return true;
         }
     }
 

@@ -22,6 +22,4 @@ public interface GroceryItem {
     String getMeasure();
 
     void setMeasure(String measure);
-
-    long getRecipeId();
 }

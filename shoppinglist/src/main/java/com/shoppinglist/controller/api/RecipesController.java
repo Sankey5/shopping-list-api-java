@@ -1,4 +1,4 @@
-package com.shoppinglist.controller;
+package com.shoppinglist.controller.api;
 
 import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.api.service.RecipeService;

@@ -1,4 +1,4 @@
-package com.shoppinglist.dao;
+package com.shoppinglist.dao.jdbc;
 
 import com.google.common.collect.ImmutableList;
 import com.shoppinglist.api.dao.GroceryListDAO;
@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class GroceryListDAOImpl implements GroceryListDAO {
+public class GroceryListDAOJdbc implements GroceryListDAO {
 
     // TODO: Maybe change to static-only class instead or figure out how to make it make sense to instantiate class.
-    private GroceryListDAOImpl() {
+    private GroceryListDAOJdbc() {
         super();
     }
 
@@ -37,8 +37,7 @@ public class GroceryListDAOImpl implements GroceryListDAO {
                         rs.getLong(1),
                         rs.getString(2),
                         BigDecimal.valueOf(rs.getDouble(3)),
-                        rs.getString(4),
-                        0
+                        rs.getString(4)
                 );
 
                 shoppingList.add(currGroceryItem);

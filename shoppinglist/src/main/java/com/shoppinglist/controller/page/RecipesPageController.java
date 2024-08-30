@@ -1,14 +1,12 @@
-package com.shoppinglist.controller;
+package com.shoppinglist.controller.page;
 
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.model.Recipe;
-import com.shoppinglist.api.service.GroceryService;
+import com.shoppinglist.api.service.GroceryItemService;
 import com.shoppinglist.api.service.RecipeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +22,8 @@ public class RecipesPageController {
     private final static Logger LOGGER = LoggerFactory.getLogger(RecipesPageController.class);
 
     @Autowired RecipeService recipeService;
-    @Autowired GroceryService groceryService;
+    @Autowired
+    GroceryItemService groceryItemService;
 
     @GetMapping
     public String getRecipes(Model model) {
@@ -37,7 +36,7 @@ public class RecipesPageController {
 
     @GetMapping("/{recipeId}/grocery-items")
     public String getGroceryItems(@PathVariable long recipeId, Model model) {
-        List<GroceryItem> groceryItems = groceryService.getGroceryItems(recipeId);
+        List<GroceryItem> groceryItems = groceryItemService.getGroceryItemsForRecipe(recipeId);
 
         model.addAttribute("groceryItems", groceryItems);
 

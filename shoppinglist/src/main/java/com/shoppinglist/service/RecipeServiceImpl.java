@@ -1,21 +1,17 @@
 package com.shoppinglist.service;
 
-import com.shoppinglist.api.dao.GroceryDAO;
 import com.shoppinglist.api.dao.RecipeDAO;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.model.Recipe;
-import com.shoppinglist.api.service.GroceryService;
+import com.shoppinglist.api.service.GroceryItemService;
 import com.shoppinglist.api.service.RecipeService;
 import com.shoppinglist.util.Database;
 import com.shoppinglist.util.SQLExceptionHandler;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import javax.xml.crypto.Data;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +23,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Qualifier("recipeJdbcDAO")
     RecipeDAO recipeDAO;
     @Autowired
-    GroceryService groceryService;
+    GroceryItemService groceryItemService;
 
     @Override
     public List<Recipe> getRecipes() {return recipeDAO.getRecipes();}
@@ -49,7 +45,7 @@ public class RecipeServiceImpl implements RecipeService {
             }
             recipeId = generatedKeysOpt.get();
 
-            if(!groceryService.saveGroceryItems(connection, recipeId, groceryItems)) {
+            if(!groceryItemService.saveGroceryItemsForRecipe(connection, recipeId, groceryItems)) {
                 connection.rollback();
                 return false;
             }
@@ -77,7 +73,7 @@ public class RecipeServiceImpl implements RecipeService {
                 return false;
             }
 
-            if (!groceryService.updateGroceryItems(connection, recipeId, updatedRecipe.getGroceryItems())) {
+            if (!groceryItemService.updateGroceryItemsForRecipe(connection, recipeId, updatedRecipe.getGroceryItems())) {
                 connection.rollback();
                 return false;
             }
@@ -99,7 +95,7 @@ public class RecipeServiceImpl implements RecipeService {
 
             con.setAutoCommit(false);
 
-            boolean successfulDelete = groceryService.deleteAllGroceryItems(con, recipeId);
+            boolean successfulDelete = groceryItemService.deleteAllGroceryItemsForRecipe(con, recipeId);
 
             if (!successfulDelete) {
                 con.rollback();

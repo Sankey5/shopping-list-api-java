@@ -1,11 +1,9 @@
-package com.shoppinglist.dao;
+package com.shoppinglist.dao.impl;
 
 import com.google.common.collect.ImmutableList;
-import com.shoppinglist.api.dao.GroceryDAO;
+import com.shoppinglist.api.dao.GroceryItemDAO;
 import com.shoppinglist.api.model.GroceryItem;
-import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.model.GroceryItemImpl;
-import com.shoppinglist.model.RecipeImpl;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -15,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-public class GroceryDAOImpl implements GroceryDAO {
+public class GroceryItemDAOImpl implements GroceryItemDAO {
 
     private static List<GroceryItemImpl> groceryItemsList;
 
@@ -34,15 +32,15 @@ public class GroceryDAOImpl implements GroceryDAO {
     }
 
     @Override
-    public List<GroceryItem> getGroceryItems(long recipeId) { return ImmutableList.copyOf(groceryItemsList);}
+    public List<GroceryItem> getGroceryItemsForRecipe(long recipeId) { return ImmutableList.copyOf(groceryItemsList);}
 
     @Override
-    public void saveGroceryItems(Connection connection, long recipeId, List<GroceryItem> newGroceryItem) {
+    public void saveGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> newGroceryItem) {
         groceryItemsList.add((GroceryItemImpl) newGroceryItem);
     }
 
     @Override
-    public void updateGroceryItems(Connection connection, long recipeId, List<GroceryItem> updatedGroceryItems) {
+    public void updateGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> updatedGroceryItems) {
 
         // TODO: Needs a major upgrade in terms of performance
         for(GroceryItem updatedGroceryItem: updatedGroceryItems) {
@@ -67,7 +65,7 @@ public class GroceryDAOImpl implements GroceryDAO {
     }
 
     @Override
-    public void deleteAllGroceryItems(Connection connection, long recipeId) {
+    public void deleteAllGroceryItemsForRecipe(Connection connection, long recipeId) {
 
 
     }

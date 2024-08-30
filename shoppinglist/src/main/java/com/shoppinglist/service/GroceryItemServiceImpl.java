@@ -1,11 +1,10 @@
 package com.shoppinglist.service;
 
-import com.shoppinglist.api.dao.GroceryDAO;
+import com.shoppinglist.api.dao.GroceryItemDAO;
 import com.shoppinglist.api.model.GroceryItem;
-import com.shoppinglist.api.service.GroceryService;
+import com.shoppinglist.api.service.GroceryItemService;
 import com.shoppinglist.util.SQLExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -13,20 +12,21 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Component
-public class GroceryItemServiceImpl implements GroceryService {
+public class GroceryItemServiceImpl implements GroceryItemService {
 
     @Autowired
-    @Qualifier("groceryJdbcDAO")
-    GroceryDAO groceryItemDAO;
+    GroceryItemService groceryItemService;
+    @Autowired
+    GroceryItemDAO groceryItemDAO;
 
     @Override
-    public List<GroceryItem> getGroceryItems(long recipeId) { return groceryItemDAO.getGroceryItems(recipeId); }
+    public List<GroceryItem> getGroceryItemsForRecipe(long recipeId) { return groceryItemDAO.getGroceryItemsForRecipe(recipeId); }
 
     @Override
-    public boolean saveGroceryItems(Connection connection, long recipeId, List<GroceryItem> newGroceryItems) {
+    public boolean saveGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> newGroceryItems) {
 
         try {
-            groceryItemDAO.saveGroceryItems(connection, recipeId, newGroceryItems);
+            groceryItemDAO.saveGroceryItemsForRecipe(connection, recipeId, newGroceryItems);
             return true;
         } catch (SQLException e) {
             SQLExceptionHandler.handle(e);
@@ -35,9 +35,13 @@ public class GroceryItemServiceImpl implements GroceryService {
     }
 
     @Override
-    public boolean updateGroceryItems(Connection connection, long recipeId, List<GroceryItem> updatedGroceryItems) {
+    public boolean updateGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> updatedGroceryItems) {
         try {
-            groceryItemDAO.updateGroceryItems(connection, recipeId, updatedGroceryItems);
+
+            //Create a grocery item if there is not one already created
+            createGroceryItemsIfNotExists(updatedGroceryItems);
+
+            groceryItemDAO.updateGroceryItemsForRecipe(connection, recipeId, updatedGroceryItems);
             return true;
         } catch (SQLException e) {
             SQLExceptionHandler.handle(e);
@@ -46,9 +50,9 @@ public class GroceryItemServiceImpl implements GroceryService {
     }
 
     @Override
-    public boolean deleteAllGroceryItems(Connection connection, long recipeId) {
+    public boolean deleteAllGroceryItemsForRecipe(Connection connection, long recipeId) {
         try {
-            groceryItemDAO.deleteAllGroceryItems(connection, recipeId);
+            groceryItemDAO.deleteAllGroceryItemsForRecipe(connection, recipeId);
             return true;
         } catch (SQLException e) {
             SQLExceptionHandler.handle(e);
@@ -57,5 +61,16 @@ public class GroceryItemServiceImpl implements GroceryService {
     }
 
     @Override
-    public boolean deleteGroceryItem(long groceryItemId) { return groceryItemDAO.deleteGroceryItem(groceryItemId);}
+    public boolean deleteGroceryItem(long groceryItemId) { return groceryItemService.deleteGroceryItem(groceryItemId); }
+
+    private void createGroceryItemsIfNotExists(List <GroceryItem> updatedGroceryItems) throws SQLException{
+        List<GroceryItem> currentGroceryItems = groceryItemService.getGroceryItems();
+
+        // TODO: Check to make sure the predicate is sound
+        List<GroceryItem> newGroceryItems = updatedGroceryItems.stream()
+                .filter( groceryItem -> groceryItem.getId() == 0 || !currentGroceryItems.contains(groceryItem))
+                .toList();
+
+        groceryItemService.createGroceryItems(newGroceryItems);
+    }
 }
