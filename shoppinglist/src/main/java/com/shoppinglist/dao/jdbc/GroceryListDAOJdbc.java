@@ -55,7 +55,7 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
     @Override
     public List<GroceryItem> addToGroceryList(List<GroceryItem> groceryList) {
 
-        final String sqlStatement = "INSERT INTO ShoppingList (GroceryItemId) VALUES (?)";
+        final String sqlStatement = "INSERT INTO GroceryList (GroceryItemId) VALUES (?)";
 
         try(Connection connection = Database.getConnection();
             PreparedStatement ps = connection.prepareStatement(sqlStatement)) {

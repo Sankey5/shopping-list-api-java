@@ -14,8 +14,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class GroceryListServiceImpl implements GroceryListService {
@@ -27,7 +26,9 @@ public class GroceryListServiceImpl implements GroceryListService {
 
     @Override
     public List<GroceryItem> getGroceryList() throws SQLException{
-        return groceryListDAO.getGroceryList();
+
+        List<GroceryItem> returnedList = groceryListDAO.getGroceryList();
+        return reduceSimilarItems(returnedList);
     }
 
     @Override
@@ -45,25 +46,23 @@ public class GroceryListServiceImpl implements GroceryListService {
         return false;
     }
 
-    private void mergeGroceryItemListQuantity(ArrayList<GroceryItem> originalGroceryList,
-                                                            List<GroceryItem> providedGroceryList) {
+    private List<GroceryItem> reduceSimilarItems(List<GroceryItem> unnormilizedList) {
+        HashMap<String, GroceryItem> itemsHashMap = new HashMap<>();
 
-        for (GroceryItem groceryItemToUpdate : providedGroceryList) {
+        for(GroceryItem currItem : unnormilizedList) {
+            String currName = currItem.getName();
 
-            if (originalGroceryList.contains(groceryItemToUpdate)) {
-
-                int indexOfItemInOldList = originalGroceryList.indexOf(groceryItemToUpdate);
-                BigDecimal currentOriginalQuantity = originalGroceryList.get(indexOfItemInOldList).getQuantity();
-
-                BigDecimal updatedQuantity = currentOriginalQuantity.add(groceryItemToUpdate.getQuantity())
-                                                .setScale(3, RoundingMode.HALF_UP);
-
-                groceryItemToUpdate.setQuantity(updatedQuantity);
-                originalGroceryList.set(indexOfItemInOldList, groceryItemToUpdate);
-
+            if(!itemsHashMap.containsKey(currName)) {
+                itemsHashMap.put(currName, currItem);
             } else {
-                originalGroceryList.add(groceryItemToUpdate);
+                itemsHashMap.computeIfPresent(currName, (key, val) -> {
+                    val.setQuantity(val.getQuantity().add(currItem.getQuantity()));
+                    return val;
+                });
+
             }
         }
+
+        return List.copyOf(itemsHashMap.values());
     }
 }
