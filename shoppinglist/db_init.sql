@@ -27,7 +27,6 @@ CREATE TABLE IF NOT EXISTS GroceryItem (
 
 -- Accumulation of Grocery Items on the shopping list
 CREATE TABLE IF NOT EXISTS GroceryList (
-    GroceryListItemId INT NOT NULL AUTO_INCREMENT,
     GroceryItemId INT NOT NULL,
     FOREIGN KEY (GroceryItemId) REFERENCES GroceryItem(GroceryItemId)
 );

@@ -3,7 +3,6 @@ package com.shoppinglist.service;
 import com.google.common.collect.ImmutableList;
 import com.shoppinglist.api.dao.GroceryListDAO;
 import com.shoppinglist.api.model.GroceryItem;
-import com.shoppinglist.api.model.GroceryListItem;
 import com.shoppinglist.api.service.GroceryListService;
 import com.shoppinglist.model.GroceryItemImpl;
 import com.shoppinglist.util.SQLExceptionHandler;
@@ -26,25 +25,20 @@ public class GroceryListServiceImpl implements GroceryListService {
     GroceryListDAO groceryListDAO;
 
     @Override
-    public List<GroceryListItem> getGroceryList() {
+    public List<GroceryItem> getGroceryList() throws SQLException{
 
-        List<GroceryListItem> returnedList = groceryListDAO.getGroceryList();
+        List<GroceryItem> returnedList = groceryListDAO.getGroceryList();
         return reduceSimilarItems(returnedList);
     }
 
     @Override
-    public List<GroceryListItem> addToGroceryList(List<GroceryItem> newGroceryList) {
+    public List<GroceryItem> addToGroceryList(List<GroceryItem> newGroceryList) {
         return groceryListDAO.addToGroceryList(newGroceryList);
     }
 
     @Override
-    public boolean deleteGroceryListItem(long groceryListItemId) {
-        return groceryListDAO.deleteGroceryListItem(groceryListItemId);
-    }
-
-    @Override
-    public boolean deleteAllOfGroceryListItem(long groceryItemId) {
-        return groceryListDAO.deleteGroceryListItem(groceryItemId);
+    public boolean deleteGroceryListItem(long groceryItemId) {
+        return false;
     }
 
     @Override
@@ -52,10 +46,10 @@ public class GroceryListServiceImpl implements GroceryListService {
         return false;
     }
 
-    private List<GroceryListItem> reduceSimilarItems(List<GroceryListItem> unnormilizedList) {
-        HashMap<String, GroceryListItem> itemsHashMap = new HashMap<>();
+    private List<GroceryItem> reduceSimilarItems(List<GroceryItem> unnormilizedList) {
+        HashMap<String, GroceryItem> itemsHashMap = new HashMap<>();
 
-        for(GroceryListItem currItem : unnormilizedList) {
+        for(GroceryItem currItem : unnormilizedList) {
             String currName = currItem.getName();
 
             if(!itemsHashMap.containsKey(currName)) {

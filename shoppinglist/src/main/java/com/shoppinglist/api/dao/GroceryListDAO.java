@@ -1,20 +1,19 @@
 package com.shoppinglist.api.dao;
 
 import com.shoppinglist.api.model.GroceryItem;
-import com.shoppinglist.api.model.GroceryListItem;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public interface GroceryListDAO {
 
-    List<GroceryListItem> getGroceryList();
+    List<GroceryItem> getGroceryList() throws SQLException;
 
-    List<GroceryListItem> addToGroceryList(List<GroceryItem> groceryList);
+    List<GroceryItem> addToGroceryList(List<GroceryItem> groceryList);
+
+    List<GroceryItem> updateGroceryList(List<GroceryItem> groceryList);
 
     boolean deleteGroceryListItem(long groceryItemId);
-
-    boolean deleteAllOfGroceryListItem(long groceryListId);
 
     boolean deleteGroceryList();
 
