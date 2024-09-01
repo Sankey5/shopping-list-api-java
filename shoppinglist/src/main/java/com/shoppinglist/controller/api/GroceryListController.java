@@ -1,6 +1,7 @@
 package com.shoppinglist.controller.api;
 
 import com.shoppinglist.api.model.GroceryItem;
+import com.shoppinglist.api.model.GroceryListItem;
 import com.shoppinglist.api.service.GroceryListService;
 import com.shoppinglist.util.SQLExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,22 +18,13 @@ public class GroceryListController {
     GroceryListService groceryListService;
 
     @GetMapping
-    public List<GroceryItem> getGroceryItems() {
-        List<GroceryItem> groceryList;
-
-        try {
-            groceryList = groceryListService.getGroceryList();
-        } catch (SQLException e) {
-            SQLExceptionHandler.handle(e);
-            groceryList = List.of();
-        }
-
-        return groceryList;
+    public List<GroceryListItem> getGroceryItems() {
+        return groceryListService.getGroceryList();
     }
 
     @PostMapping
-    public List<GroceryItem> addGroceryItemsToGroceryList(List<GroceryItem> newGroceryItems) {
-        List<GroceryItem> updatedList = groceryListService.addToGroceryList(newGroceryItems);
+    public List<GroceryListItem> addGroceryItemsToGroceryList(List<GroceryItem> newGroceryItems) {
+        List<GroceryListItem> updatedList = groceryListService.addToGroceryList(newGroceryItems);
 
         if(updatedList.isEmpty())
             return List.of();

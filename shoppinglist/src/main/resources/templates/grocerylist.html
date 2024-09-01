@@ -15,6 +15,7 @@
             </thead>
             <tbody>
                 <tr th:each="groceryItem : ${groceryList}" >
+                    <td hidden th:text="${}"
                     <td th:text="${groceryItem.name}">Name</td>
                     <td th:text="${groceryItem.quantity}">Quantity</td>
                     <td th:text="${groceryItem.measure}">Measure</td>

@@ -1,6 +1,7 @@
 package com.shoppinglist.controller.page;
 
 import com.shoppinglist.api.model.GroceryItem;
+import com.shoppinglist.api.model.GroceryListItem;
 import com.shoppinglist.api.service.GroceryListService;
 import com.shoppinglist.util.SQLExceptionHandler;
 import org.slf4j.Logger;
@@ -24,16 +25,8 @@ public class GroceryListPageController {
 
     @GetMapping
     public String getShoppingList(Model model) {
-        List<GroceryItem> groceryList;
-
-        try {
-            groceryList = groceryListService.getGroceryList();
-        } catch (SQLException e) {
-            SQLExceptionHandler.handle(e);
-            groceryList = new ArrayList<>();
-        }
-
-        LOGGER.info(String.format("Array List: %s", groceryList));
+        List<GroceryListItem> groceryList;
+        groceryList = groceryListService.getGroceryList();
 
         model.addAttribute("groceryList", groceryList);
         return "grocerylist.html :: grocerylist";
@@ -49,7 +42,7 @@ public class GroceryListPageController {
         if(groceryItemList.isEmpty())
             return "grocerylist.html :: grocerylist";
 
-        List<GroceryItem> updatedList = groceryListService.addToGroceryList(groceryItemList);
+        List<GroceryListItem> updatedList = groceryListService.addToGroceryList(groceryItemList);
 
         if(updatedList.isEmpty())
             return "grocerylist.html :: grocerylist";
@@ -58,12 +51,46 @@ public class GroceryListPageController {
         return "grocerylist.html :: grocerylist";
     }
 
+    @DeleteMapping(value = "/{groceryListItemId}")
+    public String deleteGroceryListItem(@PathVariable long groceryListItemId, @PathVariable long groceryItemId, Model model) {
 
-    @DeleteMapping
-    public String deleteShoppingList() {
+        if (groceryItemId >= 0)
+            return "error";
+
+        if(!groceryListService.deleteGroceryListItem(groceryListItemId))
+            return "error";
+
+        List<GroceryListItem> groceryItems = groceryListService.getGroceryList();
+
+        model.addAttribute("groceryList", groceryItems);
         return "grocerylist.html :: grocerylist";
     }
 
+    @DeleteMapping(value = "/{groceryItemId}")
+    public String deleteAllOfGroceryListItem(@PathVariable long groceryItemId, Model model) {
 
+        if (groceryItemId >= 0)
+            return "error";
+
+        if(!groceryListService.deleteAllOfGroceryListItem(groceryItemId))
+            return "error";
+
+        List<GroceryListItem> groceryItems = groceryListService.getGroceryList();
+
+        model.addAttribute("groceryList", groceryItems);
+        return "grocerylist.html :: grocerylist";
+    }
+
+    @DeleteMapping
+    public String deleteShoppingList(Model model) {
+
+        if(!groceryListService.deleteGroceryList())
+            return "error";
+
+        List<GroceryListItem> groceryItems = groceryListService.getGroceryList();
+
+        model.addAttribute("groceryList", groceryItems);
+        return "grocerylist.html :: grocerylist";
+    }
 
 }
