@@ -8,6 +8,7 @@ import com.shoppinglist.util.Database;
 import com.shoppinglist.util.SQLExceptionHandler;
 import org.springframework.stereotype.Repository;
 
+import javax.xml.crypto.Data;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
@@ -69,11 +70,9 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
 
             int[] returnVals = ps.executeBatch();
 
-            for (int returnVal : returnVals) {
-                if (returnVal == PreparedStatement.EXECUTE_FAILED) {
-                    connection.rollback();
-                    return List.of();
-                }
+            if (Database.failedBatchExecution(returnVals)) {
+                connection.rollback();
+                return List.of();
             }
 
             connection.commit();
@@ -87,43 +86,73 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
     }
 
     @Override
-    public List<GroceryItem> updateGroceryList(List<GroceryItem> groceryList) {
-
-        final String sqlStatement = "UPDATE ShoppingList SET Quantity = ? WHERE GroceryItemId = ?";
+    public boolean deleteGroceryListItem(long groceryItemId) {
+        final String sqlStatement = "DELETE FROM GroceryList WHERE GroceryItemId = ? FETCH FIRST ROW ONLY";
 
         try(Connection connection = Database.getConnection();
             PreparedStatement ps = connection.prepareStatement(sqlStatement)) {
 
-            for (GroceryItem currGI : groceryList) {
-                ps.setDouble(1, currGI.getQuantity().doubleValue());
-                ps.setLong(2, currGI.getId());
+            connection.setAutoCommit(false);
 
-                ps.addBatch();
-            }
+            ps.setLong(1, groceryItemId);
+            int deletedItems = ps.executeUpdate();
 
-            int[] returnVals = ps.executeBatch();
-
-            if(Database.failedBatchExecution(returnVals)) {
+            if (deletedItems != 1) {
                 connection.rollback();
-                return List.of();
+                return false;
             }
 
-            return this.getGroceryList();
+            connection.commit();
+            return true;
 
         } catch (SQLException e) {
             SQLExceptionHandler.handle(e);
         }
 
-        return List.of();
+        return false;
     }
 
     @Override
-    public boolean deleteGroceryListItem(long groceryListId) {
+    public boolean deleteAllOfGroceryListItem(long groceryItemId) {
+        final String sqlStatement = "DELETE FROM GroceryList WHERE GroceryItemId = ?";
+
+        try(Connection connection = Database.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sqlStatement)) {
+
+            connection.setAutoCommit(false);
+
+            ps.setLong(1, groceryItemId);
+            int deletedItems = ps.executeUpdate();
+
+            if (deletedItems > 1) {
+                connection.rollback();
+                return false;
+            }
+
+            connection.commit();
+            return true;
+
+        } catch (SQLException e) {
+            SQLExceptionHandler.handle(e);
+        }
+
         return false;
     }
 
     @Override
     public boolean deleteGroceryList() {
+        final String sqlStatement = "DELETE FROM GroceryList";
+
+        try(Connection connection = Database.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sqlStatement)) {
+
+            ps.executeUpdate();
+            return true;
+
+        } catch (SQLException e) {
+            SQLExceptionHandler.handle(e);
+        }
+
         return false;
     }
 
