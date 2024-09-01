@@ -4,7 +4,7 @@
 (function() {
     let api;
 
-    htmx.defineExtension('put-Grocery-Items', {
+    htmx.defineExtension('post-Grocery-Items', {
         init: function(apiRef) {
             api = apiRef
         },
