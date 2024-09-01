@@ -38,12 +38,17 @@ public class GroceryListServiceImpl implements GroceryListService {
 
     @Override
     public boolean deleteGroceryListItem(long groceryItemId) {
-        return false;
+        return groceryListDAO.deleteGroceryListItem(groceryItemId);
+    }
+
+    @Override
+    public boolean deleteAllOfGroceryListItem(long groceryItemId) {
+        return groceryListDAO.deleteAllOfGroceryListItem(groceryItemId);
     }
 
     @Override
     public boolean deleteGroceryList() {
-        return false;
+        return groceryListDAO.deleteGroceryList();
     }
 
     private List<GroceryItem> reduceSimilarItems(List<GroceryItem> unnormilizedList) {
