@@ -18,7 +18,6 @@ public class GroceryItemImpl implements GroceryItem {
     private String name;
     @JsonProperty("quantity")
     private BigDecimal quantity;
-    // TODO: Change the measure into an enum
     @JsonProperty("measure")
     private String measure;
 
@@ -56,29 +55,19 @@ public class GroceryItemImpl implements GroceryItem {
         return quantity;
     }
 
-    @JsonProperty("quantity")
-    @Override public void setQuantity(Double quantity) {
-        this.setQuantity(BigDecimal.valueOf(quantity));
-    }
-
-    private void setQuantity(BigDecimal newQuantity) {
-        this.quantity = newQuantity.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros();
-    }
-
     @Override public void setQuantity(BigDecimal quantity1, BigDecimal quantity2) {
         this.quantity = quantity1.add(quantity2)
                                 .setScale(3, RoundingMode.HALF_UP)
                                 .stripTrailingZeros();
     }
 
-    @Override public void setQuantityAndMeasure(GroceryItem item1, GroceryItem item2) {
-        // TODO: Implement future "smart" measure changes based on the quantity computed
-        BigDecimal quantity1 = item1.getQuantity();
-        BigDecimal quantity2 = item2.getQuantity();
+    private void setQuantity(BigDecimal newQuantity) {
+        this.quantity = newQuantity.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros();
+    }
 
-        this.quantity = quantity1.add(quantity2)
-                .setScale(3, RoundingMode.HALF_UP)
-                .stripTrailingZeros();
+    @JsonProperty("quantity")
+    @Override public void setQuantity(Double quantity) {
+        this.setQuantity(BigDecimal.valueOf(quantity));
     }
 
     @JsonProperty("id")

@@ -13,11 +13,9 @@ public interface GroceryItem {
 
     BigDecimal getQuantity();
 
-    void setQuantity(Double quantity);
-
     void setQuantity(BigDecimal quantity1, BigDecimal quantity2);
 
-    void setQuantityAndMeasure(GroceryItem item1, GroceryItem item2);
+    void setQuantity(Double quantity);
 
     long getId();
 
