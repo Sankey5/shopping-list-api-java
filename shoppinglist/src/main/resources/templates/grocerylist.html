@@ -14,11 +14,11 @@
             </tr>
             </thead>
             <tbody>
-                <tr th:each="groceryItem : ${groceryList}" >
-                    <td hidden th:text="${}"
-                    <td th:text="${groceryItem.name}">Name</td>
-                    <td th:text="${groceryItem.quantity}">Quantity</td>
-                    <td th:text="${groceryItem.measure}">Measure</td>
+                <tr th:each="groceryListItem : ${groceryList}" >
+                    <td hidden th:text="${groceryListItem.groceryListItemId}"></td>
+                    <td th:text="${groceryListItem.name}">Name</td>
+                    <td th:text="${groceryListItem.quantity}">Quantity</td>
+                    <td th:text="${groceryListItem.measure}">Measure</td>
                 </tr>
             </tbody>
         </table>
