@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:hx-on="http://www.w3.org/1999/xhtml">
     <div th:fragment="addRecipe" id="recipe-form">
         <form hx-post="/recipes"
               hx-swap="outerHTML"
@@ -40,8 +40,12 @@
             </datalist>
 
             <button type="submit" class="btn btn-primary">Create Recipe</button>
-            <!--TODO: Add functionality to add additional input-->
-            <button type="button" class="btn btn-secondary">Add Recipe Item</button>
+            <button type="button"
+                    hx-get="/home/add-recipe"
+                    hx-target="#recipe-form"
+                    hx-swap="outerHTML"
+                    hx-on:htmx:config-request="event.detail.parameters.recipeCount = getNumRecipeFormInputs();"
+                    class="btn btn-secondary">Add Recipe Item</button>
         </form>
     </div>
 </html>

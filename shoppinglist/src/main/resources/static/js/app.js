@@ -189,6 +189,11 @@ function setValueFromPath(context, step, value) {
     }
 }
 
+function getNumRecipeFormInputs() {
+    let inputs = document.querySelectorAll('#recipe-form tbody tr');
+    return inputs.length;
+}
+
 // UI Helper functions
 function toggleRecipeDropDown(event) {
     let currentNode = event.currentTarget;
