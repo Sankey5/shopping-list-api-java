@@ -17,11 +17,13 @@ public interface GroceryItem {
 
     void setQuantity(BigDecimal quantity1, BigDecimal quantity2);
 
-    void setQuantityAndMeasure(GroceryItem item1, GroceryItem item2);
+    void addQuantityAndMeasure(GroceryItem item1, GroceryItem item2);
 
     long getId();
 
     String getMeasure();
 
     void setMeasure(String measure);
+
+    boolean isAllDefault();
 }

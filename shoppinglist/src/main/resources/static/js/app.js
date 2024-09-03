@@ -23,7 +23,7 @@
             return JSON.stringify(obj);
         }
     })
-})()
+})();
 
 (function() {
     let api;
@@ -42,10 +42,10 @@
             xhr.overrideMimeType('text/json');
 
             let encoded_parameters = encodingAlgorithm(parameters);
-            return JSON.stringify(obj);
+            return JSON.stringify(encoded_parameters);
         }
     })
-})()
+})();
 
 // Event handler helper methods
 
@@ -79,6 +79,28 @@ function setRecipeParameters(sourceElement) {
     }
 
     return paramArray;
+}
+
+function encodingAlgorithm(parameters) {
+    let resultingObject = Object.create(null);
+    const PARAM_NAMES = Object.keys(parameters);
+    const PARAM_VALUES = Object.values(parameters);
+    const PARAM_LENGHT = PARAM_NAMES.length;
+
+    for (let param_index = 0; param_index < PARAM_LENGHT; param_index++) {
+        let name = PARAM_NAMES[param_index];
+        let value = PARAM_VALUES[param_index];
+        let steps = JSONEncodingPath(name);
+        let context = resultingObject;
+
+        for (let step_index = 0; step_index < steps.length; step_index++) {
+            let step = steps[step_index];
+            context = setValueFromPath(context, step, value);
+        }
+    }
+
+    let result = resultingObject;
+    return result
 }
 
 function JSONEncodingPath(name) {

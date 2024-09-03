@@ -20,12 +20,15 @@ public class GroceryItemServiceImpl implements GroceryItemService {
     @Autowired GroceryItemDAO groceryItemDAO;
 
     @Override
-    public List<GroceryItem> getGroceryItemsForRecipe(long recipeId) { return groceryItemDAO.getGroceryItemsForRecipe(recipeId); }
+    public List<GroceryItem> getGroceryItemsForRecipe(long recipeId) {
+        return groceryItemDAO.getGroceryItemsForRecipe(recipeId);
+    }
 
     @Override
     public List<GroceryItem> saveGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> newGroceryItems) {
 
         try {
+            newGroceryItems = removeEmptyGroceryItems(newGroceryItems);
             return groceryItemDAO.saveGroceryItemsForRecipe(connection, recipeId, newGroceryItems);
         } catch (SQLException e) {
             SQLExceptionHandler.handle(e);
@@ -36,6 +39,7 @@ public class GroceryItemServiceImpl implements GroceryItemService {
     @Override
     public List<GroceryItem> updateGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> updatedGroceryItems) {
         try {
+            updatedGroceryItems = removeEmptyGroceryItems(updatedGroceryItems);
             return groceryItemDAO.updateGroceryItemsForRecipe(connection, recipeId, updatedGroceryItems);
         } catch (SQLException e) {
             SQLExceptionHandler.handle(e);
@@ -58,6 +62,12 @@ public class GroceryItemServiceImpl implements GroceryItemService {
     public boolean deleteGroceryItem(long groceryItemId) {
         // TODO: Change to delete from GroceryList first as a transaction
         return groceryItemDAO.deleteGroceryItem(groceryItemId);
+    }
+
+    private List<GroceryItem> removeEmptyGroceryItems(List<GroceryItem> groceryItems) {
+        return groceryItems.stream()
+                .filter(groceryItem -> !groceryItem.isAllDefault())
+                .toList();
     }
 
 }

@@ -17,23 +17,17 @@
                     <th>Measure</th>
                 </thead>
                 <tbody>
-                    <div th:each="num : ${entries}">
+                    <tr th:each="num :  ${#numbers.sequence(0, entries)}">
                         <td>
-                            <label>Ingredient
-                                <input type="text" name="groceryItems[${num}][name]">
-                            </label>
+                            <input type="text" th:name="|groceryItems[${num}][name]|" >
                         </td>
                         <td>
-                            <label>Quantity
-                                <input type="text" name="groceryItems[${num}][quantity]">
-                            </label>
+                            <input type="text" th:name="|groceryItems[${num}][quantity]|">
                         </td>
                         <td>
-                            <label>Measure
-                                <input list="measures" name="groceryItems[${num}][measure]">
-                            </label>
+                            <input list="measures" th:name="|groceryItems[${num}][measure]|">
                         </td>
-                    </div>
+                    </tr>
                 </tbody>
             </table>
             <datalist id="measures">

@@ -23,7 +23,7 @@ public class RecipesController {
     }
 
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<String> saveRecipe(@RequestBody RecipeImpl newRecipe) {
+    public ResponseEntity<String> saveRecipe(@RequestBody Recipe newRecipe) {
 
         // TODO: Return list instead of boolean
         if(!recipeService.saveRecipe(newRecipe)) {
