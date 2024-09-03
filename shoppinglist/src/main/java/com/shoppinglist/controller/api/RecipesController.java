@@ -22,37 +22,37 @@ public class RecipesController {
         return new ResponseEntity<>(recipeService.getRecipes(), HttpStatus.OK) ;
     }
 
-    @PostMapping(consumes = "application/json", produces = "application/json")
+    @PostMapping(consumes = "application/json")
     public ResponseEntity<String> saveRecipe(@RequestBody RecipeImpl newRecipe) {
 
         // TODO: Return list instead of boolean
         if(!recipeService.saveRecipe(newRecipe)) {
-            return new ResponseEntity<>("Invalid recipe creation", HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().build();
         }
 
-        return new ResponseEntity<>("Added new recipe", HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping(value = "/{recipeId}", consumes = "application/json", produces = "application/json")
+    @PutMapping(value = "/{recipeId}", consumes = "application/json")
     public ResponseEntity<String> updateRecipe(@PathVariable long recipeId, @RequestBody Recipe updatedRecipe) {
 
         if(recipeId <= 0)
-            return new ResponseEntity<>("Invalid recipe update", HttpStatus.BAD_REQUEST);
+            return  ResponseEntity.badRequest().build();
 
         // TODO: Return list instead of boolean
         if(!recipeService.updateRecipe(recipeId, updatedRecipe)) {
-            return new ResponseEntity<>("Invalid recipe update", HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().build();
         }
 
-        return new ResponseEntity<>("Updated recipe", HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping(value = "/{recipeId}", produces = "application/json")
+    @DeleteMapping(value = "/{recipeId}")
     public ResponseEntity<String> deleteRecipe(@PathVariable long recipeId) {
 
         if(!recipeService.deleteRecipe(recipeId))
-            return new ResponseEntity<>("Invalid recipe deletion", HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().build();
 
-        return new ResponseEntity<>("Deleted recipe", HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 }
