@@ -17,7 +17,7 @@
                     <th>Measure</th>
                 </thead>
                 <tbody>
-                    <tr th:each="num :  ${#numbers.sequence(0, entries)}">
+                    <tr th:fragment="singleRecipeInput" th:each="num : ${#numbers.sequence(start, entries)}">
                         <td>
                             <input type="text" th:name="|groceryItems[${num}][name]|" >
                         </td>
@@ -44,10 +44,11 @@
             </datalist>
 
             <button type="submit" class="btn btn-primary">Create Recipe</button>
+            <!--TODO: Change button functionality to not delete the entire list when clicked-->
             <button type="button"
                     hx-get="/home/add-recipe"
-                    hx-target="#recipe-form"
-                    hx-swap="outerHTML"
+                    hx-target="#recipe-form tbody tr"
+                    hx-swap="afterend"
                     hx-on:htmx:config-request="event.detail.parameters.recipeCount = getNumRecipeFormInputs();"
                     class="btn btn-secondary">Add Recipe Item</button>
         </form>
