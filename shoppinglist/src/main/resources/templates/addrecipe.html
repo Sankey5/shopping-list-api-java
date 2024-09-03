@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+    <div th:fragment="addRecipe" id="recipe-form">
+        <form hx-post="/recipes">
+            <label>
+                Recipe Name:
+                <input type="text" name="name">
+            </label>
+            <table>
+                <thead>
+                    <th>Ingredient Name</th>
+                    <th>Quantity</th>
+                    <th>Measure</th>
+                </thead>
+                <tbody>
+                    <div th:each="num : ${entries}">
+                        <td>
+                            <label>Ingredient
+                                <input type="text" name="name">
+                            </label>
+                        </td>
+                        <td>
+                            <label>Quantity
+                                <input type="text" name="quantity">
+                            </label>
+                        </td>
+                        <td>
+                            <label>Measure
+                                <input list="measures" name="measure">
+                            </label>
+                        </td>
+                    </div>
+                </tbody>
+            </table>
+            <datalist id="measures">
+                <option value="cup">Cup</option>
+                <option value="oz">Ounce</option>
+                <option value="lbs">Pound</option>
+                <option value="tbps">Tablespoon</option>
+                <option value="tps">Teaspoon</option>
+            </datalist>
+
+            <button class="btn btn-info">Create Recipe</button>
+        </form>
+    </div>
+</html>

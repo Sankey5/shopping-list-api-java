@@ -27,7 +27,7 @@
                                     hx-target="#grocerylist"
                                     hx-ext="post-Grocery-Items"
                                     hx-swap="outerHTML"
-                                    class="btn-put-grocery-list btn-primary">Add to grocery list</button>
+                                    class="btn-put-grocery-list btn btn-primary">Add to grocery list</button>
                         </td>
                     <td>
                         <button th:attr="hx-delete=@{/recipes/{recipeId}(recipeId=${recipe.id}) }"
@@ -35,7 +35,7 @@
                                 hx-target="closest .recipe"
                                 hx-confirm="Are you sure?"
                                 hx-swap="delete"
-                                class="btn-danger">&#128465;</button>
+                                class="btn btn-danger">&#128465;</button>
                     </td>
                 </tr>
             </tbody>

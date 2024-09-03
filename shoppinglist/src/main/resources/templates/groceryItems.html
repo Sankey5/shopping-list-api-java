@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <table th:fragment="grocery-item-table" class="grocery-item-table not-visible">
         <tbody>
             <tr th:each="groceryItem : ${groceryItems}" class="grocery-item-table-row">
