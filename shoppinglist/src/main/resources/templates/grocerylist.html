@@ -18,6 +18,12 @@
                     <td th:text="${groceryItem.name}">Name</td>
                     <td th:text="${groceryItem.quantity}">Quantity</td>
                     <td th:text="${groceryItem.measure}">Measure</td>
+                    <td>
+                        <button th:attr="hx-delete=@{ /home/grocery-list/{groceryItemId}/all(groceryItemId=${groceryItem.id}) }"
+                                hx-target="#grocerylist"
+                                hx-swap="outerHTML"
+                                class="btn-danger">Delete item</button>
+                    </td>
                 </tr>
             </tbody>
         </table>
