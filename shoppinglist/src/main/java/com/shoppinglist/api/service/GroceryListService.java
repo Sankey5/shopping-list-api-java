@@ -9,7 +9,7 @@ import java.util.List;
 @JsonDeserialize(as = GroceryItem.class)
 public interface GroceryListService {
     
-    List<GroceryItem> getGroceryList() throws SQLException;
+    List<GroceryItem> getGroceryList();
 
     List<GroceryItem> addToGroceryList(List<GroceryItem> newGroceryList);
 

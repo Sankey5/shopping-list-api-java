@@ -25,7 +25,7 @@ public class GroceryListServiceImpl implements GroceryListService {
     GroceryListDAO groceryListDAO;
 
     @Override
-    public List<GroceryItem> getGroceryList() throws SQLException{
+    public List<GroceryItem> getGroceryList(){
 
         List<GroceryItem> returnedList = groceryListDAO.getGroceryList();
         return reduceSimilarItems(returnedList);

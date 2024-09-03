@@ -23,7 +23,7 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
     }
 
     @Override
-    public List<GroceryItem> getGroceryList() throws SQLException {
+    public List<GroceryItem> getGroceryList() {
 
         final String sqlStatement = """
                                     SELECT GroceryItem.GroceryItemId, GroceryItem.Name, GroceryItem.Quantity, GroceryItem.Measure
@@ -48,6 +48,9 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
                 shoppingList.add(currGroceryItem);
             }
 
+        } catch (SQLException e) {
+            SQLExceptionHandler.handle(e);
+            return List.of();
         }
 
         return ImmutableList.copyOf(shoppingList);

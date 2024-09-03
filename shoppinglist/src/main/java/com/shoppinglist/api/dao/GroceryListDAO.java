@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface GroceryListDAO {
 
-    List<GroceryItem> getGroceryList() throws SQLException;
+    List<GroceryItem> getGroceryList();
 
     List<GroceryItem> addToGroceryList(List<GroceryItem> groceryList);
 

@@ -26,14 +26,7 @@ public class GroceryListPageController {
     public String getShoppingList(Model model) {
         List<GroceryItem> groceryList;
 
-        try {
-            groceryList = groceryListService.getGroceryList();
-        } catch (SQLException e) {
-            SQLExceptionHandler.handle(e);
-            groceryList = new ArrayList<>();
-        }
-
-        LOGGER.info(String.format("Array List: %s", groceryList));
+        groceryList = groceryListService.getGroceryList();
 
         model.addAttribute("groceryList", groceryList);
         return "grocerylist.html :: grocerylist";
@@ -54,13 +47,42 @@ public class GroceryListPageController {
         if(updatedList.isEmpty())
             return "grocerylist.html :: grocerylist";
 
-        model.addAttribute("groceryList", updatedList);
+        List<GroceryItem> allGroceryItems = groceryListService.getGroceryList();
+
+        model.addAttribute("groceryList", allGroceryItems);
         return "grocerylist.html :: grocerylist";
     }
 
+    @DeleteMapping(value = "/{groceryItemId}")
+    public String deleteAShoppingListItem(@PathVariable long groceryItemId, Model model) {
+
+        if(!groceryListService.deleteGroceryListItem(groceryItemId))
+            return "error";
+
+        List<GroceryItem> newGroceryItems = groceryListService.getGroceryList();
+        model.addAttribute("groceryList", newGroceryItems);
+
+        return "grocerylist.html :: grocerylist";
+    }
+
+    @DeleteMapping(value = "/{groceryItemId}/all")
+    public String deleteAllOfGroceryListItem(@PathVariable long groceryItemId, Model model) {
+
+        if(!groceryListService.deleteAllOfGroceryListItem(groceryItemId))
+            return "error";
+
+        List<GroceryItem> newGroceryItems = groceryListService.getGroceryList();
+        model.addAttribute("groceryList", newGroceryItems);
+
+        return "grocerylist.html :: grocerylist";
+    }
 
     @DeleteMapping
     public String deleteShoppingList() {
+        if(!groceryListService.deleteGroceryList()) {
+            return "error";
+        }
+
         return "grocerylist.html :: grocerylist";
     }
 

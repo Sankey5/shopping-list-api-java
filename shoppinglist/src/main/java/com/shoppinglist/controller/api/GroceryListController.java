@@ -20,12 +20,7 @@ public class GroceryListController {
     public List<GroceryItem> getGroceryItems() {
         List<GroceryItem> groceryList;
 
-        try {
-            groceryList = groceryListService.getGroceryList();
-        } catch (SQLException e) {
-            SQLExceptionHandler.handle(e);
-            groceryList = List.of();
-        }
+        groceryList = groceryListService.getGroceryList();
 
         return groceryList;
     }
