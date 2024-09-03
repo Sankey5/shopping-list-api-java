@@ -2,7 +2,10 @@
 
 <html xmlns:th="http://www.thymeleaf.org">
     <div th:fragment="addRecipe" id="recipe-form">
-        <form hx-post="/recipes">
+        <form hx-post="/recipes"
+              hx-swap="outerHTML"
+              hx-target="#recipe-form"
+              hx-ext="json-enc-custom">
             <label>
                 Recipe Name:
                 <input type="text" name="name">
@@ -17,17 +20,17 @@
                     <div th:each="num : ${entries}">
                         <td>
                             <label>Ingredient
-                                <input type="text" name="name">
+                                <input type="text" name="groceryItems[${num}][name]">
                             </label>
                         </td>
                         <td>
                             <label>Quantity
-                                <input type="text" name="quantity">
+                                <input type="text" name="groceryItems[${num}][quantity]">
                             </label>
                         </td>
                         <td>
                             <label>Measure
-                                <input list="measures" name="measure">
+                                <input list="measures" name="groceryItems[${num}][measure]">
                             </label>
                         </td>
                     </div>
@@ -41,7 +44,7 @@
                 <option value="tps">Teaspoon</option>
             </datalist>
 
-            <button class="btn btn-info">Create Recipe</button>
+            <button type="submit" class="btn btn-info">Create Recipe</button>
         </form>
     </div>
 </html>
