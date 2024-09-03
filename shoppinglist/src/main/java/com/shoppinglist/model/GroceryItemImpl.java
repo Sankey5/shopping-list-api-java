@@ -101,6 +101,6 @@ public class GroceryItemImpl implements GroceryItem {
 
     @Override
     public String toString() {
-        return String.format("id: %s, name: %s, quantity: %s, measure: %s", this.id, this.name, this.quantity, this.measure);
+        return String.format("id: %s, name: %s, quantity: %s, measure: %s", this.id, this.name, this.quantity.toPlainString(), this.measure);
     }
 }
