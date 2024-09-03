@@ -127,7 +127,7 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
             ps.setLong(1, groceryItemId);
             int deletedItems = ps.executeUpdate();
 
-            if (deletedItems > 1) {
+            if (deletedItems < 1) {
                 connection.rollback();
                 return false;
             }
