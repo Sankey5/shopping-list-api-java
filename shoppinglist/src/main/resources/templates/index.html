@@ -15,11 +15,13 @@
         <div class="row heading">
             <h1 class="col-sm-3 offset-sm-5">Shopping List</h1>
             <button hx-get="/home/add-recipe"
-                    hx-target="#app-container"
-                    hx-swap="beforebegin"
+                    hx-target="#recipe-form"
+                    hx-swap="innerHTML"
                     class="col-sm-1 ml-auto btn btn-primary">Add Recipe
             </button>
         </div>
+
+        <div id="recipe-form" class="row justify-content-center"></div>
 
         <div th:fragment="app" id="app-container" class="row d-flex justify-content-center">
             <div hx-get="/home/recipes" hx-trigger="load" hx-swap="outerHTML"></div>
