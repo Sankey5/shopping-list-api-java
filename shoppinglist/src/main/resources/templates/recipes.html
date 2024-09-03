@@ -27,7 +27,7 @@
                                     hx-target="#grocerylist"
                                     hx-ext="post-Grocery-Items"
                                     hx-swap="outerHTML"
-                                    class="btn-put-grocery-list btn-info">Add to grocery list</button>
+                                    class="btn-put-grocery-list btn-primary">Add to grocery list</button>
                         </td>
                     <td>
                         <button th:attr="hx-delete=@{/recipes/{recipeId}(recipeId=${recipe.id}) }"

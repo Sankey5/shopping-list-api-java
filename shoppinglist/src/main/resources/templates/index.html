@@ -12,11 +12,16 @@
         <script src="https://unpkg.com/htmx.org@2.0.2"></script>
     </head>
     <body class="container-fluid">
-        <div class="row justify-content-center heading">
-            <h1 class="col-*-*">Shopping List</h1>
+        <div class="row heading">
+            <h1 class="col-sm-3 offset-sm-5">Shopping List</h1>
+            <button hx-get="/home/add-recipe"
+                    hx-target="app-container"
+                    hx-swap="beforebegin"
+                    class="col-sm-1 ml-auto btn-primary">Add Recipe
+            </button>
         </div>
 
-        <div th:fragment="app" class="row d-flex justify-content-center">
+        <div th:fragment="app" id="app-container" class="row d-flex justify-content-center">
             <div hx-get="/home/recipes" hx-trigger="load" hx-swap="outerHTML"></div>
             <div hx-get="/home/grocery-list" hx-trigger="load" hx-swap="outerHTML"></div>
         </div>
