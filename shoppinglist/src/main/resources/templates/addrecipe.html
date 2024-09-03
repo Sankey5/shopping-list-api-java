@@ -27,6 +27,7 @@
                         <td>
                             <input list="measures" th:name="|groceryItems[${num}][measure]|">
                         </td>
+                        <!--TODO: Add functionality to delete an input field-->
                     </tr>
                 </tbody>
             </table>
@@ -38,7 +39,9 @@
                 <option value="tps">Teaspoon</option>
             </datalist>
 
-            <button type="submit" class="btn btn-info">Create Recipe</button>
+            <button type="submit" class="btn btn-primary">Create Recipe</button>
+            <!--TODO: Add functionality to add additional input-->
+            <button type="button" class="btn btn-secondary">Add Recipe Item</button>
         </form>
     </div>
 </html>

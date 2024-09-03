@@ -33,12 +33,13 @@ public class RecipeServiceImpl implements RecipeService {
         long recipeId;
         List<GroceryItem> groceryItems = newRecipe.getGroceryItems();
 
+        // TODO: Check if recipe name is null and return false otherwise
+
         try(Connection connection = Database.getConnection();) {
 
             connection.setAutoCommit(false);
             Optional<Long> generatedKeysOpt = recipeDAO.saveRecipe(connection, newRecipe);
 
-            // TODO: This could be solved more elegantly,but might not be more readable
             if(generatedKeysOpt.isEmpty()) {
                 connection.rollback();
                 return false;
@@ -63,6 +64,8 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public boolean updateRecipe(long recipeId, Recipe updatedRecipe) {
+
+        // TODO: Check if recipe name is null and return false otherwise
 
         try(Connection connection = Database.getConnection();) {
 
