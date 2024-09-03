@@ -195,6 +195,10 @@ function getNumRecipeFormInputs() {
 }
 
 // UI Helper functions
+function deleteRecipeInputField(event) {
+    event.target.closest('tr').remove();
+}
+
 function toggleRecipeDropDown(event) {
     let currentNode = event.currentTarget;
     let carrotNode = currentNode.querySelector('.carrot');

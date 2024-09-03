@@ -8,7 +8,7 @@
               hx-ext="json-enc-custom">
             <label>
                 Recipe Name:
-                <input type="text" name="name">
+                <input required type="text" name="name">
             </label>
             <table>
                 <thead>
@@ -27,7 +27,11 @@
                         <td>
                             <input list="measures" th:name="|groceryItems[${num}][measure]|">
                         </td>
-                        <!--TODO: Add functionality to delete an input field-->
+                        <td>
+                            <button type="button"
+                                    hx-on:click="deleteRecipeInputField(event);"
+                                    class="btn btn-sm btn-danger">X</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
