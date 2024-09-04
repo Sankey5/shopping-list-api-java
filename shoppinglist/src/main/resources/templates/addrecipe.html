@@ -1,54 +1,67 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org" xmlns:hx-on="http://www.w3.org/1999/xhtml">
-    <form th:fragment="addRecipe" hx-post="/recipes"
-          hx-swap="outerHTML"
-          hx-target="#recipe-form"
-          hx-ext="json-enc-custom">
-        <label>
-            Recipe Name:
-            <input required type="text" name="name">
-        </label>
-        <table>
-            <thead>
-                <th>Ingredient Name</th>
-                <th>Quantity</th>
-                <th>Measure</th>
-            </thead>
-            <tbody>
-                <tr th:fragment="singleRecipeInput" th:each="num : ${#numbers.sequence(start, entries)}">
-                    <td>
-                        <input type="text" th:name="|groceryItems[${num}][name]|" >
-                    </td>
-                    <td>
-                        <input type="text" th:name="|groceryItems[${num}][quantity]|">
-                    </td>
-                    <td>
-                        <input list="measures" th:name="|groceryItems[${num}][measure]|">
-                    </td>
-                    <td>
-                        <button type="button"
-                                hx-on:click="deleteRecipeInputField(event);"
-                                class="btn btn-sm btn-danger">X</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <datalist id="measures">
-            <option value="cup">Cup</option>
-            <option value="oz">Ounce</option>
-            <option value="lbs">Pound</option>
-            <option value="tbps">Tablespoon</option>
-            <option value="tps">Teaspoon</option>
-        </datalist>
+    <div th:fragment="addRecipe" class="modal-dialog modal-lg modal-dialog-centered bg-dark">
+        <form hx-post="/recipes"
+              hx-swap="outerHTML"
+              hx-target="#recipe-form"
+              hx-ext="json-enc-custom"
+              class="modal-content bg-dark">
 
-        <button type="submit" class="btn btn-primary">Create Recipe</button>
-        <button type="button"
-                hx-get="/home/add-recipe"
-                hx-target="#recipe-form tbody"
-                hx-swap="beforeend"
-                hx-on:htmx:config-request="event.detail.parameters.recipeCount = getNumRecipeFormInputs();"
-                class="btn btn-secondary">Add Recipe Item</button>
-        <button hx-on:click="deleteRecipeForm()" class="btn btn-danger">Exit Recipe Creation</button>
-    </form>
+            <div class="modal-header bg-dark">
+                <h2 class="modal-title text-white" id="recipeTitle">Create A Recipe</h2>
+            </div>
+
+            <div class="modal-body">
+                <label class="text-white h5">
+                    Recipe Name:
+                    <input required type="text" name="name">
+                </label>
+
+                <table class="table table-dark">
+                    <thead>
+                    <th>Ingredient Name</th>
+                    <th>Quantity</th>
+                    <th>Measure</th>
+                    </thead>
+                    <tbody>
+                    <tr th:fragment="singleRecipeInput" th:each="num : ${#numbers.sequence(start, entries)}">
+                        <td>
+                            <input type="text" th:name="|groceryItems[${num}][name]|" >
+                        </td>
+                        <td>
+                            <input type="text" th:name="|groceryItems[${num}][quantity]|">
+                        </td>
+                        <td>
+                            <input list="measures" th:name="|groceryItems[${num}][measure]|">
+                        </td>
+                        <td>
+                            <button type="button"
+                                    hx-on:click="deleteRecipeInputField(event);"
+                                    class="btn btn-sm btn-danger">&times;</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <datalist id="measures">
+                    <option value="cup">Cup</option>
+                    <option value="oz">Ounce</option>
+                    <option value="lbs">Pound</option>
+                    <option value="tbps">Tablespoon</option>
+                    <option value="tps">Teaspoon</option>
+                </datalist>
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" data-dismiss="modal">Create Recipe</button>
+                <button type="button"
+                        hx-get="/home/add-recipe"
+                        hx-target="#recipe-form tbody"
+                        hx-swap="beforeend"
+                        hx-on:htmx:config-request="event.detail.parameters.recipeCount = getNumRecipeFormInputs();"
+                        class="btn btn-secondary">Add Recipe Item</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </form>
+    </div>
 </html>

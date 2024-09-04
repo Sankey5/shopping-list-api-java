@@ -1,41 +1,52 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
-    <div th:fragment="recipes" class="col-md-4">
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:hx-on="http://www.w3.org/1999/xhtml">
+    <div th:fragment="recipes" class="card bg-dark col-lg-5 m-3">
 
-        <h2>Recipes</h2>
+        <div class="row card-header text-white justify-content-between">
+            <h2 class="col">Recipes</h2>
 
-        <table>
+            <button type="button"
+                    hx-get="/home/add-recipe"
+                    hx-target="#recipe-form"
+                    hx-trigger="click"
+                    data-toggle="modal"
+                    data-target="#recipe-form"
+                    class="col btn btn-primary">Add Recipe
+            </button>
+        </div>
 
+
+        <table class="table table-dark">
             <thead>
-            <tr>
-                <th>Name:</th>
-            </tr>
+                <tr>
+                    <th>Name</th>
+                </tr>
             </thead>
 
             <tbody>
                 <tr th:each="recipe : ${recipes}" class="recipe">
-                        <td hx-on:click="toggleRecipeDropDown(event)"
-                            class="grocery-item-list-toggle">
-                            <span th:text="${recipe.name}">Name</span>
-                            <span class="carrot">⏴</span>
-                            <span th:attr="hx-get=@{ /home/recipes/{recipeId}/grocery-items(recipeId=${recipe.id}) }"
-                                  hx-trigger="load"
-                                  hx-swap="outerHTML"></span>
-                        </td>
-                        <td>
-                            <button hx-post="/home/grocery-list"
-                                    hx-target="#grocerylist"
-                                    hx-ext="post-Grocery-Items"
-                                    hx-swap="outerHTML"
-                                    class="btn-put-grocery-list btn btn-primary">Add to grocery list</button>
-                        </td>
+                    <td hx-on:click="toggleRecipeDropDown(event)"
+                        class="align-middle grocery-item-list-toggle">
+                        <h6 style="display: inline;" th:text="${recipe.name}">Name</h6>
+                        <span class="carrot">⏴</span>
+                        <span th:attr="hx-get=@{ /home/recipes/{recipeId}/grocery-items(recipeId=${recipe.id}) }"
+                              hx-trigger="load"
+                              hx-swap="outerHTML"></span>
+                    </td>
+                    <td>
+                        <button hx-post="/home/grocery-list"
+                                hx-target="#grocerylist"
+                                hx-ext="post-Grocery-Items"
+                                hx-swap="outerHTML"
+                                class="btn-put-grocery-list btn btn-primary">&rarr;</button>
+                    </td>
                     <td>
                         <button th:attr="hx-delete=@{/recipes/{recipeId}(recipeId=${recipe.id}) }"
                                 hx-trigger="click"
                                 hx-target="closest .recipe"
                                 hx-confirm="Are you sure?"
                                 hx-swap="delete"
-                                class="btn btn-danger">&#128465;</button>
+                                class="btn btn-danger">&times;</button>
                     </td>
                 </tr>
             </tbody>

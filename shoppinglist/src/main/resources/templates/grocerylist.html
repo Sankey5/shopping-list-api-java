@@ -1,28 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
-    <div th:fragment="grocerylist" id="grocerylist" class="col-md-4">
+    <div th:fragment="grocerylist" id="grocerylist" class="card bg-dark m-3 col-lg-5">
 
-        <h2>Grocery List</h2>
+        <h2 class="card-header text-white">Grocery List</h2>
 
-        <table>
-
+        <table class="table table-dark">
             <thead>
-            <tr>
-                <th>Name</th>
-                <th>Quantity</th>
-                <th>Measure</th>
-            </tr>
+                <tr>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Measure</th>
+                </tr>
             </thead>
             <tbody>
                 <tr th:each="groceryItem : ${groceryList}" >
-                    <td th:text="${groceryItem.name}">Name</td>
-                    <td th:text="${groceryItem.quantity.toPlainString}">Quantity</td>
-                    <td th:text="${groceryItem.measure}">Measure</td>
+                    <td th:text="${groceryItem.name}" class="align-middle">Name</td>
+                    <td th:text="${groceryItem.quantity.toPlainString}" class="align-middle">Quantity</td>
+                    <td th:text="${groceryItem.measure}" class="align-middle">Measure</td>
                     <td>
                         <button th:attr="hx-delete=@{ /home/grocery-list/{groceryItemId}/all(groceryItemId=${groceryItem.id}) }"
                                 hx-target="#grocerylist"
                                 hx-swap="outerHTML"
-                                class="btn btn-danger">Delete item</button>
+                                class="btn btn-danger">&times;</button>
                     </td>
                 </tr>
             </tbody>
