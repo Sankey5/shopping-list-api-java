@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class GroceryItemServiceImpl implements GroceryItemService {
@@ -66,7 +67,7 @@ public class GroceryItemServiceImpl implements GroceryItemService {
 
     private List<GroceryItem> removeEmptyGroceryItems(List<GroceryItem> groceryItems) {
         return groceryItems.stream()
-                .filter(groceryItem -> !groceryItem.isAllDefault())
+                .filter(groceryItem -> !Objects.isNull(groceryItem) && !groceryItem.isAllDefault())
                 .toList();
     }
 

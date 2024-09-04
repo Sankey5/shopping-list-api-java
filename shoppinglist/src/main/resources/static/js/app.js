@@ -191,7 +191,7 @@ function setValueFromPath(context, step, value) {
 
 function getNumRecipeFormInputs() {
     let inputs = document.querySelectorAll('#recipe-form tbody tr');
-    return inputs.length;
+    return inputs.length - 1;
 }
 
 // UI Helper functions
