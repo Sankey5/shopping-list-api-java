@@ -195,6 +195,10 @@ function getNumRecipeFormInputs() {
 }
 
 // UI Helper functions
+function deleteRecipeForm() {
+    document.querySelector('#recipe-form>form').remove();
+}
+
 function deleteRecipeInputField(event) {
     event.target.closest('tr').remove();
 }
