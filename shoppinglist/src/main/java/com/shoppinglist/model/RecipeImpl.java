@@ -56,7 +56,7 @@ public class RecipeImpl implements Recipe {
     @JsonProperty("name")
     @Override
     public void setName(String name) {
-        this.name = StringUtil.toCamelCase(name);
+        this.name = StringUtil.toTitleCase(name);
     }
 
     @JsonProperty("groceryItems")

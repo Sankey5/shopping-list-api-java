@@ -1,0 +1,6 @@
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <datalist id="measures"
+              th:fragment="measures-datalist">
+        <option th:each="measure : ${measures}" th:value="${measure}"></option>
+    </datalist>
+</html>

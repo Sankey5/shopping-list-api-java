@@ -50,7 +50,7 @@ public class GroceryItemImpl implements GroceryItem {
     @Override public void setName(String name) {
         if(Objects.isNull(name))
             name = "";
-        this.name = StringUtil.toCamelCase(name);
+        this.name = StringUtil.toTitleCase(name);
     }
 
     @JsonGetter("quantity")
@@ -68,13 +68,6 @@ public class GroceryItemImpl implements GroceryItem {
 
     private void setQuantity(BigDecimal newQuantity) {
         this.quantity = newQuantity.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros();
-    }
-
-    // TODO: Change to use this instead of taking in the objects quantity and change name
-    @Override public void setQuantity(BigDecimal quantity1, BigDecimal quantity2) {
-        this.quantity = quantity1.add(quantity2)
-                                .setScale(3, RoundingMode.HALF_UP)
-                                .stripTrailingZeros();
     }
 
     // TODO: Change to use this instead of taking in the objects quantity
