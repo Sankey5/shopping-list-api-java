@@ -1,4 +1,12 @@
 
+// Event listeners
+
+document.body.addEventListener('htmx:afterRequest', function(event) {
+    if (event.detail.successful && event.detail.elt == document.querySelector('#create-recipe-form')) {
+        event.detail.elt.reset();
+    }
+});
+
 // HTMX custom extension
 
 (function() {
