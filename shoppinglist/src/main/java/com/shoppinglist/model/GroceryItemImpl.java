@@ -2,6 +2,7 @@ package com.shoppinglist.model;
 
 import com.fasterxml.jackson.annotation.*;
 import com.shoppinglist.api.model.GroceryItem;
+import com.shoppinglist.util.StringUtil;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -49,7 +50,7 @@ public class GroceryItemImpl implements GroceryItem {
     @Override public void setName(String name) {
         if(Objects.isNull(name))
             name = "";
-        this.name = name.toLowerCase();
+        this.name = StringUtil.toCamelCase(name);
     }
 
     @JsonGetter("quantity")

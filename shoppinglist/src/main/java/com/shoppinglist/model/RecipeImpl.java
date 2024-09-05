@@ -6,9 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.model.Recipe;
+import com.shoppinglist.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"id", "name", "groceryItems"})
@@ -24,19 +27,19 @@ public class RecipeImpl implements Recipe {
     public RecipeImpl(@JsonProperty("name") String name,
                       @JsonProperty("groceryItems") List<GroceryItem> groceryItems) {
         this.id = 0;
-        this.name = name.toLowerCase();
+        setName(name);
         this.groceryItems = groceryItems;
     }
 
     public RecipeImpl(long id, String name, List<GroceryItem> groceryItems) {
         this.id = id;
-        this.name = name.toLowerCase();
+        setName(name);
         this.groceryItems = groceryItems;
     }
 
     public RecipeImpl(long id, String name) {
         this.id = id;
-        this.name = name.toLowerCase();
+        setName(name);
         this.groceryItems = new ArrayList<>();
     }
 
@@ -53,7 +56,7 @@ public class RecipeImpl implements Recipe {
     @JsonProperty("name")
     @Override
     public void setName(String name) {
-        this.name = name.toLowerCase();
+        this.name = StringUtil.toCamelCase(name);
     }
 
     @JsonProperty("groceryItems")
