@@ -2,9 +2,9 @@
 
 <html xmlns:th="http://www.thymeleaf.org" xmlns:hx-on="http://www.w3.org/1999/xhtml">
     <div th:fragment="addRecipe" class="modal-dialog modal-lg modal-dialog-centered bg-dark">
-        <form hx-post="/recipes"
+        <form hx-post="/home/recipes"
               hx-swap="outerHTML"
-              hx-target="#recipe-form"
+              hx-target="#recipes-rows"
               hx-ext="json-enc-custom"
               class="modal-content bg-dark">
 

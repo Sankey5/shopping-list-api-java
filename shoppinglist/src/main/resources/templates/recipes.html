@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:hx-on="http://www.w3.org/1999/xhtml">
-    <div th:fragment="recipes" class="card bg-dark col-lg-5 m-3">
+    <div th:fragment="recipes" id="recipes" class="card bg-dark col-lg-5 m-3">
 
         <div class="row card-header text-white justify-content-between">
             <h2 class="col">Recipes</h2>
@@ -23,7 +23,7 @@
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody th:fragment="recipes-rows" id="recipes-rows">
                 <tr th:each="recipe : ${recipes}" class="recipe">
                     <td hx-on:click="toggleRecipeDropDown(event)"
                         class="align-middle grocery-item-list-toggle">
