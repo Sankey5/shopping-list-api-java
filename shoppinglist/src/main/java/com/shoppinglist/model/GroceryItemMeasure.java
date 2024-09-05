@@ -6,8 +6,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum GroceryItemMeasure {
+    // Weight measurements
+    OUNCE, OZ,
+    POUND, LB, LBS,
+
     // Liquid measurements
-    FLUID_OUNCE, FL_OZ,
     TEASPOON, TSP,
     TABLESPOON, TBSP,
     CUP, C,
@@ -15,9 +18,8 @@ public enum GroceryItemMeasure {
     QUART, QT,
     GALLON, GAL,
 
-    // Weight measurements
-    OUNCE, OZ,
-    POUND, LB, LBS,
+    //Unusual
+    FLUID_OUNCE, FL_OZ,
 
     //OTHER
     NONE;

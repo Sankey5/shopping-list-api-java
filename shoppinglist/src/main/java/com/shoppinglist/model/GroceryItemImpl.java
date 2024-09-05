@@ -3,6 +3,8 @@ package com.shoppinglist.model;
 import com.fasterxml.jackson.annotation.*;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -12,23 +14,29 @@ import java.util.Objects;
 @JsonPropertyOrder({"id", "name", "quantity", "measure"})
 public class GroceryItemImpl implements GroceryItem {
 
+    private final Logger LOGGER = LoggerFactory.getLogger(GroceryItemImpl.class);
+
     @JsonProperty("id")
     private final long id;
     @JsonProperty("name")
     private String name;
     @JsonProperty("quantity")
     private BigDecimal quantity;
-    // TODO: Change the measure into an enum
     @JsonProperty("measure")
-    private String measure;
+    private GroceryItemMeasure measure;
 
     public GroceryItemImpl(@JsonProperty("name") String name,
                            @JsonProperty("quantity") Double quantity,
                            @JsonProperty("measure") String measure) {
+        System.out.println("Creating grocery item imple empty");
         this.id = 0;
         setName(name);
+        System.out.println("Name set");
         setQuantity(quantity);
+        System.out.println("quantity set");
         setMeasure(measure);
+
+        System.out.printf("Current grocery item %s%n", this);
     }
 
     public GroceryItemImpl(long id,
@@ -48,8 +56,10 @@ public class GroceryItemImpl implements GroceryItem {
 
     @JsonSetter("name")
     @Override public void setName(String name) {
-        if(Objects.isNull(name))
+        if(Objects.isNull(name)) {
             name = "";
+        }
+
         this.name = StringUtil.toTitleCase(name);
     }
 
@@ -85,20 +95,27 @@ public class GroceryItemImpl implements GroceryItem {
     @Override public long getId() {return id;}
 
     @JsonGetter("measure")
-    @Override public String getMeasure() {return measure;}
+    @Override public String getMeasure() {return StringUtil.toTitleCase(measure.name());}
 
     @JsonSetter("measure")
     @Override public void setMeasure(String measure) {
-        if (Objects.isNull(measure))
-            measure = "";
+        if (Objects.isNull(measure)) {
+            this.measure = GroceryItemMeasure.NONE;
+            return;
+        }
 
-        this.measure = measure;
+        try{
+            this.measure = GroceryItemMeasure.getGroceryItemMeasure(measure);
+        } catch (IllegalArgumentException e) {
+            LOGGER.error(String.format("Invalid value to set as measure: %s", measure));
+            this.measure = GroceryItemMeasure.NONE;
+        }
     }
 
     @Override public boolean isAllDefault() {
         return this.name.isEmpty()
                 && this.quantity.equals(BigDecimal.valueOf(0.0).setScale(3, RoundingMode.HALF_UP).stripTrailingZeros())
-                && this.measure.isEmpty();
+                && this.measure == GroceryItemMeasure.NONE;
     }
 
     @Override public boolean equals(Object g) {
@@ -112,6 +129,6 @@ public class GroceryItemImpl implements GroceryItem {
 
     @Override
     public String toString() {
-        return String.format("id: %s, name: %s, quantity: %s, measure: %s", this.id, this.name, this.quantity.toPlainString(), this.measure);
+        return String.format("id: %s, name: %s, quantity: %s, measure: %s", this.id, this.name, this.quantity.toPlainString(), this.measure.name());
     }
 }
