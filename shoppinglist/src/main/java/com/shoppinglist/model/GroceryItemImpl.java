@@ -28,7 +28,7 @@ public class GroceryItemImpl implements GroceryItem {
     public GroceryItemImpl(@JsonProperty("name") String name,
                            @JsonProperty("quantity") Double quantity,
                            @JsonProperty("measure") String measure) {
-        System.out.println("Creating grocery item imple empty");
+        System.out.println("Creating groceryItemImpl empty");
         this.id = 0;
         setName(name);
         System.out.println("Name set");
@@ -98,18 +98,13 @@ public class GroceryItemImpl implements GroceryItem {
     @Override public String getMeasure() {return StringUtil.toTitleCase(measure.name());}
 
     @JsonSetter("measure")
-    @Override public void setMeasure(String measure) {
-        if (Objects.isNull(measure)) {
+    @Override public void setMeasure(String measure) throws IllegalArgumentException {
+        if (Objects.isNull(measure) || measure.isEmpty()) {
             this.measure = GroceryItemMeasure.NONE;
             return;
         }
 
-        try{
-            this.measure = GroceryItemMeasure.getGroceryItemMeasure(measure);
-        } catch (IllegalArgumentException e) {
-            LOGGER.error(String.format("Invalid value to set as measure: %s", measure));
-            this.measure = GroceryItemMeasure.NONE;
-        }
+        this.measure = GroceryItemMeasure.getGroceryItemMeasure(measure);
     }
 
     @Override public boolean isAllDefault() {

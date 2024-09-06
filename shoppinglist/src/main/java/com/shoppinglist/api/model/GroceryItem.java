@@ -13,7 +13,7 @@ public interface GroceryItem {
 
     BigDecimal getQuantity();
 
-    void setQuantity(Double quantity);
+    void setQuantity(Double quantity) throws IllegalArgumentException;
 
     void addQuantityAndMeasure(GroceryItem item1, GroceryItem item2);
 
