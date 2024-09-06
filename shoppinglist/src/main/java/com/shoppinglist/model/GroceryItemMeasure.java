@@ -14,6 +14,7 @@ public enum GroceryItemMeasure {
     LBS("dry", 16),
 
     // Liquid measurements
+    PINCH("liquid", 1.0/12.0),
     TEASPOON("liquid",1.0/6.0),
     TSP("liquid",1.0/6.0),
     TABLESPOON("liquid",0.5),
@@ -31,11 +32,11 @@ public enum GroceryItemMeasure {
 
     //OTHER
     NONE("", 0);
+    
+    private final String measurementType;
+    private final double ounces;
 
-    final String measurementType;
-    final double ounces;
-
-    private GroceryItemMeasure(String measurementType, double ounces) {
+    GroceryItemMeasure(String measurementType, double ounces) {
         this.measurementType = measurementType;
         this.ounces = ounces;
     }
