@@ -3,6 +3,10 @@ html, body{
     background-color: #fff;
 }
 
+.modal-body {
+    overflow-x: scroll !important;
+}
+
 #heading {
     height: 11%;
 }

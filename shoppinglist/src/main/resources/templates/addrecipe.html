@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org" xmlns:hx-on="http://www.w3.org/1999/xhtml">
-    <div th:fragment="addRecipe" class="modal-dialog modal-lg modal-dialog-centered bg-dark">
+    <div th:fragment="addRecipe" class="modal-dialog modal-lg modal-dialog-centered">
         <form hx-post="/home/recipes"
               hx-swap="outerHTML"
               hx-target="#recipes-rows"
@@ -31,10 +31,16 @@
                             <input type="text" th:name="|groceryItems[${num}][name]|" >
                         </td>
                         <td>
-                            <input type="text" th:name="|groceryItems[${num}][quantity]|">
+                            <input th:name="|groceryItems[${num}][quantity]|"
+                                   size="1"
+                                   type="number"
+                                   placeholder="1.0"
+                                   min="0"
+                                   max="200"
+                                   step="0.01">
                         </td>
                         <td>
-                            <input list="measures" th:name="|groceryItems[${num}][measure]|">
+                            <input size="7" list="measures" th:name="|groceryItems[${num}][measure]|">
                         </td>
                         <td>
                             <button type="button"
