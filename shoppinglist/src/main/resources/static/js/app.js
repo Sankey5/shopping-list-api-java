@@ -59,7 +59,7 @@ document.body.addEventListener('htmx:afterRequest', function(event) {
 
 function setRecipeParameters(sourceElement) {
     let closestRow = sourceElement.closest('tr');
-    let closestGroceryItemRows = closestRow.querySelectorAll('table.grocery-item-table tr');
+    let closestGroceryItemRows = closestRow.nextElementSibling.querySelectorAll('.recipe-item-row');
 
     let paramArray = [];
 
