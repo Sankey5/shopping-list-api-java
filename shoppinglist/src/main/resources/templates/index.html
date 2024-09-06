@@ -14,12 +14,11 @@
         <script src="https://unpkg.com/htmx.org@2.0.2"></script>
     </head>
     <body class="container-fluid">
-        <div class="row justify-content-center">
+        <div id="heading" class="row justify-content-center">
             <h1 class="display-1 d-none d-md-block">Shopping List</h1>
             <h1 class="display-4 d-sm-block d-md-none">Shopping List</h1>
         </div>
 
-        <!--<div id="recipe-form" class="row justify-content-center"></div>-->
         <div id="recipe-form"
              class="modal fade"
              tabindex="-1"
@@ -31,7 +30,7 @@
             </div>
         </div>
 
-        <div th:fragment="app" id="app-container" class="row h-75 justify-content-center">
+        <div th:fragment="app" id="app-container" class="row justify-content-center">
             <div hx-get="/home/recipes" hx-trigger="load" hx-swap="outerHTML"></div>
             <div hx-get="/home/grocery-list" hx-trigger="load" hx-swap="outerHTML"></div>
         </div>

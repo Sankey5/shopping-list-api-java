@@ -1,13 +1,26 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-    <table th:fragment="grocery-item-table" class="table-sm table-dark grocery-item-table not-visible">
-        <tbody>
-            <tr th:each="groceryItem : ${groceryItems}" class="grocery-item-table-row">
-                <td hidden class="id" th:text="${groceryItem.id}"></td>
-                <td class="name" th:text="${groceryItem.name}"></td>
-                <td class="quantity" th:text="${groceryItem.quantity}"></td>
-                <td class="measure" th:text="${groceryItem.measure}"></td>
-            </tr>
-        </tbody>
-    </table>
+    <tr th:fragment="grocery-item-table" class="grocery-item-table not-visible">
+        <td colspan="3">
+            <table class="col table-dark">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Measure</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="groceryItem : ${groceryItems}"
+                    class="recipe-item-row">
+                    <td hidden class="id" th:text="${groceryItem.id}"></td>
+                    <td class="name" th:text="${groceryItem.name}"></td>
+                    <td class="quantity" th:text="${groceryItem.quantity}"></td>
+                    <td class="measure" th:text="${groceryItem.measure}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+
 </html>

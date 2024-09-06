@@ -212,14 +212,15 @@ function deleteRecipeInputField(event) {
 }
 
 function toggleRecipeDropDown(event) {
-    let currentNode = event.currentTarget;
-    let carrotNode = currentNode.querySelector('.carrot');
-    let childTable = currentNode.querySelector('.grocery-item-table');
+
+    let currentRecipe = event.currentTarget;
+    let carrotNode = currentRecipe.querySelector('.carrot');
+    let nextRow = event.target.closest('tr').nextElementSibling;
 
     toggleCarrotNode(carrotNode);
 
-    if(childTable) {
-        childTable.classList.toggle('not-visible');
+    if(nextRow) {
+        nextRow.classList.toggle('not-visible');
     }
 }
 

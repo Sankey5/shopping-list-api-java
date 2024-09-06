@@ -3,9 +3,12 @@ html, body{
     background-color: #fff;
 }
 
-.heading {
-    background-color: #005f0f;
-    color: white;
+#heading {
+    height: 11%;
+}
+
+#app-container {
+    height: 89%;
 }
 
 .not-visible {
