@@ -1,19 +1,13 @@
 package com.shoppinglist.service;
 
-import com.google.common.collect.ImmutableList;
 import com.shoppinglist.api.dao.GroceryListDAO;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.service.GroceryListService;
-import com.shoppinglist.model.GroceryItemImpl;
-import com.shoppinglist.util.SQLExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.sql.SQLException;
 import java.util.*;
 
 @Service

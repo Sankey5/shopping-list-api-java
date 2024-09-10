@@ -4,8 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.shoppinglist.api.dao.GroceryItemDAO;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.model.GroceryItemImpl;
-import com.shoppinglist.util.Database;
-import com.shoppinglist.util.SQLExceptionHandler;
+import com.shoppinglist.util.DataAccessExceptionHandler;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -15,11 +14,6 @@ import java.util.List;
 
 @Repository
 public class GroceryItemDAOJdbc implements GroceryItemDAO {
-
-    // TODO: Maybe change to static-only class instead or figure out how to make it make sense to instantiate class.
-    public GroceryItemDAOJdbc() {
-        super();
-    }
 
     @Override
     public List<GroceryItem> getGroceryItemsForRecipe(long recipeId) {
@@ -48,7 +42,7 @@ public class GroceryItemDAOJdbc implements GroceryItemDAO {
             }
 
         } catch (SQLException sqlException) {
-            SQLExceptionHandler.handle(sqlException);
+            DataAccessExceptionHandler.handle(sqlException);
         }
 
         return ImmutableList.copyOf(groceryItemsList);
@@ -128,7 +122,7 @@ public class GroceryItemDAOJdbc implements GroceryItemDAO {
             return true;
 
         } catch (SQLException sqlException) {
-            SQLExceptionHandler.handle(sqlException);
+            DataAccessExceptionHandler.handle(sqlException);
         }
 
         return false;

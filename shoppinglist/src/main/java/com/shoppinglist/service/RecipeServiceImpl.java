@@ -5,8 +5,7 @@ import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.api.service.GroceryItemService;
 import com.shoppinglist.api.service.RecipeService;
-import com.shoppinglist.util.Database;
-import com.shoppinglist.util.SQLExceptionHandler;
+import com.shoppinglist.util.DataAccessExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -56,7 +55,7 @@ public class RecipeServiceImpl implements RecipeService {
             return true;
 
         } catch (SQLException e) {
-            SQLExceptionHandler.handle(e);
+            DataAccessExceptionHandler.handle(e);
         }
 
         return false;
@@ -85,7 +84,7 @@ public class RecipeServiceImpl implements RecipeService {
             return true;
 
         } catch (SQLException e) {
-            SQLExceptionHandler.handle(e);
+            DataAccessExceptionHandler.handle(e);
         }
 
         return false;
@@ -116,7 +115,7 @@ public class RecipeServiceImpl implements RecipeService {
             return true;
 
         } catch (SQLException e) {
-            SQLExceptionHandler.handle(e);
+            DataAccessExceptionHandler.handle(e);
         }
 
         return false;

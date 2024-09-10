@@ -4,11 +4,9 @@ import com.google.common.collect.ImmutableList;
 import com.shoppinglist.api.dao.GroceryListDAO;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.model.GroceryItemImpl;
-import com.shoppinglist.util.Database;
-import com.shoppinglist.util.SQLExceptionHandler;
+import com.shoppinglist.util.DataAccessExceptionHandler;
 import org.springframework.stereotype.Repository;
 
-import javax.xml.crypto.Data;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,11 +14,6 @@ import java.util.List;
 
 @Repository
 public class GroceryListDAOJdbc implements GroceryListDAO {
-
-    // TODO: Maybe change to static-only class instead or figure out how to make it make sense to instantiate class.
-    public GroceryListDAOJdbc() {
-        super();
-    }
 
     @Override
     public List<GroceryItem> getGroceryList() {
@@ -49,7 +42,7 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
             }
 
         } catch (SQLException e) {
-            SQLExceptionHandler.handle(e);
+            DataAccessExceptionHandler.handle(e);
             return List.of();
         }
 
@@ -82,7 +75,7 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
             return groceryList;
 
         } catch (SQLException e) {
-            SQLExceptionHandler.handle(e);
+            DataAccessExceptionHandler.handle(e);
         }
 
         return List.of();
@@ -109,7 +102,7 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
             return true;
 
         } catch (SQLException e) {
-            SQLExceptionHandler.handle(e);
+            DataAccessExceptionHandler.handle(e);
         }
 
         return false;
@@ -136,7 +129,7 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
             return true;
 
         } catch (SQLException e) {
-            SQLExceptionHandler.handle(e);
+            DataAccessExceptionHandler.handle(e);
         }
 
         return false;
@@ -153,7 +146,7 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
             return true;
 
         } catch (SQLException e) {
-            SQLExceptionHandler.handle(e);
+            DataAccessExceptionHandler.handle(e);
         }
 
         return false;

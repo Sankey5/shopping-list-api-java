@@ -3,7 +3,7 @@ package com.shoppinglist.service;
 import com.shoppinglist.api.dao.GroceryItemDAO;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.service.GroceryItemService;
-import com.shoppinglist.util.SQLExceptionHandler;
+import com.shoppinglist.util.DataAccessExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -32,7 +32,7 @@ public class GroceryItemServiceImpl implements GroceryItemService {
             newGroceryItems = removeEmptyGroceryItems(newGroceryItems);
             return groceryItemDAO.saveGroceryItemsForRecipe(connection, recipeId, newGroceryItems);
         } catch (SQLException e) {
-            SQLExceptionHandler.handle(e);
+            DataAccessExceptionHandler.handle(e);
             return new ArrayList<>();
         }
     }
@@ -43,7 +43,7 @@ public class GroceryItemServiceImpl implements GroceryItemService {
             updatedGroceryItems = removeEmptyGroceryItems(updatedGroceryItems);
             return groceryItemDAO.updateGroceryItemsForRecipe(connection, recipeId, updatedGroceryItems);
         } catch (SQLException e) {
-            SQLExceptionHandler.handle(e);
+            DataAccessExceptionHandler.handle(e);
             return new ArrayList<>();
         }
     }
@@ -54,7 +54,7 @@ public class GroceryItemServiceImpl implements GroceryItemService {
             // TODO: Change to delete from GroceryList table first as a transaction
             return groceryItemDAO.deleteAllGroceryItemsForRecipe(connection, recipeId);
         } catch (SQLException e) {
-            SQLExceptionHandler.handle(e);
+            DataAccessExceptionHandler.handle(e);
             return false;
         }
     }
