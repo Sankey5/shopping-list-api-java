@@ -18,7 +18,7 @@ import java.util.List;
 public class GroceryListDAOJdbc implements GroceryListDAO {
 
     // TODO: Maybe change to static-only class instead or figure out how to make it make sense to instantiate class.
-    private GroceryListDAOJdbc() {
+    public GroceryListDAOJdbc() {
         super();
     }
 
