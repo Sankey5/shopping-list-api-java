@@ -70,7 +70,7 @@ public class RecipeServiceImpl implements RecipeService {
 
             connection.setAutoCommit(false);
 
-            if(!recipeDAO.updateRecipe(connection, recipeId, updatedRecipe)) {
+            if(!recipeDAO.updateRecipe(recipeId, updatedRecipe)) {
                 connection.rollback();
                 return false;
             }

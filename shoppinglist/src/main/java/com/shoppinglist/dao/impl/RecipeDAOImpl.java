@@ -44,23 +44,22 @@ public class RecipeDAOImpl implements RecipeDAO {
     public List<Recipe> getRecipes() { return ImmutableList.copyOf(recipesList);}
 
     @Override
-    public Optional<Long> saveRecipe(Connection connection, Recipe newRecipe) {
-        // TODO: Major overhaul needed
+    public Optional<Recipe> saveRecipe(Recipe newRecipe) {
         recipesList.add((RecipeImpl) newRecipe);
-        return Optional.empty();
+        return Optional.of(newRecipe);
     }
 
     @Override
-    public boolean updateRecipe(Connection connection, long recipeId, Recipe updatedRecipe) {
+    public Optional<Recipe> updateRecipe(long recipeId, Recipe updatedRecipe) {
 
         if(recipeExists(updatedRecipe)) {
             recipesList = recipesList.stream()
                     .map( r ->  r.getId() == recipeId ? (RecipeImpl) updatedRecipe : r)
                     .collect(Collectors.toList());
-            return true;
+            return Optional.of(new RecipeImpl(recipeId, updatedRecipe.getName(), updatedRecipe.getGroceryItems()));
         }
 
-        return false;
+        return Optional.empty();
     }
 
     private boolean recipeExists(Recipe recipe) {
@@ -71,7 +70,7 @@ public class RecipeDAOImpl implements RecipeDAO {
     }
 
     @Override
-    public boolean deleteRecipe(Connection connection, long recipeId) {
+    public boolean deleteRecipe(long recipeId) {
         for(int r = 0; r < recipesList.size(); r++) {
             if(recipeId == recipesList.get(r).getId()) {
                 recipesList.remove(r);

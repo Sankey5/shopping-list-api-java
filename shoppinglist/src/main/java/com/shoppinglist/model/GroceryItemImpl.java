@@ -28,15 +28,13 @@ public class GroceryItemImpl implements GroceryItem {
     public GroceryItemImpl(@JsonProperty("name") String name,
                            @JsonProperty("quantity") Double quantity,
                            @JsonProperty("measure") String measure) {
-        System.out.println("Creating groceryItemImpl empty");
+        LOGGER.debug("Creating groceryItemImpl empty");
         this.id = 0;
         setName(name);
-        System.out.println("Name set");
+        LOGGER.debug("Name set");
         setQuantity(quantity);
-        System.out.println("quantity set");
+        LOGGER.debug("quantity set");
         setMeasure(measure);
-
-        System.out.printf("Current grocery item %s%n", this);
     }
 
     public GroceryItemImpl(long id,

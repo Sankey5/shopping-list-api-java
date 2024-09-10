@@ -4,47 +4,42 @@ import com.google.common.collect.ImmutableList;
 import com.shoppinglist.api.dao.GroceryListDAO;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.model.GroceryItemImpl;
+import com.shoppinglist.util.BatchExecutionHelper;
 import com.shoppinglist.util.DataAccessExceptionHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class GroceryListDAOJdbc implements GroceryListDAO {
+
+    private JdbcTemplate jdbcTemplate;
+
+    public GroceryListDAOJdbc(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public List<GroceryItem> getGroceryList() {
 
         final String sqlStatement = """
-                                    SELECT GroceryItem.GroceryItemId, GroceryItem.Name, GroceryItem.Quantity, GroceryItem.Measure
+                                    SELECT GroceryItem.GroceryItemId AS id,
+                                            GroceryItem.Name AS name,
+                                            GroceryItem.Quantity AS quantity,
+                                            GroceryItem.Measure AS measure
                                     FROM GroceryItem
                                     INNER JOIN GroceryList ON GroceryList.GroceryItemId = GroceryItem.GroceryItemId
                                     """;
-        ArrayList<GroceryItemImpl> shoppingList = new ArrayList<>();
 
-        try(Connection connection = Database.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sqlStatement)) {
-
-            ResultSet rs = ps.executeQuery();
-
-            while(rs.next()) {
-                GroceryItemImpl currGroceryItem = new GroceryItemImpl(
-                        rs.getLong(1),
-                        rs.getString(2),
-                        BigDecimal.valueOf(rs.getDouble(3)),
-                        rs.getString(4)
-                );
-
-                shoppingList.add(currGroceryItem);
-            }
-
-        } catch (SQLException e) {
-            DataAccessExceptionHandler.handle(e);
-            return List.of();
-        }
+        List<GroceryItemImpl> shoppingList = jdbcTemplate.queryForList(sqlStatement, GroceryItemImpl.class);
 
         return ImmutableList.copyOf(shoppingList);
     }
@@ -54,102 +49,55 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
 
         final String sqlStatement = "INSERT INTO GroceryList (GroceryItemId) VALUES (?)";
 
-        try(Connection connection = Database.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sqlStatement)) {
-
-            connection.setAutoCommit(false);
-
-            for (GroceryItem currGI : groceryList) {
-                ps.setLong(1, currGI.getId());
-                ps.addBatch();
+        BatchPreparedStatementSetter bpss = new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setLong(1, groceryList.get(i).getId());
             }
 
-            int[] returnVals = ps.executeBatch();
-
-            if (Database.failedBatchExecution(returnVals)) {
-                connection.rollback();
-                return List.of();
+            @Override
+            public int getBatchSize() {
+                return groceryList.size();
             }
+        };
 
-            connection.commit();
-            return groceryList;
+        int[] createdRows = jdbcTemplate.batchUpdate(sqlStatement, bpss);
 
-        } catch (SQLException e) {
-            DataAccessExceptionHandler.handle(e);
-        }
+        if (BatchExecutionHelper.failedBatchExecution(createdRows))
+            throw new RuntimeException(String.format(
+                    "Failed adding one or more grocery items to the grocery list: %s",
+                    groceryList));
 
-        return List.of();
+        return groceryList;
     }
 
     @Override
     public boolean deleteGroceryListItem(long groceryItemId) {
         final String sqlStatement = "DELETE FROM GroceryList WHERE GroceryItemId = ? FETCH FIRST ROW ONLY";
 
-        try(Connection connection = Database.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sqlStatement)) {
+        int numDeletedRows = jdbcTemplate.update(sqlStatement, groceryItemId, Long.class);
 
-            connection.setAutoCommit(false);
-
-            ps.setLong(1, groceryItemId);
-            int deletedItems = ps.executeUpdate();
-
-            if (deletedItems != 1) {
-                connection.rollback();
-                return false;
-            }
-
-            connection.commit();
-            return true;
-
-        } catch (SQLException e) {
-            DataAccessExceptionHandler.handle(e);
-        }
-
-        return false;
+        return numDeletedRows == 1;
     }
 
     @Override
     public boolean deleteAllOfGroceryListItem(long groceryItemId) {
         final String sqlStatement = "DELETE FROM GroceryList WHERE GroceryItemId = ?";
 
-        try(Connection connection = Database.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sqlStatement)) {
+        int numDeletedRows = jdbcTemplate.update(sqlStatement, groceryItemId, Long.class);
 
-            connection.setAutoCommit(false);
+        if (numDeletedRows < 1)
+            throw new RuntimeException("No rows delete or no rows to delete");
 
-            ps.setLong(1, groceryItemId);
-            int deletedItems = ps.executeUpdate();
-
-            if (deletedItems < 1) {
-                connection.rollback();
-                return false;
-            }
-
-            connection.commit();
-            return true;
-
-        } catch (SQLException e) {
-            DataAccessExceptionHandler.handle(e);
-        }
-
-        return false;
+        return true;
     }
 
     @Override
     public boolean deleteGroceryList() {
         final String sqlStatement = "DELETE FROM GroceryList";
 
-        try(Connection connection = Database.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sqlStatement)) {
+        int deletedRows = jdbcTemplate.update(sqlStatement);
 
-            ps.executeUpdate();
-            return true;
-
-        } catch (SQLException e) {
-            DataAccessExceptionHandler.handle(e);
-        }
-
-        return false;
+        return deletedRows < 1;
     }
-
 }
