@@ -36,13 +36,13 @@ public class GroceryItemDAOImpl implements GroceryItemDAO {
     public List<GroceryItem> getGroceryItemsForRecipe(long recipeId) { return ImmutableList.copyOf(groceryItemsList);}
 
     @Override
-    public List<GroceryItem> saveGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> newGroceryItem) {
+    public List<GroceryItem> saveGroceryItemsForRecipe(long recipeId, List<GroceryItem> newGroceryItem) {
         groceryItemsList.add((GroceryItemImpl) newGroceryItem);
         return ImmutableList.copyOf(groceryItemsList);
     }
 
     @Override
-    public List<GroceryItem> updateGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> updatedGroceryItems) {
+    public List<GroceryItem> updateGroceryItemsForRecipe(long recipeId, List<GroceryItem> updatedGroceryItems) {
 
         // TODO: Needs a major upgrade in terms of performance
         for(GroceryItem updatedGroceryItem: updatedGroceryItems) {
@@ -68,7 +68,7 @@ public class GroceryItemDAOImpl implements GroceryItemDAO {
     }
 
     @Override
-    public boolean deleteAllGroceryItemsForRecipe(Connection connection, long recipeId) {
+    public boolean deleteAllGroceryItemsForRecipe(long recipeId) {
         // TODO: Implement
         return false;
     }
