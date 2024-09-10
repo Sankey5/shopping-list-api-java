@@ -4,7 +4,10 @@ import com.google.common.collect.ImmutableList;
 import com.shoppinglist.api.dao.GroceryItemDAO;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.model.GroceryItemImpl;
+import com.shoppinglist.util.BatchExecutionHelper;
 import com.shoppinglist.util.DataAccessExceptionHandler;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -15,6 +18,12 @@ import java.util.List;
 @Repository
 public class GroceryItemDAOJdbc implements GroceryItemDAO {
 
+    private JdbcTemplate jdbcTemplate;
+
+    public GroceryItemDAOJdbc (JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     @Override
     public List<GroceryItem> getGroceryItemsForRecipe(long recipeId) {
         final String sqlStatement = """
@@ -22,109 +31,111 @@ public class GroceryItemDAOJdbc implements GroceryItemDAO {
                                        FROM GroceryItem
                                        WHERE RecipeId = ?
                                     """;
-        ArrayList<GroceryItemImpl> groceryItemsList = new ArrayList<>();
 
-        try(Connection con = Database.getConnection();
-        PreparedStatement ps = con.prepareStatement(sqlStatement);) {
-
-            ps.setLong(1, recipeId);
-            ResultSet rs = ps.executeQuery();
-
-            while(rs.next()) {
-                GroceryItemImpl currGI = new GroceryItemImpl(
+        List<GroceryItemImpl> groceryItemsList = jdbcTemplate.queryForStream(
+                con -> {
+                    PreparedStatement ps = con.prepareStatement(sqlStatement);
+                    ps.setLong(1, recipeId);
+                    return ps;
+                },
+                (rs, rowNum) -> new GroceryItemImpl(
                         rs.getLong("GroceryItemId"),
                         rs.getString("Name"),
                         BigDecimal.valueOf(rs.getDouble("Quantity")),
-                        rs.getString("Measure")
-                );
-
-                groceryItemsList.add(currGI);
-            }
-
-        } catch (SQLException sqlException) {
-            DataAccessExceptionHandler.handle(sqlException);
-        }
+                        rs.getString("Measure"))
+        ).toList();
 
         return ImmutableList.copyOf(groceryItemsList);
     }
 
     @Override
-    public List<GroceryItem> saveGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> newGroceryItems) throws SQLException {
+    public List<GroceryItem> saveGroceryItemsForRecipe(long recipeId, List<GroceryItem> newGroceryItems) {
         final String sqlInsertGroceries = "INSERT INTO GroceryItem (Name, Quantity, Measure, RecipeId) Values (?, ?, ?, " + recipeId + ")";
 
-        try(PreparedStatement ps = connection.prepareStatement(sqlInsertGroceries);) {
-
-            for (GroceryItem currGI : newGroceryItems) {
-                ps.setString(1, currGI.getName());
-                ps.setDouble(2, currGI.getQuantity().doubleValue());
-                ps.setString(3, currGI.getMeasure());
-
-                ps.addBatch();
+        int[] retVals = jdbcTemplate.batchUpdate(sqlInsertGroceries, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setString(1, newGroceryItems.get(i).getName());
+                ps.setDouble(2, newGroceryItems.get(i).getQuantity().doubleValue());
+                ps.setString(3, newGroceryItems.get(i).getMeasure());
             }
 
-            int[] retVals = ps.executeBatch();
+            @Override
+            public int getBatchSize() {
+                return newGroceryItems.size();
+            }
+        });
 
-            if(Database.failedBatchExecution(retVals))
-                return List.of();
-
-        }
+        if(BatchExecutionHelper.failedBatchExecution(retVals))
+            throw new RuntimeException(String.format(
+                    "Failed to create one or more grocery items for the recipe id [%d]: %s",
+                    recipeId, newGroceryItems)
+            );
 
         return newGroceryItems;
     }
 
     @Override
-    public List<GroceryItem> updateGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> updatedGroceryItem) throws SQLException {
+    public List<GroceryItem> updateGroceryItemsForRecipe(long recipeId, List<GroceryItem> updatedGroceryItems) {
         final String sqlInsertGroceries = """
                                              UPDATE GroceryItem
                                              SET Name = ?, Quantity = ?, Measure = ?
                                              WHERE GroceryItemId = ?
                                           """;
 
-        try(PreparedStatement ps = connection.prepareStatement(sqlInsertGroceries);) {
-
-            for (GroceryItem currGI : updatedGroceryItem) {
-                ps.setString(1, currGI.getName());
-                ps.setDouble(2, currGI.getQuantity().doubleValue());
-                ps.setString(3, currGI.getMeasure());
-                ps.setLong(4, currGI.getId());
-
-                ps.addBatch();
+        int[] numUpdatedGroceryItems = jdbcTemplate.batchUpdate(sqlInsertGroceries, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setString(1, updatedGroceryItems.get(i).getName());
+                ps.setDouble(2, updatedGroceryItems.get(i).getQuantity().doubleValue());
+                ps.setString(3, updatedGroceryItems.get(i).getMeasure());
+                ps.setLong(4, updatedGroceryItems.get(i).getId());
             }
 
-            ps.executeBatch();
-        }
+            @Override
+            public int getBatchSize() {
+                return updatedGroceryItems.size();
+            }
+        });
 
-        // TODO: Cheating. Need to ensure the grocery items were saved in the database correctly by pulling those same ones from the database.
-        return updatedGroceryItem;
+        if(BatchExecutionHelper.failedBatchExecution(numUpdatedGroceryItems))
+            throw new RuntimeException(String.format(
+                    "Failed to update one or more grocery items for the recipe id [%d]: %s",
+                    recipeId, updatedGroceryItems)
+            );
+
+        return updatedGroceryItems;
     }
 
     @Override
-    public boolean deleteAllGroceryItemsForRecipe (Connection connection, long recipeId) throws SQLException {
+    public boolean deleteAllGroceryItemsForRecipe (long recipeId) {
         final String sqlDeleteGroceries = "DELETE FROM GroceryItem WHERE RecipeId = ?";
 
-        try (PreparedStatement ps = connection.prepareStatement(sqlDeleteGroceries);) {
+        int deletedRows = jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sqlDeleteGroceries);
             ps.setLong(1, recipeId);
-            ps.executeUpdate();
-            return true;
-        }
+            return ps;
+        });
+
+        if (deletedRows < 1)
+            throw new RuntimeException(String.format("Failed deleting grocery items for recipe [%d]", recipeId));
+
+        return true;
     }
 
     @Override
     public boolean deleteGroceryItem(long groceryItemId) {
         final String sqlDeleteGroceries = "DELETE FROM GroceryItem WHERE GroceryItemId = ?";
 
-        try (Connection connection = Database.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sqlDeleteGroceries);) {
-
+        int deletedRows = jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sqlDeleteGroceries);
             ps.setLong(1, groceryItemId);
-            ps.executeUpdate();
+            return ps;
+        });
 
-            return true;
+        if (deletedRows < 1)
+            throw new RuntimeException(String.format("Failed deleting grocery item with id [%d]", groceryItemId));
 
-        } catch (SQLException sqlException) {
-            DataAccessExceptionHandler.handle(sqlException);
-        }
-
-        return false;
+        return true;
     }
 }
