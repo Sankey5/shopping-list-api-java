@@ -11,9 +11,9 @@ public interface RecipeDAO {
 
     List<Recipe> getRecipes();
 
-    Optional<Long> saveRecipe(Connection connection, Recipe newRecipe);
+    Optional<Recipe> saveRecipe(Recipe newRecipe);
 
-    boolean updateRecipe(Connection connection, long recipeId, Recipe updatedRecipe);
+    Optional<Recipe> updateRecipe(long recipeId, Recipe updatedRecipe);
 
-    boolean deleteRecipe(Connection connection, long recipeId);
+    boolean deleteRecipe(long recipeId);
 }
