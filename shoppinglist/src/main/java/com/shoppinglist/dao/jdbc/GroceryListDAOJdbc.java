@@ -91,6 +91,27 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
 
         return true;
     }
+    
+    @Override public boolean deleteAllGroceryListItems(List<Long> groceryListItemIds) {
+
+        final String sqlStatement = "DELETE FROM GroceryList WHERE GroceryItemId = ?";
+
+        BatchPreparedStatementSetter bpss = new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setLong(1, groceryListItemIds.get(i));
+            }
+
+            @Override
+            public int getBatchSize() {
+                return groceryListItemIds.size();
+            }
+        };
+
+        int[] deletedRows = jdbcTemplate.batchUpdate(sqlStatement, bpss);
+        
+        return BatchExecutionHelper.failedBatchExecution(deletedRows);
+    }
 
     @Override
     public boolean deleteGroceryList() {

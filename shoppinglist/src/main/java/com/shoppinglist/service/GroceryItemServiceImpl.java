@@ -39,12 +39,13 @@ public class GroceryItemServiceImpl implements GroceryItemService {
         return groceryItemDAO.updateGroceryItemsForRecipe(recipeId, updatedGroceryItems);
     }
 
-    @Transactional
     @Override public boolean deleteAllGroceryItemsForRecipe(long recipeId) {
 
-        // TODO: Change to delete from GroceryList table first as a transaction
+        List<Long> groceryItemIds = groceryItemDAO.getGroceryItemsForRecipe(recipeId).stream()
+                .map(GroceryItem::getId).toList();
 
-        return groceryItemDAO.deleteAllGroceryItemsForRecipe(recipeId);
+        return groceryListService.deleteAllGroceryListItems(groceryItemIds) &&
+                groceryItemDAO.deleteAllGroceryItemsForRecipe(recipeId);
     }
 
     @Transactional

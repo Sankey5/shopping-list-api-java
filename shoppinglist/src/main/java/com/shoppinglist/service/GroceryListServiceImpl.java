@@ -13,14 +13,10 @@ import java.util.*;
 @Service
 public class GroceryListServiceImpl implements GroceryListService {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(GroceryListServiceImpl.class);
-
-    @Autowired
-    GroceryListDAO groceryListDAO;
+    @Autowired GroceryListDAO groceryListDAO;
 
     @Override
     public List<GroceryItem> getGroceryList(){
-
         List<GroceryItem> returnedList = groceryListDAO.getGroceryList();
         return reduceSimilarItems(returnedList);
     }
@@ -38,6 +34,11 @@ public class GroceryListServiceImpl implements GroceryListService {
     @Override
     public boolean deleteAllOfGroceryListItem(long groceryItemId) {
         return groceryListDAO.deleteAllOfGroceryListItem(groceryItemId);
+    }
+
+    @Override
+    public boolean deleteAllGroceryListItems(List<Long> groceryListItemIds) {
+        return groceryListDAO.deleteAllGroceryListItems(groceryListItemIds);
     }
 
     @Override
