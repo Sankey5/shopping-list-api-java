@@ -11,6 +11,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementSetter;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -34,7 +35,9 @@ public class RecipeDAOJdbc implements RecipeDAO {
     public List<Recipe> getRecipes() {
         final String sqlQuery = "SELECT RecipeId AS id, Name AS name FROM Recipe";
 
-        List<RecipeImpl> recipesList = jdbcTemplate.queryForList(sqlQuery, RecipeImpl.class);
+        List<RecipeImpl> recipesList = jdbcTemplate.query(sqlQuery, (rs, rowNum) ->
+                new RecipeImpl(rs.getLong(1), rs.getString(2))
+        );
 
         return ImmutableList.copyOf(recipesList);
     }
@@ -43,7 +46,15 @@ public class RecipeDAOJdbc implements RecipeDAO {
     public Recipe saveRecipe(String recipeName) {
         final String sqlQuery = "INSERT INTO Recipe (Name) VALUES (?)";
 
-        PreparedStatementCreator psc = con -> con.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
+        PreparedStatementCreator psc = new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1, recipeName);
+                return ps;
+            }
+        };
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         int numInsertedRows = jdbcTemplate.update(psc, keyHolder);
