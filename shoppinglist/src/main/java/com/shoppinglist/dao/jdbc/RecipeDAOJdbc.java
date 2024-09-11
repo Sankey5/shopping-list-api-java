@@ -88,7 +88,7 @@ public class RecipeDAOJdbc implements RecipeDAO {
     public boolean deleteRecipe(long recipeId) {
         final String sqlDeleteRecipes = "DELETE FROM Recipe WHERE RecipeId = ?";
 
-        int deletedRows = jdbcTemplate.update(sqlDeleteRecipes, recipeId, Long.class);
+        int deletedRows = jdbcTemplate.update(sqlDeleteRecipes, ps -> ps.setLong(1, recipeId));
 
         if (deletedRows != 1)
             throw new RuntimeException(String.format("Unable to delete recipe with id: %d", recipeId));
