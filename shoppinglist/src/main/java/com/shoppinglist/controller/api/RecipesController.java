@@ -23,28 +23,30 @@ public class RecipesController {
     }
 
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<String> saveRecipe(@RequestBody Recipe newRecipe) {
+    public ResponseEntity<Recipe> saveRecipe(@RequestBody Recipe newRecipe) {
 
-        // TODO: Return list instead of boolean
-        if(!recipeService.saveRecipe(newRecipe)) {
+        Recipe newRecipeFromDB = recipeService.saveRecipe(newRecipe);
+
+        if(newRecipeFromDB.isAllDefault()) {
             return ResponseEntity.badRequest().build();
         }
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(newRecipeFromDB);
     }
 
     @PutMapping(value = "/{recipeId}", consumes = "application/json")
-    public ResponseEntity<String> updateRecipe(@PathVariable long recipeId, @RequestBody Recipe updatedRecipe) {
+    public ResponseEntity<Recipe> updateRecipe(@PathVariable long recipeId, @RequestBody Recipe updatedRecipe) {
 
         if(recipeId <= 0)
             return  ResponseEntity.badRequest().build();
 
-        // TODO: Return list instead of boolean
-        if(!recipeService.updateRecipe(recipeId, updatedRecipe)) {
+        Recipe updateRecipeFromDB = recipeService.updateRecipe(recipeId, updatedRecipe);
+
+        if(updateRecipeFromDB.isAllDefault()) {
             return ResponseEntity.badRequest().build();
         }
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(updateRecipeFromDB);
     }
 
     @DeleteMapping(value = "/{recipeId}")
