@@ -17,4 +17,6 @@ public interface Recipe {
     List<GroceryItem> getGroceryItems();
 
     void setGroceryItems(List<GroceryItem> groceryItems);
+
+    boolean isAllDefault();
 }

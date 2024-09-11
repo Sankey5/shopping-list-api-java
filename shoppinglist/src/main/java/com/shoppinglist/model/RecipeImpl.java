@@ -70,6 +70,11 @@ public class RecipeImpl implements Recipe {
     }
 
     @Override
+    public boolean isAllDefault() {
+        return this.id == 0 && this.name.isEmpty() && this.groceryItems.isEmpty();
+    }
+
+    @Override
     public boolean equals(Object g) {
         if (g == null || this.getClass() != g.getClass())
             return false;

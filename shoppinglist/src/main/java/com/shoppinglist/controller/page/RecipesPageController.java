@@ -47,7 +47,9 @@ public class RecipesPageController {
     public ModelAndView createRecipe(@RequestBody Recipe newRecipe) {
         ModelAndView modelAndView = new ModelAndView("recipes.html :: recipes-rows");
 
-        if(!recipeService.saveRecipe(newRecipe)) {
+        Recipe newRecipeFromDB = recipeService.saveRecipe(newRecipe);
+
+        if(newRecipeFromDB.isAllDefault()) {
             modelAndView.setStatus(HttpStatusCode.valueOf(400));
             return modelAndView;
         }
