@@ -40,25 +40,22 @@ public class RecipeDAOJdbc implements RecipeDAO {
     }
 
     @Override
-    public Optional<Recipe> saveRecipe(Recipe recipe) {
+    public Recipe saveRecipe(Recipe recipe) {
         final String sqlQuery = "INSERT INTO Recipe (Name) VALUES (?)";
 
         PreparedStatementCreator psc = con -> con.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
+
         int numInsertedRows = jdbcTemplate.update(psc, keyHolder);
 
         if (numInsertedRows != 1 || Objects.isNull(keyHolder.getKey()))
-            return Optional.empty();
+            throw new RuntimeException(String.format("Unable to create recipe: %s", recipe));
 
-        RecipeImpl newRecipe = new RecipeImpl(keyHolder.getKey().longValue(),
-                                                recipe.getName());
-
-        return Optional.of(newRecipe);
+        return new RecipeImpl(keyHolder.getKey().longValue(), recipe.getName());
     }
 
     @Override
-    public Optional<Recipe> updateRecipe(long recipeId, Recipe updatedRecipe) {
+    public Recipe updateRecipe(long recipeId, Recipe updatedRecipe) {
         final String sqlQuery = "UPDATE Recipe SET Name = ? WHERE RecipeId = ?";
 
         int numUpdatedRows = jdbcTemplate.update(con -> {
@@ -71,9 +68,9 @@ public class RecipeDAOJdbc implements RecipeDAO {
         });
 
         if (numUpdatedRows != 1)
-            return Optional.empty();
+            throw new RuntimeException(String.format("Unable to update recipe: %s", updatedRecipe));
 
-        return Optional.of(updatedRecipe);
+        return updatedRecipe;
     }
 
     @Override
