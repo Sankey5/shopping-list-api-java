@@ -9,11 +9,11 @@ public interface GroceryItemService {
 
     List<GroceryItem> getGroceryItemsForRecipe(long recipeId);
 
-    List<GroceryItem> saveGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> newGroceryItems);
+    List<GroceryItem> saveGroceryItemsForRecipe(long recipeId, List<GroceryItem> newGroceryItems);
 
-    List<GroceryItem> updateGroceryItemsForRecipe(Connection connection, long recipeId, List<GroceryItem> updatedGroceryItems);
+    List<GroceryItem> updateGroceryItemsForRecipe(long recipeId, List<GroceryItem> updatedGroceryItems);
 
-    boolean deleteAllGroceryItemsForRecipe(Connection connection, long recipeId);
+    boolean deleteAllGroceryItemsForRecipe(long recipeId);
 
     boolean deleteGroceryItem(long groceryItemId);
 }
