@@ -44,7 +44,7 @@
                                     hx-target="closest .recipe"
                                     hx-confirm="Are you sure?"
                                     hx-swap="delete"
-                                    class="btn btn-danger">&times;</button>
+                                    class="delete-recipe-btn btn btn-danger">&times;</button>
                         </td>
                     </tr>
                     <tr th:attr="hx-get=@{ /home/recipes/{recipeId}/grocery-items(recipeId=${recipe.id}) }"

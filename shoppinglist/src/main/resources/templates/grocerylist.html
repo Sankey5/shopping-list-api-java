@@ -13,7 +13,10 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="groceryItem : ${groceryList}" >
+                <tr th:fragment="grocerylistRows"
+                    th:each="groceryItem : ${groceryList}"
+                    hx-get="/home/grocery-list/rows"
+                    hx-trigger="refreshGroceryList from:body">
                     <td th:text="${groceryItem.name}" class="align-middle">Name</td>
                     <td th:text="${groceryItem.quantity.toPlainString}" class="align-middle">Quantity</td>
                     <td th:text="${groceryItem.measure}" class="align-middle">Measure</td>

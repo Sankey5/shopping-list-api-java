@@ -55,6 +55,6 @@ public class RecipesController {
         if(!recipeService.deleteRecipe(recipeId))
             return ResponseEntity.badRequest().build();
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().header("HX-Trigger", "refreshGroceryList").build();
     }
 }

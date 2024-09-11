@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -27,6 +28,16 @@ public class GroceryListPageController {
 
         model.addAttribute("groceryList", groceryList);
         return "grocerylist.html :: grocerylist";
+    }
+
+    @GetMapping("/rows")
+    public ModelAndView getShoppingListRows() {
+        ModelAndView modelAndView = new ModelAndView("grocerylist.html :: grocerylistRows");
+
+        List<GroceryItem> groceryList = groceryListService.getGroceryList();
+
+        modelAndView.addObject("groceryList", groceryList);
+        return modelAndView;
     }
 
     @PostMapping(consumes = "application/json")
