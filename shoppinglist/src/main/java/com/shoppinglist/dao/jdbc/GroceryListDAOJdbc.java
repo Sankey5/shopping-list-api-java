@@ -5,19 +5,12 @@ import com.shoppinglist.api.dao.GroceryListDAO;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.model.GroceryItemImpl;
 import com.shoppinglist.util.BatchExecutionHelper;
-import com.shoppinglist.util.DataAccessExceptionHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class GroceryListDAOJdbc implements GroceryListDAO {
@@ -82,19 +75,22 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
     public boolean deleteGroceryListItem(long groceryItemId) {
         final String sqlStatement = "DELETE FROM GroceryList WHERE GroceryItemId = ? FETCH FIRST ROW ONLY";
 
-        int numDeletedRows = jdbcTemplate.update(sqlStatement, groceryItemId, Long.class);
+        int numDeletedRows = jdbcTemplate.update(sqlStatement, groceryItemId);
 
-        return numDeletedRows == 1;
+        if (numDeletedRows == Statement.EXECUTE_FAILED || numDeletedRows == Statement.SUCCESS_NO_INFO)
+            throw new RuntimeException("Error in deleting rows");
+
+        return true;
     }
 
     @Override
     public boolean deleteAllOfGroceryListItem(long groceryItemId) {
         final String sqlStatement = "DELETE FROM GroceryList WHERE GroceryItemId = ?";
 
-        int numDeletedRows = jdbcTemplate.update(sqlStatement, groceryItemId, Long.class);
+        int numDeletedRows = jdbcTemplate.update(sqlStatement, groceryItemId);
 
-        if (numDeletedRows < 1)
-            throw new RuntimeException("No rows delete or no rows to delete");
+        if (numDeletedRows == Statement.EXECUTE_FAILED || numDeletedRows == Statement.SUCCESS_NO_INFO)
+            throw new RuntimeException("Error in deleting rows");
 
         return true;
     }
@@ -124,8 +120,11 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
     public boolean deleteGroceryList() {
         final String sqlStatement = "DELETE FROM GroceryList";
 
-        int deletedRows = jdbcTemplate.update(sqlStatement);
+        int numDeletedRows = jdbcTemplate.update(sqlStatement);
 
-        return deletedRows < 1;
+        if (numDeletedRows == Statement.EXECUTE_FAILED || numDeletedRows == Statement.SUCCESS_NO_INFO)
+            throw new RuntimeException("Error in deleting rows");
+
+        return true;
     }
 }
