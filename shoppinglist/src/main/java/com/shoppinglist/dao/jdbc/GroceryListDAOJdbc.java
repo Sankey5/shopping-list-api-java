@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,7 +40,13 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
                                     INNER JOIN GroceryList ON GroceryList.GroceryItemId = GroceryItem.GroceryItemId
                                     """;
 
-        List<GroceryItemImpl> shoppingList = jdbcTemplate.queryForList(sqlStatement, GroceryItemImpl.class);
+        List<GroceryItemImpl> shoppingList = jdbcTemplate.query(sqlStatement,
+                (rs, rowNum) -> new GroceryItemImpl(
+                rs.getLong(1),
+                rs.getString(2),
+                rs.getBigDecimal(3),
+                rs.getString(4)
+        ));
 
         return ImmutableList.copyOf(shoppingList);
     }
@@ -110,7 +117,7 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
 
         int[] deletedRows = jdbcTemplate.batchUpdate(sqlStatement, bpss);
         
-        return BatchExecutionHelper.failedBatchExecution(deletedRows);
+        return BatchExecutionHelper.successfulBatchExecution(deletedRows);
     }
 
     @Override

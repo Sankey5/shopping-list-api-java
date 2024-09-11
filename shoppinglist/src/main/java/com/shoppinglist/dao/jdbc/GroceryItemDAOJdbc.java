@@ -32,7 +32,7 @@ public class GroceryItemDAOJdbc implements GroceryItemDAO {
                                        WHERE RecipeId = ?
                                     """;
 
-        List<GroceryItemImpl> groceryItemsList = jdbcTemplate.queryForStream(
+        List<GroceryItemImpl> groceryItemsList = jdbcTemplate.query(
                 con -> {
                     PreparedStatement ps = con.prepareStatement(sqlStatement);
                     ps.setLong(1, recipeId);
@@ -43,7 +43,7 @@ public class GroceryItemDAOJdbc implements GroceryItemDAO {
                         rs.getString("Name"),
                         BigDecimal.valueOf(rs.getDouble("Quantity")),
                         rs.getString("Measure"))
-        ).toList();
+        );
 
         return ImmutableList.copyOf(groceryItemsList);
     }

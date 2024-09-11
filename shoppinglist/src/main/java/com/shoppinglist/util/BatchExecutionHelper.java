@@ -13,4 +13,14 @@ public class BatchExecutionHelper {
 
         return false;
     }
+
+    public static boolean successfulBatchExecution(int[] retVals) {
+
+        for(int retVal : retVals){
+            if (retVal == Statement.EXECUTE_FAILED || retVal == Statement.SUCCESS_NO_INFO)
+                return false;
+        }
+
+        return true;
+    }
 }

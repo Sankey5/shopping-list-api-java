@@ -7,6 +7,8 @@ import com.shoppinglist.api.service.GroceryItemService;
 import com.shoppinglist.api.service.RecipeService;
 import com.shoppinglist.model.RecipeImpl;
 import com.shoppinglist.util.DataAccessExceptionHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
