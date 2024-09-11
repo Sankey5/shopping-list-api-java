@@ -12,9 +12,9 @@ public interface RecipeService {
 
     List<Recipe> getRecipes();
 
-    boolean saveRecipe(Recipe newRecipe);
+    Recipe saveRecipe(Recipe newRecipe);
 
-    boolean updateRecipe(long recipeId, Recipe recipe);
+    Recipe updateRecipe(long recipeId, Recipe recipe);
 
     boolean deleteRecipe(long recipeId);
 

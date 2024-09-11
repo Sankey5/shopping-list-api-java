@@ -5,14 +5,17 @@ import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.api.service.GroceryItemService;
 import com.shoppinglist.api.service.RecipeService;
+import com.shoppinglist.model.RecipeImpl;
 import com.shoppinglist.util.DataAccessExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -27,97 +30,38 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<Recipe> getRecipes() {return recipeDAO.getRecipes();}
 
-    @Override
-    public boolean saveRecipe(Recipe newRecipe) {
-        long recipeId;
+    @Transactional
+    @Override public Recipe saveRecipe(Recipe newRecipe) {
+
+        if (Objects.isNull(newRecipe.getName()))
+            return new RecipeImpl(0, "", List.of());
+
+        Recipe recipeFromDatabase = recipeDAO.saveRecipe(newRecipe.getName());
+
+        long recipeId = recipeFromDatabase.getId();
         List<GroceryItem> groceryItems = newRecipe.getGroceryItems();
 
-        // TODO: Check if recipe name is null and return false otherwise
+        List<GroceryItem> newGroceryItems = groceryItemService.saveGroceryItemsForRecipe(recipeId, groceryItems);
 
-        try(Connection connection = Database.getConnection();) {
-
-            connection.setAutoCommit(false);
-            Optional<Long> generatedKeysOpt = recipeDAO.saveRecipe(connection, newRecipe);
-
-            if(generatedKeysOpt.isEmpty()) {
-                connection.rollback();
-                return false;
-            }
-            recipeId = generatedKeysOpt.get();
-
-            if(groceryItemService.saveGroceryItemsForRecipe(connection, recipeId, groceryItems).isEmpty()) {
-                connection.rollback();
-                return false;
-            }
-
-            connection.commit();
-
-            return true;
-
-        } catch (SQLException e) {
-            DataAccessExceptionHandler.handle(e);
-        }
-
-        return false;
+        recipeFromDatabase.setGroceryItems(newGroceryItems);
+        return recipeFromDatabase;
     }
 
-    @Override
-    public boolean updateRecipe(long recipeId, Recipe updatedRecipe) {
+    @Transactional
+    @Override public Recipe updateRecipe(long recipeId, Recipe updatedRecipe) {
 
-        // TODO: Check if recipe name is null and return false otherwise
+        if (Objects.isNull(updatedRecipe.getName()))
+            return new RecipeImpl(0, "", List.of());
 
-        try(Connection connection = Database.getConnection();) {
+        String updatedRecipeName = recipeDAO.updateRecipeName(recipeId, updatedRecipe.getName());
+        List<GroceryItem> updatedGroceryItems = groceryItemService.updateGroceryItemsForRecipe(recipeId, updatedRecipe.getGroceryItems());
 
-            connection.setAutoCommit(false);
-
-            if(!recipeDAO.updateRecipe(recipeId, updatedRecipe)) {
-                connection.rollback();
-                return false;
-            }
-
-            if (groceryItemService.updateGroceryItemsForRecipe(connection, recipeId, updatedRecipe.getGroceryItems()).isEmpty()) {
-                connection.rollback();
-                return false;
-            }
-
-            connection.commit();
-            return true;
-
-        } catch (SQLException e) {
-            DataAccessExceptionHandler.handle(e);
-        }
-
-        return false;
+        return new RecipeImpl(recipeId, updatedRecipeName, updatedGroceryItems);
     }
 
-    @Override
-    public boolean deleteRecipe(long recipeId) {
-
-        try(Connection con = Database.getConnection();) {
-
-            con.setAutoCommit(false);
-
-            boolean successfulDelete = groceryItemService.deleteAllGroceryItemsForRecipe(con, recipeId);
-
-            if (!successfulDelete) {
-                con.rollback();
-                return false;
-            }
-
-            successfulDelete = recipeDAO.deleteRecipe(con, recipeId);
-
-            if(!successfulDelete) {
-                con.rollback();
-                return false;
-            }
-
-            con.commit();
-            return true;
-
-        } catch (SQLException e) {
-            DataAccessExceptionHandler.handle(e);
-        }
-
-        return false;
+    @Transactional
+    @Override public boolean deleteRecipe(long recipeId) {
+        return groceryItemService.deleteAllGroceryItemsForRecipe(recipeId) &&
+                recipeDAO.deleteRecipe(recipeId);
     }
 }

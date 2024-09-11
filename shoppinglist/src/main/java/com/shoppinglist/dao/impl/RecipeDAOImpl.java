@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -44,27 +45,39 @@ public class RecipeDAOImpl implements RecipeDAO {
     public List<Recipe> getRecipes() { return ImmutableList.copyOf(recipesList);}
 
     @Override
-    public Optional<Recipe> saveRecipe(Recipe newRecipe) {
-        recipesList.add((RecipeImpl) newRecipe);
-        return Optional.of(newRecipe);
+    public Recipe saveRecipe(String newRecipeName) {
+
+        if(Objects.isNull(newRecipeName))
+            return new RecipeImpl(0, "", List.of());
+
+
+        RecipeImpl newRecipe = new RecipeImpl(0, newRecipeName, List.of());
+        recipesList.add(newRecipe);
+        return newRecipe;
     }
 
     @Override
-    public Optional<Recipe> updateRecipe(long recipeId, Recipe updatedRecipe) {
+    public String updateRecipeName(long recipeId, String updatedRecipeName) {
 
-        if(recipeExists(updatedRecipe)) {
+        if(Objects.isNull(updatedRecipeName))
+            return "";
+
+        if(recipeExists(updatedRecipeName)) {
             recipesList = recipesList.stream()
-                    .map( r ->  r.getId() == recipeId ? (RecipeImpl) updatedRecipe : r)
-                    .collect(Collectors.toList());
-            return Optional.of(new RecipeImpl(recipeId, updatedRecipe.getName(), updatedRecipe.getGroceryItems()));
+                    .peek(r ->  {
+                        if (r.getId() == recipeId)
+                            r.setName(updatedRecipeName);
+                    }).toList();
+            return updatedRecipeName;
         }
 
-        return Optional.empty();
+        return "";
     }
 
-    private boolean recipeExists(Recipe recipe) {
+    private boolean recipeExists(String recipeName) {
         return recipesList.stream()
-                .filter( r -> r.equals(recipe))
+                .map(RecipeImpl::getName)
+                .filter(rs -> rs.equals(recipeName))
                 .findFirst()
                 .isEmpty();
     }

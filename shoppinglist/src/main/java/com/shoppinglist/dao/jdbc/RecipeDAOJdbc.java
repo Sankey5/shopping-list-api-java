@@ -40,7 +40,7 @@ public class RecipeDAOJdbc implements RecipeDAO {
     }
 
     @Override
-    public Recipe saveRecipe(Recipe recipe) {
+    public Recipe saveRecipe(String recipeName) {
         final String sqlQuery = "INSERT INTO Recipe (Name) VALUES (?)";
 
         PreparedStatementCreator psc = con -> con.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
@@ -49,28 +49,28 @@ public class RecipeDAOJdbc implements RecipeDAO {
         int numInsertedRows = jdbcTemplate.update(psc, keyHolder);
 
         if (numInsertedRows != 1 || Objects.isNull(keyHolder.getKey()))
-            throw new RuntimeException(String.format("Unable to create recipe: %s", recipe));
+            throw new RuntimeException(String.format("Unable to create recipe with name: %s", recipeName));
 
-        return new RecipeImpl(keyHolder.getKey().longValue(), recipe.getName());
+        return new RecipeImpl(keyHolder.getKey().longValue(), recipeName);
     }
 
     @Override
-    public Recipe updateRecipe(long recipeId, Recipe updatedRecipe) {
+    public String updateRecipeName(long recipeId, String updatedRecipeName) {
         final String sqlQuery = "UPDATE Recipe SET Name = ? WHERE RecipeId = ?";
 
         int numUpdatedRows = jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sqlQuery);
 
-            ps.setString(1, updatedRecipe.getName());
+            ps.setString(1, updatedRecipeName);
             ps.setLong(2, recipeId);
 
             return ps;
         });
 
         if (numUpdatedRows != 1)
-            throw new RuntimeException(String.format("Unable to update recipe: %s", updatedRecipe));
+            throw new RuntimeException(String.format("Unable to update recipe with name: %s", updatedRecipeName));
 
-        return updatedRecipe;
+        return updatedRecipeName;
     }
 
     @Override
@@ -79,6 +79,9 @@ public class RecipeDAOJdbc implements RecipeDAO {
 
         int deletedRows = jdbcTemplate.update(sqlDeleteRecipes, recipeId, Long.class);
 
-        return deletedRows == 1;
+        if (deletedRows != 1)
+            throw new RuntimeException(String.format("Unable to delete recipe with id: %d", recipeId));
+
+        return true;
     }
 }

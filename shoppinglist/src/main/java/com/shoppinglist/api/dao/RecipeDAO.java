@@ -11,9 +11,9 @@ public interface RecipeDAO {
 
     List<Recipe> getRecipes();
 
-    Recipe saveRecipe(Recipe newRecipe);
+    Recipe saveRecipe(String recipeName);
 
-    Recipe updateRecipe(long recipeId, Recipe updatedRecipe);
+    String updateRecipeName(long recipeId, String updatedRecipeName);
 
     boolean deleteRecipe(long recipeId);
 }
