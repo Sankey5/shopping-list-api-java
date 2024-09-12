@@ -5,7 +5,9 @@ import com.shoppinglist.api.dao.RecipeDAO;
 import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.model.RecipeImpl;
 import com.shoppinglist.util.DataAccessExceptionHandler;
+import jakarta.persistence.EntityManager;
 import org.checkerframework.checker.units.qual.A;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,9 +28,20 @@ import java.util.Optional;
 public class RecipeDAOJdbc implements RecipeDAO {
 
     private JdbcTemplate jdbcTemplate;
+    private EntityManager entityManager;
 
-    public RecipeDAOJdbc (JdbcTemplate jdbcTemplate) {
+    public RecipeDAOJdbc (JdbcTemplate jdbcTemplate, EntityManager entityManager) {
         this.jdbcTemplate = jdbcTemplate;
+        this.entityManager = entityManager;
+    }
+
+    private Session getConnection() {
+        Session session = null;
+        if (entityManager == null
+                || (session = entityManager.unwrap(Session.class)) == null) {
+            throw new NullPointerException("Unable to get a connection from the entity manager");
+        }
+        return session;
     }
 
     @Override

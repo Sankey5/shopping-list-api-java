@@ -5,6 +5,8 @@ import com.shoppinglist.api.dao.GroceryListDAO;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.model.GroceryItemImpl;
 import com.shoppinglist.util.BatchExecutionHelper;
+import jakarta.persistence.EntityManager;
+import org.hibernate.Session;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -16,9 +18,20 @@ import java.util.List;
 public class GroceryListDAOJdbc implements GroceryListDAO {
 
     private JdbcTemplate jdbcTemplate;
+    private EntityManager entityManager;
 
-    public GroceryListDAOJdbc(JdbcTemplate jdbcTemplate) {
+    public GroceryListDAOJdbc(JdbcTemplate jdbcTemplate, EntityManager entityManager) {
         this.jdbcTemplate = jdbcTemplate;
+        this.entityManager = entityManager;
+    }
+
+    private Session getConnection() {
+        Session session = null;
+        if (entityManager == null
+                || (session = entityManager.unwrap(Session.class)) == null) {
+            throw new NullPointerException("Unable to get a connection from the entity manager");
+        }
+        return session;
     }
 
     @Override
