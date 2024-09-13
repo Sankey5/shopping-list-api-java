@@ -13,7 +13,7 @@
                 <tbody>
                 <tr th:each="groceryItem : ${groceryItems}"
                     class="recipe-item-row">
-                    <td hidden class="id" th:text="${groceryItem.id}"></td>
+                    <td hidden class="id" th:text="${groceryItem.groceryItemId}"></td>
                     <td class="name" th:text="${groceryItem.name}"></td>
                     <td class="quantity" th:text="${groceryItem.quantity}"></td>
                     <td class="measure" th:text="${groceryItem.measure}"></td>

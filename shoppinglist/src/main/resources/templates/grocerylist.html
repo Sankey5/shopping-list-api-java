@@ -21,7 +21,7 @@
                     <td th:text="${groceryItem.quantity.toPlainString}" class="align-middle">Quantity</td>
                     <td th:text="${groceryItem.measure}" class="align-middle">Measure</td>
                     <td>
-                        <button th:attr="hx-delete=@{ /home/grocery-list/{groceryItemId}/all(groceryItemId=${groceryItem.id}) }"
+                        <button th:attr="hx-delete=@{ /home/grocery-list/{groceryItemId}/all(groceryItemId=${groceryItem.groceryItemId}) }"
                                 hx-target="#grocerylist"
                                 hx-swap="outerHTML"
                                 class="btn btn-danger">&times;</button>
