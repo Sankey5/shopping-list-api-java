@@ -3,8 +3,7 @@ package com.shoppinglist.model;
 import com.fasterxml.jackson.annotation.*;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.util.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -12,12 +11,14 @@ import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"id", "name", "quantity", "measure"})
+@Entity
 public class GroceryItemImpl implements GroceryItem {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(GroceryItemImpl.class);
-
+    @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY)
     @JsonProperty("id")
-    private final long id;
+    private Long groceryItemId;
+
     @JsonProperty("name")
     private String name;
     @JsonProperty("quantity")
@@ -28,20 +29,17 @@ public class GroceryItemImpl implements GroceryItem {
     public GroceryItemImpl(@JsonProperty("name") String name,
                            @JsonProperty("quantity") Double quantity,
                            @JsonProperty("measure") String measure) {
-        LOGGER.debug("Creating groceryItemImpl empty");
-        this.id = 0;
+        this.groceryItemId = null;
         setName(name);
-        LOGGER.debug("Name set");
         setQuantity(quantity);
-        LOGGER.debug("quantity set");
         setMeasure(measure);
     }
 
-    public GroceryItemImpl(long id,
+    public GroceryItemImpl(Long groceryItemId,
                            String name,
                            BigDecimal quantity,
                            String measure) {
-        this.id = id;
+        setGroceryItemId(groceryItemId);
         setName(name);
         setQuantity(quantity);
         setMeasure(measure);
@@ -90,7 +88,14 @@ public class GroceryItemImpl implements GroceryItem {
     }
 
     @JsonGetter("id")
-    @Override public long getId() {return id;}
+    @Override public Long getGroceryItemId() {return groceryItemId;}
+
+    private void setGroceryItemId(Long groceryItemId) throws IllegalArgumentException {
+        if (Objects.isNull(groceryItemId))
+            throw new IllegalArgumentException(String.format("Setting null groceryItemId for grocery item: %s", this));
+
+        this.groceryItemId = groceryItemId;
+    }
 
     @JsonGetter("measure")
     @Override public String getMeasure() {return StringUtil.toTitleCase(measure.name());}
@@ -115,13 +120,13 @@ public class GroceryItemImpl implements GroceryItem {
         if (g == null || this.getClass() != g.getClass())
             return false;
         else
-            return this.getId() == ((GroceryItem) g).getId();
+            return Objects.equals(this.getGroceryItemId(), ((GroceryItem) g).getGroceryItemId());
     }
 
     // TODO: Override the hasCode() method
 
     @Override
     public String toString() {
-        return String.format("id: %s, name: %s, quantity: %s, measure: %s", this.id, this.name, this.quantity.toPlainString(), this.measure.name());
+        return String.format("id: %s, name: %s, quantity: %s, measure: %s", this.groceryItemId, this.name, this.quantity.toPlainString(), this.measure.name());
     }
 }

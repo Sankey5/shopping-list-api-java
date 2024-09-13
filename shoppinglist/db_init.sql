@@ -8,27 +8,27 @@
 -- PRIMARY MODELS
 
 CREATE TABLE IF NOT EXISTS Recipe (
-    RecipeId INT NOT NULL AUTO_INCREMENT,
-    Name VARCHAR(30) NOT NULL,
-    PRIMARY KEY (RecipeId)
+    recipeId INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(30) NOT NULL,
+    PRIMARY KEY (recipeId)
 );
 
 CREATE TABLE IF NOT EXISTS GroceryItem (
-    GroceryItemId INT NOT NULL AUTO_INCREMENT,
-    Name VARCHAR(30) NOT NULL,
-    Quantity DOUBLE NOT NULL,
-    Measure VARCHAR(10) NOT NULL,
-    RecipeId INT NOT NULL,
-    PRIMARY KEY (GroceryItemId),
-    FOREIGN KEY (RecipeId) REFERENCES Recipe(RecipeId)
+    groceryItemId INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(30) NOT NULL,
+    quantity DOUBLE NOT NULL,
+    measure VARCHAR(10) NOT NULL,
+    recipeId INT NOT NULL,
+    PRIMARY KEY (groceryItemId),
+    FOREIGN KEY (recipeId) REFERENCES Recipe(recipeId)
 );
 
 -- HELPER TABLES
 
 -- Accumulation of Grocery Items on the shopping list
 CREATE TABLE IF NOT EXISTS GroceryList (
-    GroceryItemId INT NOT NULL,
-    FOREIGN KEY (GroceryItemId) REFERENCES GroceryItem(GroceryItemId)
+    groceryItemId INT NOT NULL,
+    FOREIGN KEY (groceryItemId) REFERENCES GroceryItem(groceryItemId)
 );
 
 -- Insert in test data if it doesn't exist

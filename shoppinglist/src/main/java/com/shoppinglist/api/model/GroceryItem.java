@@ -17,7 +17,7 @@ public interface GroceryItem {
 
     void addQuantityAndMeasure(GroceryItem item1, GroceryItem item2);
 
-    long getId();
+    Long getGroceryItemId();
 
     String getMeasure();
 
