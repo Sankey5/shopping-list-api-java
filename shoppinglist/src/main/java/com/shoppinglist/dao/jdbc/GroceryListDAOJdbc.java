@@ -38,12 +38,12 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
     public List<GroceryItem> getGroceryList() {
 
         final String sqlStatement = """
-                                    SELECT GroceryItem.GroceryItemId AS id,
-                                            GroceryItem.Name AS name,
-                                            GroceryItem.Quantity AS quantity,
-                                            GroceryItem.Measure AS measure
+                                    SELECT GroceryItem.groceryItemId AS id,
+                                            GroceryItem.name AS name,
+                                            GroceryItem.quantity AS quantity,
+                                            GroceryItem.measure AS measure
                                     FROM GroceryItem
-                                    INNER JOIN GroceryList ON GroceryList.GroceryItemId = GroceryItem.GroceryItemId
+                                    INNER JOIN GroceryList ON GroceryList.groceryItemId = GroceryItem.groceryItemId
                                     """;
 
         List<GroceryItemImpl> shoppingList = jdbcTemplate.query(sqlStatement,
@@ -60,12 +60,12 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
     @Override
     public List<GroceryItem> addToGroceryList(List<GroceryItem> groceryList) {
 
-        final String sqlStatement = "INSERT INTO GroceryList (GroceryItemId) VALUES (?)";
+        final String sqlStatement = "INSERT INTO GroceryList (groceryItemId) VALUES (?)";
 
         BatchPreparedStatementSetter bpss = new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
-                ps.setLong(1, groceryList.get(i).getId());
+                ps.setLong(1, groceryList.get(i).getGroceryItemId());
             }
 
             @Override
@@ -86,31 +86,37 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
 
     @Override
     public boolean deleteGroceryListItem(long groceryItemId) {
-        final String sqlStatement = "DELETE FROM GroceryList WHERE GroceryItemId = ? FETCH FIRST ROW ONLY";
+        final String sqlStatement = "DELETE FROM GroceryList WHERE groceryItemId = ? FETCH FIRST ROW ONLY";
 
         int numDeletedRows = jdbcTemplate.update(sqlStatement, groceryItemId);
 
         if (numDeletedRows == Statement.EXECUTE_FAILED || numDeletedRows == Statement.SUCCESS_NO_INFO)
-            throw new RuntimeException("Error in deleting rows");
+            throw new RuntimeException(
+                    String.format(
+                            "Error in deleting a single grocery item from grocery list with id of [%d]",
+                            groceryItemId));
 
         return true;
     }
 
     @Override
     public boolean deleteAllOfGroceryListItem(long groceryItemId) {
-        final String sqlStatement = "DELETE FROM GroceryList WHERE GroceryItemId = ?";
+        final String sqlStatement = "DELETE FROM GroceryList WHERE groceryItemId = ?";
 
         int numDeletedRows = jdbcTemplate.update(sqlStatement, groceryItemId);
 
         if (numDeletedRows == Statement.EXECUTE_FAILED || numDeletedRows == Statement.SUCCESS_NO_INFO)
-            throw new RuntimeException("Error in deleting rows");
+            throw new RuntimeException(
+                    String.format(
+                            "Error in deleting all grocery items from grocery list with grocery item id of [%d]",
+                            groceryItemId));
 
         return true;
     }
     
     @Override public boolean deleteAllGroceryListItems(List<Long> groceryListItemIds) {
 
-        final String sqlStatement = "DELETE FROM GroceryList WHERE GroceryItemId = ?";
+        final String sqlStatement = "DELETE FROM GroceryList WHERE groceryItemId = ?";
 
         BatchPreparedStatementSetter bpss = new BatchPreparedStatementSetter() {
             @Override
@@ -136,7 +142,7 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
         int numDeletedRows = jdbcTemplate.update(sqlStatement);
 
         if (numDeletedRows == Statement.EXECUTE_FAILED || numDeletedRows == Statement.SUCCESS_NO_INFO)
-            throw new RuntimeException("Error in deleting rows");
+            throw new RuntimeException("Error in deleting all rows in grocery list");
 
         return true;
     }

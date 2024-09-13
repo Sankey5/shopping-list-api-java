@@ -6,8 +6,6 @@ import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.model.GroceryItemImpl;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,7 +47,7 @@ public class GroceryItemDAOImpl implements GroceryItemDAO {
             if(groceryItemExists(updatedGroceryItem)) {
                 groceryItemsList = groceryItemsList.stream()
                         .map( r -> {
-                            if(r.getId() == updatedGroceryItem.getId())
+                            if(r.getGroceryItemId() == updatedGroceryItem.getGroceryItemId())
                                 return (GroceryItemImpl) updatedGroceryItem;
                             return r;
                         })
@@ -76,7 +74,7 @@ public class GroceryItemDAOImpl implements GroceryItemDAO {
     @Override
     public boolean deleteGroceryItem(long groceryItemId) {
         for(int r = 0; r < groceryItemsList.size(); r++) {
-            if(groceryItemId == groceryItemsList.get(r).getId()) {
+            if(groceryItemId == groceryItemsList.get(r).getGroceryItemId()) {
                 groceryItemsList.remove(r);
                 return true;
             }

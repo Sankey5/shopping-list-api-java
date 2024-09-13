@@ -4,16 +4,11 @@ import com.shoppinglist.api.dao.GroceryItemDAO;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.service.GroceryItemService;
 import com.shoppinglist.api.service.GroceryListService;
-import com.shoppinglist.util.DataAccessExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,7 +38,7 @@ public class GroceryItemServiceImpl implements GroceryItemService {
     @Override public boolean deleteAllGroceryItemsForRecipe(long recipeId) {
 
         List<Long> groceryItemIds = groceryItemDAO.getGroceryItemsForRecipe(recipeId).stream()
-                .map(GroceryItem::getId).toList();
+                .map(GroceryItem::getGroceryItemId).toList();
 
         return groceryListService.deleteAllGroceryListItems(groceryItemIds) &&
                 groceryItemDAO.deleteAllGroceryItemsForRecipe(recipeId);

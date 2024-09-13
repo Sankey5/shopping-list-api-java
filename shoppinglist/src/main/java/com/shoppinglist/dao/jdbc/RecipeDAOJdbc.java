@@ -46,7 +46,7 @@ public class RecipeDAOJdbc implements RecipeDAO {
 
     @Override
     public List<Recipe> getRecipes() {
-        final String sqlQuery = "SELECT RecipeId AS id, Name AS name FROM Recipe";
+        final String sqlQuery = "SELECT recipeId AS id, name AS name FROM Recipe";
 
         List<RecipeImpl> recipesList = jdbcTemplate.query(sqlQuery, (rs, rowNum) ->
                 new RecipeImpl(rs.getLong(1), rs.getString(2))
@@ -57,7 +57,7 @@ public class RecipeDAOJdbc implements RecipeDAO {
 
     @Override
     public Recipe saveRecipe(String recipeName) {
-        final String sqlQuery = "INSERT INTO Recipe (Name) VALUES (?)";
+        final String sqlQuery = "INSERT INTO Recipe (name) VALUES (?)";
 
         PreparedStatementCreator psc = new PreparedStatementCreator() {
             @Override
@@ -80,7 +80,7 @@ public class RecipeDAOJdbc implements RecipeDAO {
 
     @Override
     public String updateRecipeName(long recipeId, String updatedRecipeName) {
-        final String sqlQuery = "UPDATE Recipe SET Name = ? WHERE RecipeId = ?";
+        final String sqlQuery = "UPDATE Recipe SET name = ? WHERE recipeId = ?";
 
         int numUpdatedRows = jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sqlQuery);
@@ -99,7 +99,7 @@ public class RecipeDAOJdbc implements RecipeDAO {
 
     @Override
     public boolean deleteRecipe(long recipeId) {
-        final String sqlDeleteRecipes = "DELETE FROM Recipe WHERE RecipeId = ?";
+        final String sqlDeleteRecipes = "DELETE FROM Recipe WHERE recipeId = ?";
 
         int deletedRows = jdbcTemplate.update(sqlDeleteRecipes, ps -> ps.setLong(1, recipeId));
 
