@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.util.StringUtil;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -12,6 +13,7 @@ import java.util.Objects;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"id", "name", "quantity", "measure"})
 @Entity
+@Access(AccessType.PROPERTY)
 public class GroceryItemImpl implements GroceryItem {
 
     @Id
@@ -23,6 +25,7 @@ public class GroceryItemImpl implements GroceryItem {
     private String name;
     @JsonProperty("quantity")
     private BigDecimal quantity;
+    @Enumerated(EnumType.STRING)
     @JsonProperty("measure")
     private GroceryItemMeasure measure;
 

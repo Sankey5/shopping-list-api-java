@@ -17,8 +17,14 @@ public class GroceryListServiceImpl implements GroceryListService {
 
     @Override
     public List<GroceryItem> getGroceryList(){
-        List<GroceryItem> returnedList = groceryListDAO.getGroceryList();
-        return reduceSimilarItems(returnedList);
+        List<GroceryItem> groceryListItems;
+
+        groceryListItems = groceryListDAO.getGroceryList();
+
+        if(Objects.isNull(groceryListItems))
+            return List.of();
+
+        return reduceSimilarItems(groceryListItems);
     }
 
     @Override

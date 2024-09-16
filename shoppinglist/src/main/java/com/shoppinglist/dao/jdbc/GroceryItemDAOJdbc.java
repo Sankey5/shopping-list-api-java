@@ -6,7 +6,9 @@ import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.model.GroceryItemImpl;
 import com.shoppinglist.util.BatchExecutionHelper;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import org.hibernate.Session;
+import org.hibernate.query.NativeQuery;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class GroceryItemDAOJdbc implements GroceryItemDAO {
@@ -26,7 +29,7 @@ public class GroceryItemDAOJdbc implements GroceryItemDAO {
         this.entityManager = entityManager;
     }
 
-    private Session getConnection() {
+    private Session getCurrentSession() {
         Session session = null;
         if (entityManager == null
                 || (session = entityManager.unwrap(Session.class)) == null) {
@@ -43,18 +46,9 @@ public class GroceryItemDAOJdbc implements GroceryItemDAO {
                                        WHERE recipeId = ?
                                     """;
 
-        List<GroceryItemImpl> groceryItemsList = jdbcTemplate.query(
-                con -> {
-                    PreparedStatement ps = con.prepareStatement(sqlStatement);
-                    ps.setLong(1, recipeId);
-                    return ps;
-                },
-                (rs, rowNum) -> new GroceryItemImpl(
-                        rs.getLong("groceryItemId"),
-                        rs.getString("name"),
-                        BigDecimal.valueOf(rs.getDouble("quantity")),
-                        rs.getString("measure"))
-        );
+        TypedQuery<GroceryItemImpl> query = getCurrentSession().createNativeQuery(sqlStatement, GroceryItemImpl.class);
+        query.setParameter(1, recipeId);
+        List<GroceryItemImpl> groceryItemsList = query.getResultList();
 
         return ImmutableList.copyOf(groceryItemsList);
     }

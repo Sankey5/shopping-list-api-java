@@ -1,24 +1,17 @@
---Drop old test data
---DROP TABLE IF EXISTS ShoppingList;
---DROP TABLE IF EXISTS Recipe_GroceryItems;
---DROP TABLE IF EXISTS GroceryItems;
---DROP TABLE IF EXISTS Recipes;
---DROP TABLE IF EXISTS ShoppingList;
-
 -- PRIMARY MODELS
 
 CREATE TABLE IF NOT EXISTS Recipe (
-    recipeId INT NOT NULL AUTO_INCREMENT,
-    name VARCHAR(30) NOT NULL,
+    recipeId BIGINT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(32) NOT NULL,
     PRIMARY KEY (recipeId)
 );
 
 CREATE TABLE IF NOT EXISTS GroceryItem (
-    groceryItemId INT NOT NULL AUTO_INCREMENT,
-    name VARCHAR(30) NOT NULL,
-    quantity DOUBLE NOT NULL,
-    measure VARCHAR(10) NOT NULL,
-    recipeId INT NOT NULL,
+    groceryItemId BIGINT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(32) NOT NULL,
+    quantity NUMERIC NOT NULL,
+    measure VARCHAR(16) NOT NULL,
+    recipeId BIGINT NOT NULL,
     PRIMARY KEY (groceryItemId),
     FOREIGN KEY (recipeId) REFERENCES Recipe(recipeId)
 );
@@ -27,7 +20,7 @@ CREATE TABLE IF NOT EXISTS GroceryItem (
 
 -- Accumulation of Grocery Items on the shopping list
 CREATE TABLE IF NOT EXISTS GroceryList (
-    groceryItemId INT NOT NULL,
+    groceryItemId BIGINT NOT NULL,
     FOREIGN KEY (groceryItemId) REFERENCES GroceryItem(groceryItemId)
 );
 
