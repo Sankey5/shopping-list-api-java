@@ -21,6 +21,10 @@ public interface GroceryItem {
 
     String getMeasure();
 
+    Recipe getRecipe();
+
+    void setRecipe(Recipe recipe);
+
     void setMeasure(String measure);
 
     boolean isAllDefault();

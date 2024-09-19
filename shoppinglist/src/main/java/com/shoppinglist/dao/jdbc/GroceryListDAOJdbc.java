@@ -42,6 +42,7 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
                                             GroceryItem.name AS name,
                                             GroceryItem.quantity AS quantity,
                                             GroceryItem.measure AS measure
+                                            GroceryItem.recipeId AS recipeId
                                     FROM GroceryItem
                                     INNER JOIN GroceryList ON GroceryList.groceryItemId = GroceryItem.groceryItemId
                                     """;
@@ -51,7 +52,8 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
                 rs.getLong(1),
                 rs.getString(2),
                 rs.getBigDecimal(3),
-                rs.getString(4)
+                rs.getString(4),
+                null
         ));
 
         return ImmutableList.copyOf(shoppingList);

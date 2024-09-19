@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,28 +58,48 @@ public class GroceryItemDAOJdbc implements GroceryItemDAO {
     public List<GroceryItem> saveGroceryItemsForRecipe(long recipeId, List<GroceryItem> newGroceryItems) {
         final String sqlInsertGroceries = "INSERT INTO GroceryItem (name, quantity, measure, recipeId) Values (?, ?, ?, ?)";
 
-        int[] retVals = jdbcTemplate.batchUpdate(sqlInsertGroceries, new BatchPreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement ps, int i) throws SQLException {
-                ps.setString(1, newGroceryItems.get(i).getName());
-                ps.setDouble(2, newGroceryItems.get(i).getQuantity().doubleValue());
-                ps.setString(3, newGroceryItems.get(i).getMeasure());
-                ps.setLong(4, recipeId);
+        NativeQuery<Integer> createdGroceryItemQuery = getCurrentSession().createNativeQuery(sqlInsertGroceries, Integer.class);
+        List<GroceryItem> savedGroceryItemList = new ArrayList<>();
+
+        for (GroceryItem groceryItem: newGroceryItems) {
+            createdGroceryItemQuery.setParameter(1, groceryItem.getName());
+            createdGroceryItemQuery.setParameter(2, groceryItem.getQuantity());
+            createdGroceryItemQuery.setParameter(3, groceryItem.getMeasure());
+            createdGroceryItemQuery.setParameter(4, recipeId);
+
+            int successfulInsert = createdGroceryItemQuery.executeUpdate();
+
+            if(successfulInsert != 1) {
+                savedGroceryItemList.add(groceryItem);
+            } else {
+                throw new RuntimeException(String.format("Error adding the grocery item: %s", groceryItem));
             }
+        }
 
-            @Override
-            public int getBatchSize() {
-                return newGroceryItems.size();
-            }
-        });
+        return savedGroceryItemList;
 
-        if(BatchExecutionHelper.failedBatchExecution(retVals))
-            throw new RuntimeException(String.format(
-                    "Failed to create one or more grocery items for the recipe groceryItemId [%d]: %s",
-                    recipeId, newGroceryItems)
-            );
+//        int[] retVals = jdbcTemplate.batchUpdate(sqlInsertGroceries, new BatchPreparedStatementSetter() {
+//            @Override
+//            public void setValues(PreparedStatement ps, int i) throws SQLException {
+//                ps.setString(1, newGroceryItems.get(i).getName());
+//                ps.setDouble(2, newGroceryItems.get(i).getQuantity().doubleValue());
+//                ps.setString(3, newGroceryItems.get(i).getMeasure());
+//                ps.setLong(4, recipeId);
+//            }
+//
+//            @Override
+//            public int getBatchSize() {
+//                return newGroceryItems.size();
+//            }
+//        });
 
-        return newGroceryItems;
+//        if(BatchExecutionHelper.failedBatchExecution(retVals))
+//            throw new RuntimeException(String.format(
+//                    "Failed to create one or more grocery items for the recipe groceryItemId [%d]: %s",
+//                    recipeId, newGroceryItems)
+//            );
+//
+//        return newGroceryItems;
     }
 
     @Override

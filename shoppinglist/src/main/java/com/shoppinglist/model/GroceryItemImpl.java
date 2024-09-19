@@ -2,6 +2,7 @@ package com.shoppinglist.model;
 
 import com.fasterxml.jackson.annotation.*;
 import com.shoppinglist.api.model.GroceryItem;
+import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.util.StringUtil;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
@@ -28,6 +29,9 @@ public class GroceryItemImpl implements GroceryItem {
     @Enumerated(EnumType.STRING)
     @JsonProperty("measure")
     private GroceryItemMeasure measure;
+    @ManyToOne
+    @JoinColumn(name = "recipeId")
+    private Recipe recipe;
 
     public GroceryItemImpl(@JsonProperty("name") String name,
                            @JsonProperty("quantity") Double quantity,
@@ -36,16 +40,19 @@ public class GroceryItemImpl implements GroceryItem {
         setName(name);
         setQuantity(quantity);
         setMeasure(measure);
+        this.recipe = null;
     }
 
     public GroceryItemImpl(Long groceryItemId,
                            String name,
                            BigDecimal quantity,
-                           String measure) {
+                           String measure,
+                           Recipe recipe) {
         setGroceryItemId(groceryItemId);
         setName(name);
         setQuantity(quantity);
         setMeasure(measure);
+        setRecipe(recipe);
     }
 
     @JsonGetter("name")
@@ -111,6 +118,16 @@ public class GroceryItemImpl implements GroceryItem {
         }
 
         this.measure = GroceryItemMeasure.getGroceryItemMeasure(measure);
+    }
+
+    @Override
+    public Recipe getRecipe() {
+        return this.recipe;
+    }
+
+    @Override
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
     }
 
     @Override public boolean isAllDefault() {
