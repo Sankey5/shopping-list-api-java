@@ -57,7 +57,8 @@ class RecipeServiceTest {
 
     @Test
     void createRecipeWithIdLessThanZero() {
-        Mockito.when(recipeDAOJdbc.saveRecipe(this.existingRecipeNegativeId.getName()))
+        Mockito
+                .when(recipeDAOJdbc.saveRecipe(this.existingRecipeNegativeId.getName()))
                 .thenReturn(this.expectedRecipe);
         Recipe savedRecipe = this.recipeService.saveRecipe(this.existingRecipeNegativeId);
         Assertions.assertEquals(this.expectedRecipe.getRecipeId(), savedRecipe.getRecipeId());
