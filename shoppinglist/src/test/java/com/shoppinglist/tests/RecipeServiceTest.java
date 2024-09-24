@@ -21,12 +21,11 @@ import java.util.List;
         RecipeDAOJdbc.class,
         RecipeServiceImpl.class,
 })
-@ComponentScan("com.shoppinglist")
 class RecipeServiceTest {
 
     @Autowired
     private RecipeService recipeService;
-    @MockBean//(answer = Answers.RETURNS_MOCKS)
+    @MockBean
     private RecipeDAO recipeDAOJdbc;
     @MockBean
     private GroceryItemService groceryItemService;
