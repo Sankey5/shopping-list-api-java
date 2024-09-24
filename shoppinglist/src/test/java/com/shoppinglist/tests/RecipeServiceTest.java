@@ -7,6 +7,7 @@ import com.shoppinglist.api.service.GroceryItemService;
 import com.shoppinglist.api.service.RecipeService;
 import com.shoppinglist.dao.jdbc.GroceryItemDAOJdbc;
 import com.shoppinglist.dao.jdbc.RecipeDAOJdbc;
+import com.shoppinglist.model.GroceryItemImpl;
 import com.shoppinglist.model.RecipeImpl;
 import com.shoppinglist.service.GroceryItemServiceImpl;
 import com.shoppinglist.service.RecipeServiceImpl;
@@ -16,6 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.util.List;
 
 @SpringBootTest(classes = {
         RecipeDAOJdbc.class,
@@ -41,8 +44,18 @@ class RecipeServiceTest {
         Assertions.assertNotNull(savedRecipe);
     }
 
+    @Test
     void createRecipeWithIdGreaterThanZero() {
+        RecipeImpl recipeWithNonZeroId = new RecipeImpl(1L, "Bad Recipe");
+        Recipe savedRecipe = this.recipeService.saveRecipe(recipeWithNonZeroId);
+        Assertions.assertTrue(savedRecipe.isAllDefault());
+    }
 
+    @Test
+    void createRecipeWithIdLessThanZero() {
+        RecipeImpl recipeWithNonZeroId = new RecipeImpl(-1L, "Bad Recipe");
+        Recipe savedRecipe = this.recipeService.saveRecipe(recipeWithNonZeroId);
+        Assertions.assertTrue(savedRecipe.isAllDefault());
     }
 
 }

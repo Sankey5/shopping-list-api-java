@@ -32,7 +32,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Transactional
     @Override public Recipe saveRecipe(Recipe newRecipe) {
 
-        if(newRecipe.getRecipeId() > 0 || newRecipe.getName().isEmpty())
+        if(newRecipe.getRecipeId() != 0 || newRecipe.getName().isEmpty())
             return new RecipeImpl();
 
         Recipe recipeFromDatabase = recipeDAO.saveRecipe(newRecipe.getName());
