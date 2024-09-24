@@ -47,7 +47,7 @@ public class RecipeImpl implements Recipe {
     }
 
     private void setRecipeId(Long recipeId) {
-        if(recipeId == null) {
+        if(recipeId == null || recipeId < 0) {
             this.recipeId = 0L;
             return;
         }

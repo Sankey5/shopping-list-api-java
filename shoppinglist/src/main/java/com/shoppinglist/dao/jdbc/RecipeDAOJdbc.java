@@ -72,7 +72,7 @@ public class RecipeDAOJdbc implements RecipeDAO {
 
         int numInsertedRows = jdbcTemplate.update(psc, keyHolder);
 
-        if (numInsertedRows != 1 || Objects.isNull(keyHolder.getKey()))
+        if (numInsertedRows != 1 || keyHolder.getKey() == null)
             throw new RuntimeException(String.format("Unable to create recipe with name: %s", recipeName));
 
         return new RecipeImpl(keyHolder.getKey().longValue(), recipeName);

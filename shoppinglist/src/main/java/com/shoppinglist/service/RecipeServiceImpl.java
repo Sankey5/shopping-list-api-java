@@ -36,7 +36,6 @@ public class RecipeServiceImpl implements RecipeService {
             return new RecipeImpl();
 
         Recipe recipeFromDatabase = recipeDAO.saveRecipe(newRecipe.getName());
-
         LOGGER.debug("Returned recipe from database: {}", recipeFromDatabase);
 
         Long recipeId = recipeFromDatabase.getRecipeId();
@@ -51,8 +50,8 @@ public class RecipeServiceImpl implements RecipeService {
     @Transactional
     @Override public Recipe updateRecipe(long recipeId, Recipe updatedRecipe) {
 
-        if (Objects.isNull(updatedRecipe.getName()))
-            return new RecipeImpl(0, "", List.of());
+        if (recipeId == 0 || updatedRecipe.getName().isEmpty())
+            return new RecipeImpl();
 
         String updatedRecipeName = recipeDAO.updateRecipeName(recipeId, updatedRecipe.getName());
         List<GroceryItem> updatedGroceryItems = groceryItemService.updateGroceryItemsForRecipe(recipeId, updatedRecipe.getGroceryItems());
@@ -62,6 +61,8 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Transactional
     @Override public boolean deleteRecipe(long recipeId) {
+        if(recipeId <= 0)
+            return false;
         return groceryItemService.deleteAllGroceryItemsForRecipe(recipeId) &&
                 recipeDAO.deleteRecipe(recipeId);
     }
