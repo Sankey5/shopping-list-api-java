@@ -41,7 +41,7 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
                                     SELECT GroceryItem.groceryItemId AS id,
                                             GroceryItem.name AS name,
                                             GroceryItem.quantity AS quantity,
-                                            GroceryItem.measure AS measure
+                                            GroceryItem.measure AS measure,
                                             GroceryItem.recipeId AS recipeId
                                     FROM GroceryItem
                                     INNER JOIN GroceryList ON GroceryList.groceryItemId = GroceryItem.groceryItemId
