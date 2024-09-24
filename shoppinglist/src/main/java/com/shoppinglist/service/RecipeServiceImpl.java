@@ -6,7 +6,6 @@ import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.api.service.GroceryItemService;
 import com.shoppinglist.api.service.RecipeService;
 import com.shoppinglist.model.RecipeImpl;
-import com.shoppinglist.util.DataAccessExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,20 +13,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Component
 public class RecipeServiceImpl implements RecipeService {
 
     @Autowired
     @Qualifier("recipeDAOJdbc")
-    RecipeDAO recipeDAO;
+    private RecipeDAO recipeDAO;
     @Autowired
-    GroceryItemService groceryItemService;
+    private GroceryItemService groceryItemService;
+    private Logger LOGGER = LoggerFactory.getLogger(RecipeServiceImpl.class);
 
     @Override
     public List<Recipe> getRecipes() {return recipeDAO.getRecipes();}
@@ -35,12 +32,14 @@ public class RecipeServiceImpl implements RecipeService {
     @Transactional
     @Override public Recipe saveRecipe(Recipe newRecipe) {
 
-        if (Objects.isNull(newRecipe.getName()))
-            return new RecipeImpl(0, "", List.of());
+        if(newRecipe.getRecipeId() > 0 || newRecipe.getName().isEmpty())
+            return new RecipeImpl();
 
         Recipe recipeFromDatabase = recipeDAO.saveRecipe(newRecipe.getName());
 
-        long recipeId = recipeFromDatabase.getId();
+        LOGGER.debug("Returned recipe from database: {}", recipeFromDatabase);
+
+        Long recipeId = recipeFromDatabase.getRecipeId();
         List<GroceryItem> groceryItems = newRecipe.getGroceryItems();
 
         List<GroceryItem> newGroceryItems = groceryItemService.saveGroceryItemsForRecipe(recipeId, groceryItems);

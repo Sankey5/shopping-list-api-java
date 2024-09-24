@@ -41,4 +41,8 @@ class RecipeServiceTest {
         Assertions.assertNotNull(savedRecipe);
     }
 
+    void createRecipeWithIdGreaterThanZero() {
+
+    }
+
 }

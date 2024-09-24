@@ -8,7 +8,7 @@ import java.util.List;
 @JsonDeserialize(as = RecipeImpl.class)
 public interface Recipe {
 
-    long getId();
+    Long getRecipeId();
 
     String getName();
 

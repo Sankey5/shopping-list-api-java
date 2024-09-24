@@ -10,12 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class RecipeDAOImpl implements RecipeDAO {
@@ -65,7 +62,7 @@ public class RecipeDAOImpl implements RecipeDAO {
         if(recipeExists(updatedRecipeName)) {
             recipesList = recipesList.stream()
                     .peek(r ->  {
-                        if (r.getId() == recipeId)
+                        if (r.getRecipeId() == recipeId)
                             r.setName(updatedRecipeName);
                     }).toList();
             return updatedRecipeName;
@@ -85,7 +82,7 @@ public class RecipeDAOImpl implements RecipeDAO {
     @Override
     public boolean deleteRecipe(long recipeId) {
         for(int r = 0; r < recipesList.size(); r++) {
-            if(recipeId == recipesList.get(r).getId()) {
+            if(recipeId == recipesList.get(r).getRecipeId()) {
                 recipesList.remove(r);
                 return true;
             }
