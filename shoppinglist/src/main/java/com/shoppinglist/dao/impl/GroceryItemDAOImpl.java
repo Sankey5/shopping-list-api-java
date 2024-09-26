@@ -3,6 +3,7 @@ package com.shoppinglist.dao.impl;
 import com.google.common.collect.ImmutableList;
 import com.shoppinglist.api.dao.GroceryItemDAO;
 import com.shoppinglist.api.model.GroceryItem;
+import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.model.GroceryItemImpl;
 import org.springframework.stereotype.Repository;
 
@@ -10,8 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Repository
-public class GroceryItemDAOImpl implements GroceryItemDAO {
+public class GroceryItemDAOImpl {
 
     private static List<GroceryItemImpl> groceryItemsList;
 
@@ -30,17 +30,17 @@ public class GroceryItemDAOImpl implements GroceryItemDAO {
         return mockGroceryItems;
     }
 
-    @Override
     public List<GroceryItem> getGroceryItemsForRecipe(long recipeId) { return ImmutableList.copyOf(groceryItemsList);}
 
-    @Override
-    public List<GroceryItem> saveGroceryItemsForRecipe(long recipeId, List<GroceryItem> newGroceryItem) {
-        groceryItemsList.add((GroceryItemImpl) newGroceryItem);
+    public List<GroceryItem> saveGroceryItemsForRecipe(Recipe recipe, List<GroceryItem> groceryItems) {
+        groceryItems.forEach(groceryItem -> {
+            groceryItem.setRecipe(recipe);
+            groceryItemsList.add((GroceryItemImpl) groceryItem);
+        });
         return ImmutableList.copyOf(groceryItemsList);
     }
 
-    @Override
-    public List<GroceryItem> updateGroceryItemsForRecipe(long recipeId, List<GroceryItem> updatedGroceryItems) {
+    public List<GroceryItem> updateGroceryItemsForRecipe(Recipe recipe, List<GroceryItem> updatedGroceryItems) {
 
         // TODO: Needs a major upgrade in terms of performance
         for(GroceryItem updatedGroceryItem: updatedGroceryItems) {
@@ -65,13 +65,11 @@ public class GroceryItemDAOImpl implements GroceryItemDAO {
                 .isEmpty();
     }
 
-    @Override
     public boolean deleteAllGroceryItemsForRecipe(long recipeId) {
         // TODO: Implement
         return false;
     }
 
-    @Override
     public boolean deleteGroceryItem(long groceryItemId) {
         for(int r = 0; r < groceryItemsList.size(); r++) {
             if(groceryItemId == groceryItemsList.get(r).getGroceryItemId()) {

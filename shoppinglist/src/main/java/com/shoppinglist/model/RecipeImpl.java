@@ -3,69 +3,63 @@ package com.shoppinglist.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.google.common.collect.ImmutableList;
+import com.shoppinglist.api.model.BaseRecipe;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.util.StringUtil;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Access(AccessType.FIELD)
+@Table(name = "Recipe")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"id", "name", "groceryItems"})
-public class RecipeImpl implements Recipe {
+public class RecipeImpl extends BaseRecipe {
 
-    @JsonProperty("id")
-    private Long recipeId;
     @JsonProperty("name")
     private String name;
     @JsonProperty("groceryItems")
-    private List<GroceryItem> groceryItems;
+    @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER)
+    private List<GroceryItemImpl> groceryItems;
 
     public RecipeImpl() {
-        setRecipeId(0L);
-        setName("");
-        setGroceryItems(List.of());
+        super.setRecipeId(0L);
+        this.setName("");
+        this.setGroceryItems(List.of());
     }
 
     public RecipeImpl(@JsonProperty("name") String name,
                       @JsonProperty("groceryItems") List<GroceryItem> groceryItems) {
-        setRecipeId(0L);
-        setName(name);
-        this.groceryItems = groceryItems;
+        super.setRecipeId(0L);
+        this.setName(name);
+        this.setGroceryItems(groceryItems);
     }
 
     public RecipeImpl(long recipeId, String name, List<GroceryItem> groceryItems) {
-        setRecipeId(recipeId);
-        setName(name);
-        this.groceryItems = groceryItems;
+        super.setRecipeId(recipeId);
+        this.setName(name);
+        this.setGroceryItems(groceryItems);
     }
 
+    // Used for lazy-loading the recipes
     public RecipeImpl(long recipeId, String name) {
-        setRecipeId(recipeId);
-        setName(name);
+        super.setRecipeId(recipeId);
+        this.setName(name);
         this.groceryItems = new ArrayList<>();
     }
 
-    private void setRecipeId(Long recipeId) {
-        if(recipeId == null || recipeId < 0) {
-            this.recipeId = 0L;
-            return;
-        }
-        this.recipeId = recipeId;
-    }
-
-    @JsonProperty("id")
     @Override
-    public Long getRecipeId() {return recipeId;}
-
     @JsonProperty("name")
-    @Override
     public String getName() {
         return name;
     }
 
-    @JsonProperty("name")
     @Override
+    @JsonProperty("name")
     public void setName(String name) {
         if (name == null) {
             this.name = "";
@@ -74,19 +68,30 @@ public class RecipeImpl implements Recipe {
         this.name = StringUtil.toTitleCase(name);
     }
 
-    @JsonProperty("groceryItems")
     @Override
-    public List<GroceryItem> getGroceryItems() {return groceryItems;}
+    @JsonProperty("groceryItems")
+    public List<GroceryItem> getGroceryItems() {
+        return ImmutableList.copyOf(this.groceryItems);
+    }
 
-    @JsonProperty("groceryItems")
     @Override
+    @JsonProperty("groceryItems")
     public void setGroceryItems(List<GroceryItem> groceryItems) {
-        this.groceryItems = groceryItems;
+        this.groceryItems = groceryItems.stream().map(g -> {
+           if(g.getClass() != GroceryItemImpl.class) {
+               throw new IllegalArgumentException(
+                       String.format(
+                               "Attempt to convert grocery item to solid implementation failed for grocery item: %s",
+                               g)
+               );
+           }
+           return (GroceryItemImpl) g;
+        }).toList();
     }
 
     @Override
     public boolean isAllDefault() {
-        return this.recipeId == 0 && this.name.isEmpty() && this.groceryItems.isEmpty();
+        return this.getRecipeId() == 0 && this.name.isEmpty() && this.groceryItems.isEmpty();
     }
 
     @Override
@@ -94,12 +99,12 @@ public class RecipeImpl implements Recipe {
         if (g == null || this.getClass() != g.getClass())
             return false;
         else
-            return this.getRecipeId() == ((Recipe) g).getRecipeId();
+            return super.getRecipeId() == ((Recipe) g).getRecipeId();
     }
 
     // TODO: Override the hasCode() method
 
     public String toString() {
-        return String.format("Id: %s, Name: %s, GroceryItems: %s", this.recipeId, this.name, this.groceryItems);
+        return String.format("Id: %s, Name: %s, GroceryItems: %s", super.getRecipeId(), this.name, this.groceryItems);
     }
 }

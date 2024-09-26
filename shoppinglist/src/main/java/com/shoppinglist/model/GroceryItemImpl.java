@@ -1,26 +1,22 @@
 package com.shoppinglist.model;
 
 import com.fasterxml.jackson.annotation.*;
+import com.shoppinglist.api.model.BaseGroceryItem;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.util.StringUtil;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Type;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
+@Entity
+@Access(AccessType.FIELD)
+@Table(name = "GroceryItem")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"id", "name", "quantity", "measure"})
-@Entity
-@Access(AccessType.PROPERTY)
-public class GroceryItemImpl implements GroceryItem {
-
-    @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY)
-    @JsonProperty("id")
-    private Long groceryItemId;
+public class GroceryItemImpl extends BaseGroceryItem {
 
     @JsonProperty("name")
     private String name;
@@ -31,16 +27,24 @@ public class GroceryItemImpl implements GroceryItem {
     private GroceryItemMeasure measure;
     @ManyToOne
     @JoinColumn(name = "recipeId")
-    private Recipe recipe;
+    private RecipeImpl recipe;
+
+    public GroceryItemImpl() {
+        super.setGroceryItemId(0L);
+        this.setName("");
+        this.setQuantity(0.0);
+        this.setMeasure("");
+        this.setRecipe(null);
+    }
 
     public GroceryItemImpl(@JsonProperty("name") String name,
                            @JsonProperty("quantity") Double quantity,
                            @JsonProperty("measure") String measure) {
-        this.groceryItemId = null;
-        setName(name);
-        setQuantity(quantity);
-        setMeasure(measure);
-        this.recipe = null;
+        super.setGroceryItemId(0L);
+        this.setName(name);
+        this.setQuantity(quantity);
+        this.setMeasure(measure);
+        this.setRecipe(null);
     }
 
     public GroceryItemImpl(Long groceryItemId,
@@ -48,11 +52,11 @@ public class GroceryItemImpl implements GroceryItem {
                            BigDecimal quantity,
                            String measure,
                            Recipe recipe) {
-        setGroceryItemId(groceryItemId);
-        setName(name);
-        setQuantity(quantity);
-        setMeasure(measure);
-        setRecipe(recipe);
+        super.setGroceryItemId(groceryItemId);
+        this.setName(name);
+        this.setQuantity(quantity);
+        this.setMeasure(measure);
+        this.setRecipe(recipe);
     }
 
     @JsonGetter("name")
@@ -65,17 +69,18 @@ public class GroceryItemImpl implements GroceryItem {
         if(Objects.isNull(name)) {
             name = "";
         }
-
         this.name = StringUtil.toTitleCase(name);
     }
 
+    @Override
     @JsonGetter("quantity")
-    @Override public BigDecimal getQuantity() {
+    public BigDecimal getQuantity() {
         return quantity;
     }
 
+    @Override
     @JsonSetter("quantity")
-    @Override public void setQuantity(Double quantity) {
+    public void setQuantity(Double quantity) {
         if(Objects.isNull(quantity))
             quantity = 0.0;
 
@@ -97,26 +102,17 @@ public class GroceryItemImpl implements GroceryItem {
                 .stripTrailingZeros();
     }
 
-    @JsonGetter("id")
-    @Override public Long getGroceryItemId() {return groceryItemId;}
-
-    private void setGroceryItemId(Long groceryItemId) throws IllegalArgumentException {
-        if (Objects.isNull(groceryItemId))
-            throw new IllegalArgumentException(String.format("Setting null groceryItemId for grocery item: %s", this));
-
-        this.groceryItemId = groceryItemId;
-    }
-
+    @Override
     @JsonGetter("measure")
-    @Override public String getMeasure() {return StringUtil.toTitleCase(measure.name());}
+    public String getMeasure() {return StringUtil.toTitleCase(measure.name());}
 
+    @Override
     @JsonSetter("measure")
-    @Override public void setMeasure(String measure) throws IllegalArgumentException {
+    public void setMeasure(String measure) throws IllegalArgumentException {
         if (Objects.isNull(measure) || measure.isEmpty()) {
             this.measure = GroceryItemMeasure.NONE;
             return;
         }
-
         this.measure = GroceryItemMeasure.getGroceryItemMeasure(measure);
     }
 
@@ -127,26 +123,36 @@ public class GroceryItemImpl implements GroceryItem {
 
     @Override
     public void setRecipe(Recipe recipe) {
-        this.recipe = recipe;
+        this.recipe = (RecipeImpl) recipe;
     }
 
-    @Override public boolean isAllDefault() {
+    @Override
+    public boolean isAllDefault() {
         return this.name.isEmpty()
-                && this.quantity.equals(BigDecimal.valueOf(0.0).setScale(3, RoundingMode.HALF_UP).stripTrailingZeros())
+                && this.quantity.equals(BigDecimal.valueOf(0.0)
+                                                    .setScale(3,
+                                                            RoundingMode.HALF_UP)
+                                                    .stripTrailingZeros())
                 && this.measure == GroceryItemMeasure.NONE;
     }
 
-    @Override public boolean equals(Object g) {
+    @Override
+    public boolean equals(Object g) {
         if (g == null || this.getClass() != g.getClass())
             return false;
         else
-            return Objects.equals(this.getGroceryItemId(), ((GroceryItem) g).getGroceryItemId());
+            return Objects.equals(super.getGroceryItemId(),
+                                ((GroceryItem) g).getGroceryItemId());
     }
 
     // TODO: Override the hasCode() method
 
     @Override
     public String toString() {
-        return String.format("id: %s, name: %s, quantity: %s, measure: %s", this.groceryItemId, this.name, this.quantity.toPlainString(), this.measure.name());
+        return String.format("id: %s, name: %s, quantity: %s, measure: %s",
+                super.getGroceryItemId(),
+                this.name,
+                this.quantity.toPlainString(),
+                this.measure.name());
     }
 }

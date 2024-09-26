@@ -7,16 +7,10 @@ import java.util.List;
 
 @JsonDeserialize(as = RecipeImpl.class)
 public interface Recipe {
-
     Long getRecipeId();
-
     String getName();
-
     void setName(String name);
-
     List<GroceryItem> getGroceryItems();
-
     void setGroceryItems(List<GroceryItem> groceryItems);
-
     boolean isAllDefault();
 }

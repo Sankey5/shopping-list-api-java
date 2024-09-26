@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 
 @JsonDeserialize(as = GroceryItemImpl.class)
 public interface GroceryItem {
+    Long getGroceryItemId();
+
     String getName();
 
     void setName(String name);
@@ -16,8 +18,6 @@ public interface GroceryItem {
     void setQuantity(Double quantity) throws IllegalArgumentException;
 
     void addQuantityAndMeasure(GroceryItem item1, GroceryItem item2);
-
-    Long getGroceryItemId();
 
     String getMeasure();
 

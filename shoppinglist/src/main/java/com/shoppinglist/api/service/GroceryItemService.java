@@ -1,6 +1,7 @@
 package com.shoppinglist.api.service;
 
 import com.shoppinglist.api.model.GroceryItem;
+import com.shoppinglist.api.model.Recipe;
 
 import java.sql.Connection;
 import java.util.List;
@@ -9,9 +10,9 @@ public interface GroceryItemService {
 
     List<GroceryItem> getGroceryItemsForRecipe(long recipeId);
 
-    List<GroceryItem> saveGroceryItemsForRecipe(long recipeId, List<GroceryItem> newGroceryItems);
+    List<GroceryItem> saveGroceryItemsForRecipe(Recipe recipe, List<GroceryItem> newGroceryItems);
 
-    List<GroceryItem> updateGroceryItemsForRecipe(long recipeId, List<GroceryItem> updatedGroceryItems);
+    List<GroceryItem> updateGroceryItemsForRecipe(Recipe recipe, List<GroceryItem> updatedGroceryItems);
 
     boolean deleteAllGroceryItemsForRecipe(long recipeId);
 

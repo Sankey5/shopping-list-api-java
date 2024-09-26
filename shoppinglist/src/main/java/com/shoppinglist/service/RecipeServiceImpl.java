@@ -1,5 +1,7 @@
 package com.shoppinglist.service;
 
+import com.google.common.collect.ImmutableList;
+import com.shoppinglist.api.dao.GroceryItemDAO;
 import com.shoppinglist.api.dao.RecipeDAO;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.model.Recipe;
@@ -20,50 +22,46 @@ import java.util.Objects;
 public class RecipeServiceImpl implements RecipeService {
 
     @Autowired
-    @Qualifier("recipeDAOJdbc")
     private RecipeDAO recipeDAO;
     @Autowired
     private GroceryItemService groceryItemService;
     private Logger LOGGER = LoggerFactory.getLogger(RecipeServiceImpl.class);
 
     @Override
-    public List<Recipe> getRecipes() {return recipeDAO.getRecipes();}
+    public List<Recipe> getRecipes() {return ImmutableList.copyOf(recipeDAO.findAll());}
 
     @Transactional
     @Override public Recipe saveRecipe(Recipe newRecipe) {
 
-        if(newRecipe.getRecipeId() != 0 || newRecipe.getName().isEmpty())
+        if(newRecipe.getRecipeId() != 0 || newRecipe.getName().isEmpty() || newRecipe.getClass() != RecipeImpl.class)
             return new RecipeImpl();
-
-        Recipe recipeFromDatabase = recipeDAO.saveRecipe(newRecipe.getName());
-        LOGGER.debug("Returned recipe from database: {}", recipeFromDatabase);
-
-        Long recipeId = recipeFromDatabase.getRecipeId();
-        List<GroceryItem> groceryItems = newRecipe.getGroceryItems();
-
-        List<GroceryItem> newGroceryItems = groceryItemService.saveGroceryItemsForRecipe(recipeId, groceryItems);
-
-        recipeFromDatabase.setGroceryItems(newGroceryItems);
-        return recipeFromDatabase;
+        Recipe savedRecipe = recipeDAO.save((RecipeImpl) newRecipe);
+        LOGGER.info("Saved recipe: {}", savedRecipe);
+        List<GroceryItem> savedGroceryItems =
+                groceryItemService.saveGroceryItemsForRecipe(savedRecipe, newRecipe.getGroceryItems());
+        LOGGER.info("Saved grocery items: {}", savedGroceryItems);
+        savedRecipe.setGroceryItems(savedGroceryItems);
+        LOGGER.info("Saved final recipe: {}", savedRecipe);
+        return savedRecipe;
     }
 
+    // TODO: Merge this with save recipe method above
+    @Override
     @Transactional
-    @Override public Recipe updateRecipe(long recipeId, Recipe updatedRecipe) {
+    public Recipe updateRecipe(long recipeId, Recipe updatedRecipe) {
 
-        if (recipeId == 0 || updatedRecipe.getName().isEmpty())
+        if (recipeId == 0 || updatedRecipe.getName().isEmpty() || updatedRecipe.getClass() != RecipeImpl.class)
             return new RecipeImpl();
-
-        String updatedRecipeName = recipeDAO.updateRecipeName(recipeId, updatedRecipe.getName());
-        List<GroceryItem> updatedGroceryItems = groceryItemService.updateGroceryItemsForRecipe(recipeId, updatedRecipe.getGroceryItems());
-
-        return new RecipeImpl(recipeId, updatedRecipeName, updatedGroceryItems);
+        return recipeDAO.save((RecipeImpl) updatedRecipe);
     }
 
+    @Override
     @Transactional
-    @Override public boolean deleteRecipe(long recipeId) {
-        if(recipeId <= 0)
+    public boolean deleteRecipe(long recipeId) {
+        if(recipeId <= 0
+                && !groceryItemService.deleteAllGroceryItemsForRecipe(recipeId))
             return false;
-        return groceryItemService.deleteAllGroceryItemsForRecipe(recipeId) &&
-                recipeDAO.deleteRecipe(recipeId);
+        recipeDAO.deleteById(recipeId);
+        return true;
     }
 }

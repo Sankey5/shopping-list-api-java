@@ -15,7 +15,7 @@ public interface GroceryListDAO {
 
     boolean deleteAllOfGroceryListItem(long groceryItemId);
 
-    boolean deleteAllGroceryListItems(List<Long> groceryListItemIds);
+    boolean deleteAllGroceryListItems(List<GroceryItem> groceryListItems);
 
     boolean deleteGroceryList();
 

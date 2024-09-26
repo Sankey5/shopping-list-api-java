@@ -17,7 +17,7 @@ public interface GroceryListService {
 
     boolean deleteAllOfGroceryListItem(long groceryItemId);
 
-    boolean deleteAllGroceryListItems(List<Long> groceryListItemIds);
+    boolean deleteAllGroceryListItems(List<GroceryItem> groceryListItemIds);
 
     boolean deleteGroceryList();
 }

@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -116,10 +117,12 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
         return true;
     }
     
-    @Override public boolean deleteAllGroceryListItems(List<Long> groceryListItemIds) {
-
+    @Override public boolean deleteAllGroceryListItems(List<GroceryItem> groceryListItems) {
         final String sqlStatement = "DELETE FROM GroceryList WHERE groceryItemId = ?";
-
+        List<Long> groceryListItemIds = groceryListItems
+                                            .stream()
+                                            .map(GroceryItem::getGroceryItemId)
+                                            .toList();
         BatchPreparedStatementSetter bpss = new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
