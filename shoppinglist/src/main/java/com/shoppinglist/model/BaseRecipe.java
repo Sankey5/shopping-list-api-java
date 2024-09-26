@@ -1,12 +1,11 @@
-package com.shoppinglist.api.model;
+package com.shoppinglist.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.shoppinglist.api.model.Recipe;
 import jakarta.persistence.*;
 
-import java.util.List;
-
 @MappedSuperclass
-public abstract class BaseRecipe implements Recipe{
+public abstract class BaseRecipe implements Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("id")

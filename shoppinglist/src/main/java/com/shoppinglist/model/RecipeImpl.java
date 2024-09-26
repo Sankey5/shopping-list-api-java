@@ -3,8 +3,6 @@ package com.shoppinglist.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.google.common.collect.ImmutableList;
-import com.shoppinglist.api.model.BaseRecipe;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.util.StringUtil;
@@ -12,6 +10,7 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Access(AccessType.FIELD)
@@ -71,22 +70,23 @@ public class RecipeImpl extends BaseRecipe {
     @Override
     @JsonProperty("groceryItems")
     public List<GroceryItem> getGroceryItems() {
-        return ImmutableList.copyOf(this.groceryItems);
+        return new ArrayList<>(this.groceryItems);
     }
 
     @Override
     @JsonProperty("groceryItems")
     public void setGroceryItems(List<GroceryItem> groceryItems) {
-        this.groceryItems = groceryItems.stream().map(g -> {
-           if(g.getClass() != GroceryItemImpl.class) {
-               throw new IllegalArgumentException(
-                       String.format(
-                               "Attempt to convert grocery item to solid implementation failed for grocery item: %s",
-                               g)
-               );
-           }
+        this.groceryItems = new ArrayList<>(groceryItems
+                .stream()
+                .map(g -> {
+                   if(g.getClass() != GroceryItemImpl.class) {
+                       throw new IllegalArgumentException(
+                               String.format(
+                                       "Attempt to convert grocery item to solid implementation failed for grocery item: %s", g)
+                       );
+                   }
            return (GroceryItemImpl) g;
-        }).toList();
+        }).toList());
     }
 
     @Override
@@ -99,7 +99,7 @@ public class RecipeImpl extends BaseRecipe {
         if (g == null || this.getClass() != g.getClass())
             return false;
         else
-            return super.getRecipeId() == ((Recipe) g).getRecipeId();
+            return Objects.equals(super.getRecipeId(), ((Recipe) g).getRecipeId());
     }
 
     // TODO: Override the hasCode() method

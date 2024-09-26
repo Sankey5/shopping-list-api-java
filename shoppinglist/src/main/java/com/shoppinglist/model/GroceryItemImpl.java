@@ -1,7 +1,6 @@
 package com.shoppinglist.model;
 
 import com.fasterxml.jackson.annotation.*;
-import com.shoppinglist.api.model.BaseGroceryItem;
 import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.util.StringUtil;

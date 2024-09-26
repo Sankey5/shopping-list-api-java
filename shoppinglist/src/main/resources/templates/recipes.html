@@ -39,7 +39,7 @@
                                     class="btn-put-grocery-list btn btn-primary">&rarr;</button>
                         </td>
                         <td>
-                            <button th:attr="hx-delete=@{/recipes/{recipeId}(recipeId=${recipe.id}) }"
+                            <button th:attr="hx-delete=@{/recipes/{recipeId}(recipeId=${recipe.recipeId}) }"
                                     hx-trigger="click"
                                     hx-target="closest .recipe"
                                     hx-confirm="Are you sure?"
@@ -47,7 +47,7 @@
                                     class="delete-recipe-btn btn btn-danger">&times;</button>
                         </td>
                     </tr>
-                    <tr th:attr="hx-get=@{ /home/recipes/{recipeId}/grocery-items(recipeId=${recipe.id}) }"
+                    <tr th:attr="hx-get=@{ /home/recipes/{recipeId}/grocery-items(recipeId=${recipe.recipeId}) }"
                         hx-trigger="load"
                         hx-swap="outerHTML"></tr>
                 </th:block>
