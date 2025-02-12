@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:hx-on="http://www.w3.org/1999/xhtml">
-    <div th:fragment="recipes" id="recipes" class="card bg-dark col-11 m-3">
+    <div th:fragment="recipes" id="recipes" class="card bg-dark col-6 m-1">
 
         <div class="row card-header text-white justify-content-between">
-            <h2 class="col">Recipes</h2>
+            <h2>Recipes</h2>
 
             <button type="button"
                     hx-get="/home/add-recipe"
@@ -11,7 +11,7 @@
                     hx-trigger="click"
                     data-toggle="modal"
                     data-target="#recipe-form"
-                    class="col btn btn-primary">Add Recipe
+                    class="btn btn-primary">Add Recipe
             </button>
         </div>
 
