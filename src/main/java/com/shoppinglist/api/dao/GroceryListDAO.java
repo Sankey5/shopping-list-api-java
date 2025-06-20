@@ -1,11 +1,17 @@
 package com.shoppinglist.api.dao;
 
 import com.shoppinglist.api.model.GroceryItem;
+import com.shoppinglist.model.GroceryItemImpl;
+import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.util.List;
 
-public interface GroceryListDAO {
+@Repository
+@Transactional
+public interface GroceryListDAO extends JpaRepository<GroceryItemImpl, Long> {
 
     List<GroceryItem> getGroceryList();
 
