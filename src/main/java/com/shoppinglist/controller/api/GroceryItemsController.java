@@ -1,7 +1,7 @@
 package com.shoppinglist.controller.api;
 
-import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.service.GroceryItemService;
+import com.shoppinglist.model.GroceryItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +23,7 @@ public class GroceryItemsController {
 
     @DeleteMapping(value = "/grocery-items/{groceryItemId}", produces = "application/json")
     public ResponseEntity<String> deleteAGroceryItem(@PathVariable long groceryItemId) {
-        if (!groceryItemService.deleteGroceryItem(groceryItemId)) {
-            return new ResponseEntity<>("Failed to delete grocery item", HttpStatus.BAD_REQUEST);
-        }
-
+        groceryItemService.deleteGroceryItem(groceryItemId);
         return new ResponseEntity<>("Deleted grocery item", HttpStatus.OK);
     }
 }

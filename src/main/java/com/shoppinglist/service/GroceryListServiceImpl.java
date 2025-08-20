@@ -1,10 +1,9 @@
 package com.shoppinglist.service;
 
+import com.google.common.collect.ImmutableList;
 import com.shoppinglist.api.dao.GroceryListDAO;
-import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.service.GroceryListService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.shoppinglist.model.GroceryItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,7 @@ public class GroceryListServiceImpl implements GroceryListService {
     public List<GroceryItem> getGroceryList(){
         List<GroceryItem> groceryListItems;
 
-        groceryListItems = groceryListDAO.getGroceryList();
+        groceryListItems = ImmutableList.copyOf(groceryListDAO.findAll());
 
         if(Objects.isNull(groceryListItems))
             return List.of();
@@ -29,27 +28,27 @@ public class GroceryListServiceImpl implements GroceryListService {
 
     @Override
     public List<GroceryItem> addToGroceryList(List<GroceryItem> newGroceryList) {
-        return groceryListDAO.addToGroceryList(newGroceryList);
+        return ImmutableList.copyOf(groceryListDAO.saveAll(newGroceryList));
     }
 
     @Override
-    public boolean deleteGroceryListItem(long groceryItemId) {
-        return groceryListDAO.deleteGroceryListItem(groceryItemId);
+    public void deleteGroceryListItem(long groceryItemId) {
+        groceryListDAO.deleteFirstByGroceryItemId(groceryItemId);
     }
 
     @Override
-    public boolean deleteAllOfGroceryListItem(long groceryItemId) {
-        return groceryListDAO.deleteAllOfGroceryListItem(groceryItemId);
+    public void deleteAllOfGroceryListItem(long groceryItemId) {
+        groceryListDAO.deleteById(groceryItemId);
     }
 
     @Override
-    public boolean deleteAllGroceryListItems(List<GroceryItem> groceryListItems) {
-        return groceryListDAO.deleteAllGroceryListItems(groceryListItems);
+    public void deleteAllGroceryListItems(List<GroceryItem> groceryListItems) {
+        groceryListDAO.deleteAll(groceryListItems);
     }
 
     @Override
-    public boolean deleteGroceryList() {
-        return groceryListDAO.deleteGroceryList();
+    public void deleteGroceryList() {
+        groceryListDAO.deleteAll();
     }
 
     private List<GroceryItem> reduceSimilarItems(List<GroceryItem> unnormilizedList) {

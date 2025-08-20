@@ -1,6 +1,6 @@
 package com.shoppinglist.api.dao;
 
-import com.shoppinglist.model.GroceryItemImpl;
+import com.shoppinglist.model.GroceryItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -10,9 +10,9 @@ import java.util.List;
 
 @Repository
 @Transactional
-public interface GroceryItemDAO extends JpaRepository<GroceryItemImpl, Long> {
-    @Query(value = "SELECT g FROM GroceryItemImpl g WHERE g.recipe.recipeId = :recipeId")
-    List<GroceryItemImpl> findAllByRecipeId(long recipeId);
+public interface GroceryItemDAO extends JpaRepository<GroceryItem, Long> {
+    @Query(value = "SELECT g FROM GroceryItem g WHERE g.recipe.id = :id")
+    List<GroceryItem> findAllByRecipeId(long id);
     int deleteAllByGroceryItemIdIn(List<Long> groceryItemIds);
     int deleteByGroceryItemId(Long groceryItemId);
 }

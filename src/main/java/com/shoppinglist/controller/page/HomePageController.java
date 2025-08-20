@@ -1,13 +1,8 @@
 package com.shoppinglist.controller.page;
 
-import com.shoppinglist.api.model.Recipe;
-import com.shoppinglist.api.service.RecipeService;
-import com.shoppinglist.model.GroceryItemImpl;
 import com.shoppinglist.model.GroceryItemMeasure;
-import com.shoppinglist.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,7 +25,7 @@ public class HomePageController {
 
     @GetMapping(value = "/health", produces = "text/json")
     public ResponseEntity<String> health() {
-        return new ResponseEntity<String>("I am healthy", HttpStatus.OK);
+        return new ResponseEntity<>("I am healthy", HttpStatus.OK);
     }
 
     @GetMapping("/home/measures")

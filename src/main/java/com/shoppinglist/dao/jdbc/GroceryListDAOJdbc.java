@@ -1,9 +1,7 @@
 package com.shoppinglist.dao.jdbc;
 
 import com.google.common.collect.ImmutableList;
-import com.shoppinglist.api.dao.GroceryListDAO;
-import com.shoppinglist.api.model.GroceryItem;
-import com.shoppinglist.model.GroceryItemImpl;
+import com.shoppinglist.model.GroceryItem;
 import com.shoppinglist.util.BatchExecutionHelper;
 import jakarta.persistence.EntityManager;
 import org.hibernate.Session;
@@ -12,14 +10,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class GroceryListDAOJdbc implements GroceryListDAO {
+public class GroceryListDAOJdbc {
 
-    private JdbcTemplate jdbcTemplate;
-    private EntityManager entityManager;
+    private final JdbcTemplate jdbcTemplate;
+    private final EntityManager entityManager;
 
     public GroceryListDAOJdbc(JdbcTemplate jdbcTemplate, EntityManager entityManager) {
         this.jdbcTemplate = jdbcTemplate;
@@ -27,7 +24,7 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
     }
 
     private Session getConnection() {
-        Session session = null;
+        Session session;
         if (entityManager == null
                 || (session = entityManager.unwrap(Session.class)) == null) {
             throw new NullPointerException("Unable to get a connection from the entity manager");
@@ -35,32 +32,30 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
         return session;
     }
 
-    @Override
     public List<GroceryItem> getGroceryList() {
 
         final String sqlStatement = """
-                                    SELECT GroceryItem.groceryItemId AS id,
-                                            GroceryItem.name AS name,
-                                            GroceryItem.quantity AS quantity,
-                                            GroceryItem.measure AS measure,
-                                            GroceryItem.recipeId AS recipeId
-                                    FROM GroceryItem
-                                    INNER JOIN GroceryList ON GroceryList.groceryItemId = GroceryItem.groceryItemId
-                                    """;
+                SELECT GroceryItem.groceryItemId AS id,
+                        GroceryItem.name AS name,
+                        GroceryItem.quantity AS quantity,
+                        GroceryItem.measure AS measure,
+                        GroceryItem.recipeId AS recipeId
+                FROM GroceryItem
+                INNER JOIN GroceryList ON GroceryList.groceryItemId = GroceryItem.groceryItemId
+                """;
 
-        List<GroceryItemImpl> shoppingList = jdbcTemplate.query(sqlStatement,
-                (rs, rowNum) -> new GroceryItemImpl(
-                rs.getLong(1),
-                rs.getString(2),
-                rs.getBigDecimal(3),
-                rs.getString(4),
-                null
-        ));
+        List<GroceryItem> shoppingList = jdbcTemplate.query(sqlStatement,
+                (rs, rowNum) -> new GroceryItem(
+                        rs.getLong(1),
+                        rs.getString(2),
+                        rs.getBigDecimal(3),
+                        rs.getString(4),
+                        null
+                ));
 
         return ImmutableList.copyOf(shoppingList);
     }
 
-    @Override
     public List<GroceryItem> addToGroceryList(List<GroceryItem> groceryList) {
 
         final String sqlStatement = "INSERT INTO GroceryList (groceryItemId) VALUES (?)";
@@ -87,7 +82,6 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
         return groceryList;
     }
 
-    @Override
     public boolean deleteGroceryListItem(long groceryItemId) {
         final String sqlStatement = "DELETE FROM GroceryList WHERE groceryItemId = ? FETCH FIRST ROW ONLY";
 
@@ -102,7 +96,6 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
         return true;
     }
 
-    @Override
     public boolean deleteAllOfGroceryListItem(long groceryItemId) {
         final String sqlStatement = "DELETE FROM GroceryList WHERE groceryItemId = ?";
 
@@ -116,13 +109,13 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
 
         return true;
     }
-    
-    @Override public boolean deleteAllGroceryListItems(List<GroceryItem> groceryListItems) {
+
+    public boolean deleteAllGroceryListItems(List<GroceryItem> groceryListItems) {
         final String sqlStatement = "DELETE FROM GroceryList WHERE groceryItemId = ?";
         List<Long> groceryListItemIds = groceryListItems
-                                            .stream()
-                                            .map(GroceryItem::getGroceryItemId)
-                                            .toList();
+                .stream()
+                .map(GroceryItem::getGroceryItemId)
+                .toList();
         BatchPreparedStatementSetter bpss = new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -136,11 +129,10 @@ public class GroceryListDAOJdbc implements GroceryListDAO {
         };
 
         int[] deletedRows = jdbcTemplate.batchUpdate(sqlStatement, bpss);
-        
+
         return BatchExecutionHelper.successfulBatchExecution(deletedRows);
     }
 
-    @Override
     public boolean deleteGroceryList() {
         final String sqlStatement = "DELETE FROM GroceryList";
 

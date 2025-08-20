@@ -1,21 +1,5 @@
 package com.shoppinglist.tests;
 
-import com.shoppinglist.api.dao.RecipeDAO;
-import com.shoppinglist.api.model.Recipe;
-import com.shoppinglist.api.service.GroceryItemService;
-import com.shoppinglist.api.service.RecipeService;
-import com.shoppinglist.model.RecipeImpl;
-import com.shoppinglist.service.RecipeServiceImpl;
-import org.junit.jupiter.api.*;
-import org.mockito.Answers;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-
-import java.util.List;
-
 //@SpringBootTest(classes = {
 //        RecipeDAOJdbc.class,
 //        RecipeServiceImpl.class,

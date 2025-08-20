@@ -1,13 +1,11 @@
 package com.shoppinglist.api.service;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.shoppinglist.api.model.GroceryItem;
-import com.shoppinglist.api.model.Recipe;
-import com.shoppinglist.model.RecipeImpl;
+import com.shoppinglist.model.Recipe;
 
 import java.util.List;
 
-@JsonSerialize(as = RecipeImpl.class)
+@JsonSerialize(as = Recipe.class)
 public interface RecipeService {
 
     List<Recipe> getRecipes();
@@ -16,6 +14,6 @@ public interface RecipeService {
 
     Recipe updateRecipe(long recipeId, Recipe recipe);
 
-    boolean deleteRecipe(long recipeId);
+    void deleteRecipe(long recipeId);
 
 }

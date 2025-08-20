@@ -1,19 +1,5 @@
 package com.shoppinglist.dao.impl;
 
-import com.google.common.collect.ImmutableList;
-import com.shoppinglist.api.dao.GroceryItemDAO;
-import com.shoppinglist.api.model.Recipe;
-import com.shoppinglist.api.dao.RecipeDAO;
-import com.shoppinglist.api.model.GroceryItem;
-import com.shoppinglist.model.RecipeImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 //@Repository
 public class RecipeDAOImpl {
 //

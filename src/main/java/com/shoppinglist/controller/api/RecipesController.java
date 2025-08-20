@@ -1,8 +1,7 @@
 package com.shoppinglist.controller.api;
 
-import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.api.service.RecipeService;
-import com.shoppinglist.model.RecipeImpl;
+import com.shoppinglist.model.Recipe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,10 +50,7 @@ public class RecipesController {
 
     @DeleteMapping(value = "/{recipeId}")
     public ResponseEntity<String> deleteRecipe(@PathVariable long recipeId) {
-
-        if(!recipeService.deleteRecipe(recipeId))
-            return ResponseEntity.badRequest().build();
-
+        recipeService.deleteRecipe(recipeId);
         return ResponseEntity.ok().header("HX-Trigger", "refreshGroceryList").build();
     }
 }

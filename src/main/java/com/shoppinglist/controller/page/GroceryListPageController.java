@@ -1,7 +1,7 @@
 package com.shoppinglist.controller.page;
 
-import com.shoppinglist.api.model.GroceryItem;
 import com.shoppinglist.api.service.GroceryListService;
+import com.shoppinglist.model.GroceryItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,9 +64,7 @@ public class GroceryListPageController {
     @DeleteMapping(value = "/{groceryItemId}")
     public String deleteAShoppingListItem(@PathVariable long groceryItemId, Model model) {
 
-        if(!groceryListService.deleteGroceryListItem(groceryItemId))
-            return "error";
-
+        groceryListService.deleteGroceryListItem(groceryItemId);
         List<GroceryItem> newGroceryItems = groceryListService.getGroceryList();
         model.addAttribute("groceryList", newGroceryItems);
 
@@ -75,10 +73,7 @@ public class GroceryListPageController {
 
     @DeleteMapping(value = "/{groceryItemId}/all")
     public String deleteAllOfGroceryListItem(@PathVariable long groceryItemId, Model model) {
-
-        if(!groceryListService.deleteAllOfGroceryListItem(groceryItemId))
-            return "error";
-
+        groceryListService.deleteAllOfGroceryListItem(groceryItemId);
         List<GroceryItem> newGroceryItems = groceryListService.getGroceryList();
         model.addAttribute("groceryList", newGroceryItems);
 
@@ -87,13 +82,7 @@ public class GroceryListPageController {
 
     @DeleteMapping
     public String deleteShoppingList() {
-        if(!groceryListService.deleteGroceryList()) {
-            return "error";
-        }
-
+        groceryListService.deleteGroceryList();
         return "grocerylist.html :: grocerylist";
     }
-
-
-
 }

@@ -1,24 +1,5 @@
 package com.shoppinglist.dao.jdbc;
 
-import com.google.common.collect.ImmutableList;
-import com.shoppinglist.api.dao.GroceryItemDAO;
-import com.shoppinglist.api.model.GroceryItem;
-import com.shoppinglist.model.GroceryItemImpl;
-import com.shoppinglist.util.BatchExecutionHelper;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
-import org.hibernate.Session;
-import org.hibernate.query.NativeQuery;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
-
-import java.math.BigDecimal;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 //@Repository
 public class GroceryItemDAOJdbc {
 //

@@ -1,31 +1,29 @@
 package com.shoppinglist.dao.impl;
 
 import com.google.common.collect.ImmutableList;
-import com.shoppinglist.api.dao.GroceryItemDAO;
-import com.shoppinglist.api.model.GroceryItem;
-import com.shoppinglist.api.model.Recipe;
-import com.shoppinglist.model.GroceryItemImpl;
-import org.springframework.stereotype.Repository;
+import com.shoppinglist.model.GroceryItem;
+import com.shoppinglist.model.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class GroceryItemDAOImpl {
 
-    private static List<GroceryItemImpl> groceryItemsList;
+    private static List<GroceryItem> groceryItemsList;
 
     static {
         groceryItemsList = populateGroceryItems();
     }
 
-    private static List<GroceryItemImpl> populateGroceryItems() {
-        List<GroceryItemImpl> mockGroceryItems = new ArrayList<>();
+    private static List<GroceryItem> populateGroceryItems() {
+        List<GroceryItem> mockGroceryItems = new ArrayList<>();
 
         // TODO: Create a list of multiple recipes
-        mockGroceryItems.add(new GroceryItemImpl("Bananas", 1.0, "lbs"));
-        mockGroceryItems.add(new GroceryItemImpl("Ground Beef", 2.5, "lbs"));
-        mockGroceryItems.add(new GroceryItemImpl("Salt", 2.2, "tbsp"));
+        mockGroceryItems.add(new GroceryItem("Bananas", 1.0, "lbs"));
+        mockGroceryItems.add(new GroceryItem("Ground Beef", 2.5, "lbs"));
+        mockGroceryItems.add(new GroceryItem("Salt", 2.2, "tbsp"));
 
         return mockGroceryItems;
     }
@@ -35,7 +33,7 @@ public class GroceryItemDAOImpl {
     public List<GroceryItem> saveGroceryItemsForRecipe(Recipe recipe, List<GroceryItem> groceryItems) {
         groceryItems.forEach(groceryItem -> {
             groceryItem.setRecipe(recipe);
-            groceryItemsList.add((GroceryItemImpl) groceryItem);
+            groceryItemsList.add(groceryItem);
         });
         return ImmutableList.copyOf(groceryItemsList);
     }
@@ -47,8 +45,8 @@ public class GroceryItemDAOImpl {
             if(groceryItemExists(updatedGroceryItem)) {
                 groceryItemsList = groceryItemsList.stream()
                         .map( r -> {
-                            if(r.getGroceryItemId() == updatedGroceryItem.getGroceryItemId())
-                                return (GroceryItemImpl) updatedGroceryItem;
+                            if(Objects.equals(r.getGroceryItemId(), updatedGroceryItem.getGroceryItemId()))
+                                return updatedGroceryItem;
                             return r;
                         })
                         .collect(Collectors.toList());

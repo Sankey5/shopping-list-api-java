@@ -1,9 +1,8 @@
 package com.shoppinglist.api.service;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.shoppinglist.api.model.GroceryItem;
+import com.shoppinglist.model.GroceryItem;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @JsonDeserialize(as = GroceryItem.class)
@@ -13,11 +12,11 @@ public interface GroceryListService {
 
     List<GroceryItem> addToGroceryList(List<GroceryItem> newGroceryList);
 
-    boolean deleteGroceryListItem(long groceryItemId);
+    void deleteGroceryListItem(long groceryItemId);
 
-    boolean deleteAllOfGroceryListItem(long groceryItemId);
+    void deleteAllOfGroceryListItem(long groceryItemId);
 
-    boolean deleteAllGroceryListItems(List<GroceryItem> groceryListItemIds);
+    void deleteAllGroceryListItems(List<GroceryItem> groceryListItemIds);
 
-    boolean deleteGroceryList();
+    void deleteGroceryList();
 }

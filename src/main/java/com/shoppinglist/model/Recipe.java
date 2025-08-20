@@ -3,8 +3,6 @@ package com.shoppinglist.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.shoppinglist.api.model.GroceryItem;
-import com.shoppinglist.api.model.Recipe;
 import com.shoppinglist.util.StringUtil;
 import jakarta.persistence.*;
 
@@ -17,47 +15,59 @@ import java.util.Objects;
 @Table(name = "Recipe")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"id", "name", "groceryItems"})
-public class RecipeImpl extends BaseRecipe {
+public class Recipe {
 
+    @JsonProperty("id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @JsonProperty("name")
     private String name;
     @JsonProperty("groceryItems")
     @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER)
-    private List<GroceryItemImpl> groceryItems;
+    private List<GroceryItem> groceryItems;
 
-    public RecipeImpl() {
-        super.setRecipeId(0L);
+    public Recipe() {
+        this.setId(0L);
         this.setName("");
         this.setGroceryItems(List.of());
     }
 
-    public RecipeImpl(@JsonProperty("name") String name,
-                      @JsonProperty("groceryItems") List<GroceryItem> groceryItems) {
-        super.setRecipeId(0L);
+    public Recipe(@JsonProperty("name") String name,
+                  @JsonProperty("groceryItems") List<GroceryItem> groceryItems) {
+        this.setId(0L);
         this.setName(name);
         this.setGroceryItems(groceryItems);
     }
 
-    public RecipeImpl(long recipeId, String name, List<GroceryItem> groceryItems) {
-        super.setRecipeId(recipeId);
+    public Recipe(long recipeId, String name, List<GroceryItem> groceryItems) {
+        this.setId(recipeId);
         this.setName(name);
         this.setGroceryItems(groceryItems);
     }
 
     // Used for lazy-loading the recipes
-    public RecipeImpl(long recipeId, String name) {
-        super.setRecipeId(recipeId);
+    public Recipe(long recipeId, String name) {
+        this.setId(recipeId);
         this.setName(name);
         this.groceryItems = new ArrayList<>();
     }
-
-    @Override
+    
+    @JsonProperty("id")
+    public Long getId() {
+        return this.id;
+    }
+    
+    @JsonProperty("id")
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
     @JsonProperty("name")
     public String getName() {
         return name;
     }
-
-    @Override
+    
     @JsonProperty("name")
     public void setName(String name) {
         if (name == null) {
@@ -67,44 +77,30 @@ public class RecipeImpl extends BaseRecipe {
         this.name = StringUtil.toTitleCase(name);
     }
 
-    @Override
     @JsonProperty("groceryItems")
     public List<GroceryItem> getGroceryItems() {
         return new ArrayList<>(this.groceryItems);
     }
 
-    @Override
     @JsonProperty("groceryItems")
     public void setGroceryItems(List<GroceryItem> groceryItems) {
-        this.groceryItems = new ArrayList<>(groceryItems
-                .stream()
-                .map(g -> {
-                   if(g.getClass() != GroceryItemImpl.class) {
-                       throw new IllegalArgumentException(
-                               String.format(
-                                       "Attempt to convert grocery item to solid implementation failed for grocery item: %s", g)
-                       );
-                   }
-           return (GroceryItemImpl) g;
-        }).toList());
+        this.groceryItems = groceryItems;
     }
 
-    @Override
     public boolean isAllDefault() {
-        return this.getRecipeId() == 0 && this.name.isEmpty() && this.groceryItems.isEmpty();
+        return this.getId() == 0 && this.name.isEmpty() && this.groceryItems.isEmpty();
     }
 
-    @Override
+
     public boolean equals(Object g) {
         if (g == null || this.getClass() != g.getClass())
             return false;
         else
-            return Objects.equals(super.getRecipeId(), ((Recipe) g).getRecipeId());
+            return Objects.equals(this.getId(), ((Recipe) g).getId());
     }
 
     // TODO: Override the hasCode() method
-
     public String toString() {
-        return String.format("Id: %s, Name: %s, GroceryItems: %s", super.getRecipeId(), this.name, this.groceryItems);
+        return String.format("Id: %s, Name: %s, GroceryItems: %s", this.getId(), this.name, this.groceryItems);
     }
 }
