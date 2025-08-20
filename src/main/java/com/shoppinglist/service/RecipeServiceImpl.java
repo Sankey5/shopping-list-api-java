@@ -48,7 +48,7 @@ public class RecipeServiceImpl implements RecipeService {
 
         if (recipeId == 0 || updatedRecipe.getName().isEmpty() || updatedRecipe.getClass() != Recipe.class)
             return new Recipe();
-        return recipeDAO.save((Recipe) updatedRecipe);
+        return recipeDAO.save(updatedRecipe);
     }
 
     @Override
